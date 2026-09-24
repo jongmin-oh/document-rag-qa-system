@@ -1,0 +1,22 @@
+[
+  {
+    "id": "easylaw_unemployment_benefit",
+    "title": "찾기 쉬운 생활법령정보 - 실업급여",
+    "publisher": "법제처",
+    "url": "https://www.easylaw.go.kr/CSP/FileDownload.laf?flType=pdf&onhunqnaYn=N&csmSeq=722",
+    "file": "easylaw_unemployment_benefit.pdf",
+    "as_of": "2026-08-31",
+    "pages": 59,
+    "license": "출처표시 조건 자유이용(영리 포함), 변경 금지. 출처: 법제처 찾기 쉬운 생활법령정보(https://www.easylaw.go.kr)"
+  },
+  {
+    "id": "work24_employment_dream_booklet",
+    "title": "취업드림수첩 (구직급여 수급자 안내 e북)",
+    "publisher": "고용노동부",
+    "url": "https://www.work24.go.kr/ei/static/ebookVersion/202404/empymnPktbukEbook.pdf",
+    "file": "work24_employment_dream_booklet.pdf",
+    "as_of": "2026-02-11",
+    "pages": 35,
+    "license": "고용노동부 저작물. 출처: 고용노동부 고용24(https://www.work24.go.kr)"
+  }
+]
