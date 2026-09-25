@@ -77,7 +77,7 @@ pytest tests
   "answerable": true,
   "answer": "... 하루 최대 6만8,100원을 초과할 수 없습니다.",
   "citations": [
-    {"n": 1, "chunk_id": "EL-0027", "source": "[생활법령 실업급여 | 2026-08-31 기준] 2. 구직급여 > ...", "page_start": 27, "page_end": 27, "score": 0.8143}
+    {"n": 1, "chunk_id": "EL-0027", "source": "[생활법령 실업급여 | 2026-08-31 기준] 2. 구직급여 > ...", "page_start": 27, "page_end": 27, "score": 0.0328}
   ],
   "model_version": "gemini-3.8-flash"
 }

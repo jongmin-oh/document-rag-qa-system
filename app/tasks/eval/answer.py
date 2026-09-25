@@ -243,10 +243,6 @@ def rejudge(result: dict) -> dict:
         print(f"\r{n}/{len(result['items'])}", end="", flush=True)
     print()
     meta = result["meta"]
-    meta["answer_model"] = meta.pop("configured_model", meta.get("answer_model", GeminiConfig.LLM_MODEL))
-    meta["answer_temperature"] = meta.pop("temperature", meta.get("answer_temperature", 0))
-    meta.setdefault("answer_git_commit", meta["git_commit"])
-    meta.setdefault("answer_git_dirty", meta["git_dirty"])
     meta.update(
         {
             "judge_run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -270,15 +266,13 @@ def group_summary(rows: list[dict], field: str, value: str) -> dict:
 
 def report(result: dict) -> str:
     meta, summary, rows = result["meta"], result["summary"], result["items"]
-    answer_temperature = meta.get("answer_temperature", meta.get("temperature", 0))
     judge_temperature = meta.get("judge_temperature")
     judge_temperature_label = "API 기본값" if judge_temperature is None else str(judge_temperature)
     lines = [
         "# End-to-end 답변 평가 리포트",
         "",
-        f"- 답변 실행: {meta['run_at']} / 커밋 `{meta.get('answer_git_commit', meta['git_commit'])}` / "
-        f"dirty `{str(meta.get('answer_git_dirty', meta['git_dirty'])).lower()}`",
-        f"- 문항: {summary['n_items']}개 / 답변 temperature {answer_temperature} / "
+        f"- 답변 실행: {meta['run_at']} / 커밋 `{meta['git_commit']}` / dirty `{str(meta['git_dirty']).lower()}`",
+        f"- 문항: {summary['n_items']}개 / 답변 temperature {meta['answer_temperature']} / "
         f"Judge temperature {judge_temperature_label}",
         f"- 답변 모델: `{meta['answer_model']}` / Judge: OpenRouter `{meta['judge_model']}`",
         "- 결정론적 지표: answerability, citation 형식, Gold 근거 좌표와 인용 청크의 일치",
