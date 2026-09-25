@@ -74,10 +74,6 @@ class Chunk:
     cited_laws: list[str]
     as_of: str
 
-    def embedding_text(self, with_title: bool) -> str:
-        body = f"{self.question_prefix}\n{self.text}" if self.question_prefix else self.text
-        return f"{self.title_prefix}\n{body}" if with_title else body
-
 
 def load_markdown(md: str) -> tuple[str, list[tuple[int, int]]]:
     """주석 줄을 뺀 canonical text와 (시작 위치, 쪽) 목록을 만든다."""
