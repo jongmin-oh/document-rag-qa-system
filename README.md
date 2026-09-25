@@ -118,7 +118,7 @@ pytest tests
 | PDF 추출 | pdfplumber (1회성 초안) | 좌표·글꼴 정보로 제목과 표를 추정. 이후는 검수된 Markdown만 읽는다 |
 | 임베딩 | `gemini-embedding-2` | 다국어 벤치마크(MMTEB) 기준 상위, 입력 8,192토큰. 한국어 상용 API 비교 자료가 없어 1차 선정 (`decision/models.md`) |
 | 답변·재작성 LLM | `gemini-3.8-flash` | 검색된 청크 5개만 근거로 답하므로 최상위 모델이 필요 없고, 반복 평가 비용·속도가 중요 |
-| Judge | OpenRouter `openai/gpt-5.4-mini` | 답변 모델과 다른 제공사로 자기 선호 편향을 줄이고, JSON Schema structured output으로 채점 형식 강제 |
+| Judge | OpenRouter `openai/gpt-6-sol` | 답변 모델과 다른 제공사로 자기 선호 편향을 줄이고, JSON Schema structured output으로 채점 형식 강제. 재채점이 41회 호출뿐이라 비용보다 판단력을 우선해 상위 모델 사용 |
 | 키워드 검색 | 직접 구현한 BM25 (글자 2-gram) | 형태소 분석(kiwipiepy)보다 Recall@5가 높았고(0.691 vs 0.605) 의존성이 없다 |
 | 프레임워크 | 사용 안 함 (LangChain·LlamaIndex 미사용) | 파이프라인이 재작성 → 검색 → 생성 세 단계라 직접 구현해도 짧고, 각 단계를 평가 trace로 그대로 노출할 수 있다 |
 

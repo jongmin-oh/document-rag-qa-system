@@ -29,4 +29,4 @@ class GeminiConfig:
 class OpenRouterConfig:
     API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
     BASE_URL: str = "https://openrouter.ai/api/v1"
-    JUDGE_MODEL: str = "openai/gpt-5.4-mini"
+    JUDGE_MODEL: str = "openai/gpt-6-sol"

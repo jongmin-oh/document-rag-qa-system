@@ -156,7 +156,7 @@ def test_openrouter_judge_uses_strict_structured_output():
                 reason="근거와 일치",
             ).model_dump_json()
             return SimpleNamespace(
-                model="openai/gpt-5.4-mini-actual",
+                model="openai/gpt-6-sol-actual",
                 choices=[SimpleNamespace(message=SimpleNamespace(content=content))],
             )
 
@@ -166,7 +166,7 @@ def test_openrouter_judge_uses_strict_structured_output():
     result = judge(client, gold, trace())
 
     assert result.parsed.correctness == 4
-    assert result.model_version == "openai/gpt-5.4-mini-actual"
+    assert result.model_version == "openai/gpt-6-sol-actual"
     assert completions.kwargs["model"] == OpenRouterConfig.JUDGE_MODEL
     assert "temperature" not in completions.kwargs
     assert completions.kwargs["seed"] == SEED
