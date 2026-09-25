@@ -41,10 +41,12 @@
 
 ## 실행
 
-모델 선정 근거는 `decision/models.md`에 있다. `app/secrets.yml`(git 추적 제외)에 Gemini API 키를 넣는다.
+모델 선정 근거는 `decision/models.md`에 있다. `app/secrets.yml`(git 추적 제외)에 Gemini와 OpenRouter API 키를 넣는다.
 
 ```yaml
 GEMINI:
+  API_KEY: <키>
+OPENROUTER:
   API_KEY: <키>
 ```
 

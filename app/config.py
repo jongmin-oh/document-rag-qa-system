@@ -20,3 +20,10 @@ class GeminiConfig:
     EMBEDDING_MODEL: str = "gemini-embedding-2"
     EMBEDDING_DIM: int = 3072
     LLM_MODEL: str = "gemini-3.8-flash"
+
+
+@dataclass
+class OpenRouterConfig:
+    API_KEY: str = SECRETS.get("OPENROUTER", {}).get("API_KEY", "")
+    BASE_URL: str = "https://openrouter.ai/api/v1"
+    JUDGE_MODEL: str = "openai/gpt-5.4-mini"

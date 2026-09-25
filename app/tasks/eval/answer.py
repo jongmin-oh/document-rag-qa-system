@@ -5,20 +5,20 @@
 출력: reports/answer_eval.json, reports/answer_eval.md
 
 결정론적 지표는 answerability와 인용 형식·Gold 근거 좌표를 검사한다. 의미
-지표는 참고 정답과 실제 인용 문맥을 고정 rubric으로 LLM Judge가 채점한다.
-Judge는 현재 답변 모델과 같으므로 결과를 사람 평가의 대체물이 아닌 보조
-지표로 사용한다.
+지표는 참고 정답과 실제 인용 문맥을 고정 rubric으로 OpenRouter의 GPT
+Judge가 채점한다. 자동 Judge 결과는 사람 평가의 대체물이 아닌 보조 지표다.
 """
 
 import hashlib
 import json
 import subprocess
+from dataclasses import dataclass
 from datetime import datetime, timezone
 
-from google import genai
+from openai import OpenAI
 from pydantic import BaseModel, Field
 
-from app.config import GeminiConfig
+from app.config import GeminiConfig, OpenRouterConfig
 from app.tasks.eval.retrieval import REPORTS, score
 from app.tasks.index.build import OUT, body, client, load_meta
 from app.tasks.qa.ask import AskTrace, ask_with_trace, citation_numbers, pages
@@ -47,6 +47,23 @@ class JudgeResult(BaseModel):
     reason: str
 
 
+@dataclass
+class JudgeResponse:
+    parsed: JudgeResult
+    model_version: str
+
+
+def judge_client() -> OpenAI:
+    if not OpenRouterConfig.API_KEY:
+        raise ValueError("app/secrets.yml에 OPENROUTER.API_KEY를 설정하세요")
+    return OpenAI(
+        api_key=OpenRouterConfig.API_KEY,
+        base_url=OpenRouterConfig.BASE_URL,
+        max_retries=10,
+        default_headers={"X-OpenRouter-Title": "document-rag-qa-system"},
+    )
+
+
 def cited_context(trace: AskTrace) -> str:
     return "\n\n".join(
         f"[{c.n}] {chunk['title_prefix']} ({pages(chunk)}쪽)\n{body(chunk)}"
@@ -55,7 +72,7 @@ def cited_context(trace: AskTrace) -> str:
     )
 
 
-def judge(client: genai.Client, item: dict, trace: AskTrace):
+def judge(client: OpenAI, item: dict, trace: AskTrace) -> JudgeResponse:
     evidence = "\n".join(f"- {ev['quote']}" for ev in item["evidence"]) or "(Gold 근거 없음)"
     prompt = f"""[질문]
 {item['question']}
@@ -75,17 +92,20 @@ answerable={str(trace.response.answerable).lower()}
 
 [생성 답변이 실제 인용한 자료]
 {cited_context(trace) or '(인용 없음)'}"""
-    return client.models.generate_content(
-        model=GeminiConfig.LLM_MODEL,
-        contents=prompt,
-        config={
-            "system_instruction": JUDGE_SYSTEM,
-            "temperature": 0,
-            "thinking_config": {"thinking_level": "low"},
-            "response_mime_type": "application/json",
-            "response_schema": JudgeResult,
+    response = client.chat.completions.create(
+        model=OpenRouterConfig.JUDGE_MODEL,
+        messages=[{"role": "system", "content": JUDGE_SYSTEM}, {"role": "user", "content": prompt}],
+        temperature=0,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {"name": "judge_result", "strict": True, "schema": JudgeResult.model_json_schema()},
         },
+        extra_body={"provider": {"require_parameters": True}},
     )
+    content = response.choices[0].message.content
+    if not content:
+        raise ValueError("OpenRouter Judge가 빈 응답을 반환했습니다")
+    return JudgeResponse(JudgeResult.model_validate_json(content), response.model)
 
 
 def deterministic(item: dict, trace: AskTrace) -> dict:
@@ -146,12 +166,13 @@ def sha256(path) -> str:
 
 def evaluate() -> dict:
     gemini = client()
+    evaluator = judge_client()
     items = [json.loads(line) for line in open(OUT / "gold_set.jsonl", encoding="utf-8")]
     rows = []
     rewrite_versions, answer_versions, judge_versions = set(), set(), set()
     for n, item in enumerate(items, 1):
         trace = ask_with_trace(gemini, item["question"])
-        judged = judge(gemini, item, trace)
+        judged = judge(evaluator, item, trace)
         rewrite_versions.add(trace.rewrite_model_version)
         answer_versions.add(trace.response.model_version)
         judge_versions.add(judged.model_version)
@@ -176,11 +197,13 @@ def evaluate() -> dict:
             "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "git_commit": git_value("rev-parse", "--short", "HEAD"),
             "git_dirty": bool(git_value("status", "--porcelain")),
-            "configured_model": GeminiConfig.LLM_MODEL,
+            "answer_model": GeminiConfig.LLM_MODEL,
             "rewrite_model_versions": sorted(rewrite_versions),
             "answer_model_versions": sorted(answer_versions),
+            "judge_provider": "openrouter",
+            "judge_model": OpenRouterConfig.JUDGE_MODEL,
             "judge_model_versions": sorted(judge_versions),
-            "judge_is_answer_model": True,
+            "judge_is_answer_model": False,
             "judge_prompt_sha256": hashlib.sha256(JUDGE_SYSTEM.encode()).hexdigest(),
             "embedding_model": meta["model"],
             "embedding_dim": meta["dim"],
@@ -204,7 +227,7 @@ def report(result: dict) -> str:
         "",
         f"- 실행: {meta['run_at']} / 커밋 `{meta['git_commit']}` / dirty `{str(meta['git_dirty']).lower()}`",
         f"- 문항: {summary['n_items']}개 / 생성·Judge temperature {meta['temperature']}",
-        f"- 답변·Judge 모델: `{meta['configured_model']}` / 같은 모델 Judge 사용(한계는 `decision/evaluation.md`)",
+        f"- 답변 모델: `{meta['answer_model']}` / Judge: OpenRouter `{meta['judge_model']}`",
         "- 결정론적 지표: answerability, citation 형식, Gold 근거 좌표와 인용 청크의 일치",
         "- 의미 지표: 참고 정답과 실제 인용 문맥을 이용한 0–4점 LLM Judge",
         "- citation 객체는 답변 본문의 `[n]`·`[n, m]`을 서버가 파싱해 생성",

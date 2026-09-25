@@ -2,7 +2,8 @@
 
 from types import SimpleNamespace
 
-from app.tasks.eval.answer import deterministic, summarize
+from app.config import OpenRouterConfig
+from app.tasks.eval.answer import JudgeResult, deterministic, judge, summarize
 from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers, clean_answer
 
 
@@ -137,3 +138,35 @@ def test_summary_reports_false_answers_and_raw_refusal_count():
     assert result["refusal_recall"] == 0.5
     assert result["false_answer_rate"] == 0.5
     assert result["refused"] == 1 and result["n_none"] == 2
+
+
+def test_openrouter_judge_uses_strict_structured_output():
+    class Completions:
+        kwargs = None
+
+        def create(self, **kwargs):
+            self.kwargs = kwargs
+            content = JudgeResult(
+                correctness=4,
+                completeness=4,
+                faithfulness=4,
+                partial_handling=-1,
+                unsupported_claims=[],
+                missing_points=[],
+                reason="근거와 일치",
+            ).model_dump_json()
+            return SimpleNamespace(
+                model="openai/gpt-5.4-mini-actual",
+                choices=[SimpleNamespace(message=SimpleNamespace(content=content))],
+            )
+
+    completions = Completions()
+    client = SimpleNamespace(chat=SimpleNamespace(completions=completions))
+    gold = {"question": "질문", "answerability": "full", "answer": "참고 정답", "evidence": []}
+    result = judge(client, gold, trace())
+
+    assert result.parsed.correctness == 4
+    assert result.model_version == "openai/gpt-5.4-mini-actual"
+    assert completions.kwargs["model"] == OpenRouterConfig.JUDGE_MODEL
+    assert completions.kwargs["response_format"]["json_schema"]["strict"] is True
+    assert completions.kwargs["extra_body"]["provider"]["require_parameters"] is True

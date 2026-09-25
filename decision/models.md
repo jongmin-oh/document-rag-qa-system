@@ -43,7 +43,7 @@ Gold Set이 준비되면 비교 모델 1개(voyage-4 또는 text-embedding-3-lar
 ## 3. 주의할 점
 
 - **무료 등급 데이터 사용**: 무료 등급에서는 입력 내용이 Google 제품 개선에 쓰인다. 공개 문서만 다루므로 문제는 없지만, 실제 사용자 질문을 받는 운영 환경에서는 유료 등급을 써야 한다.
-- **Judge 모델**: 평가용 LLM-as-a-Judge를 같은 Gemini로 하면 자기 답변을 후하게 채점하는 편향이 생길 수 있다. Judge 모델은 Eval Harness 설계 때 따로 정한다.
+- **Judge 모델**: 답변 모델과 분리해 OpenRouter의 `openai/gpt-5.4-mini`를 쓴다. 구조화 출력 지원과 성능·비용 균형을 근거로 골랐으며, 사람 표본 평가로 자동 Judge와의 일치도를 별도 확인한다.
 - **API 모델 변경**: GA 모델 ID도 제공사 사정으로 동작이 바뀔 수 있다. 평가 리포트에 모델 ID와 응답의 `model_version`을 함께 남긴다.
 
 ## 참고
@@ -51,6 +51,7 @@ Gold Set이 준비되면 비교 모델 1개(voyage-4 또는 text-embedding-3-lar
 - [Gemini Embedding 2 모델 문서](https://ai.google.dev/gemini-api/docs/models/gemini-embedding-2), [Embeddings 가이드](https://ai.google.dev/gemini-api/docs/embeddings)
 - [Gemini Embedding 2 논문 (arXiv 2605.27295)](https://arxiv.org/html/2605.27295)
 - [Gemini 3.8 Flash 모델 문서](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash), [Gemini API 가격](https://ai.google.dev/gemini-api/docs/pricing)
+- [OpenRouter GPT-5.4 Mini](https://openrouter.ai/openai/gpt-5.4-mini), [OpenRouter Structured Outputs](https://openrouter.ai/docs/guides/features/structured-outputs)
 - [Voyage 4 model family](https://blog.voyageai.com/2026/01/15/voyage-4/)
 - [Embedding Model Pricing (TokenCost, 2026.7)](https://tokencost.app/embeddings)
 - [Embedding Model Selection Guide – Korean benchmarks](https://www.data-dynamics.io/en/blog/embedding-model-guide)
