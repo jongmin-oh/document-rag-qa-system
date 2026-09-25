@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from google import genai
 from pydantic import BaseModel, Field
 
-from app.config import GeminiConfig
+from app.config import SEED, GeminiConfig
 from app.tasks.index.build import body, client
 from app.tasks.qa.search import embed_query, rank, rewrite_with_version
 
@@ -83,6 +83,7 @@ def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
         config={
             "system_instruction": SYSTEM,
             "temperature": 0,
+            "seed": SEED,
             "thinking_config": {"thinking_level": "low"},
             "response_mime_type": "application/json",
             "response_schema": Generated,

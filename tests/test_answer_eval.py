@@ -2,7 +2,7 @@
 
 from types import SimpleNamespace
 
-from app.config import OpenRouterConfig
+from app.config import SEED, OpenRouterConfig
 from app.tasks.eval.answer import JudgeResult, deterministic, judge, summarize, trace_from_row
 from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers, clean_answer
 
@@ -169,6 +169,7 @@ def test_openrouter_judge_uses_strict_structured_output():
     assert result.model_version == "openai/gpt-5.4-mini-actual"
     assert completions.kwargs["model"] == OpenRouterConfig.JUDGE_MODEL
     assert "temperature" not in completions.kwargs
+    assert completions.kwargs["seed"] == SEED
     assert completions.kwargs["response_format"]["json_schema"]["strict"] is True
     assert completions.kwargs["extra_body"]["provider"]["require_parameters"] is True
 

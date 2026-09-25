@@ -14,7 +14,7 @@ from functools import lru_cache
 
 from google import genai
 
-from app.config import GeminiConfig
+from app.config import SEED, GeminiConfig
 from app.tasks.index.build import body, embed, load_chunks, load_index
 
 BM25_K1, BM25_B = 1.2, 0.75
@@ -65,7 +65,7 @@ def rewrite_with_version(client: genai.Client, question: str) -> tuple[str, str]
     res = client.models.generate_content(
         model=GeminiConfig.LLM_MODEL,
         contents=REWRITE.format(question=question),
-        config={"temperature": 0, "thinking_config": {"thinking_level": "low"}},
+        config={"temperature": 0, "seed": SEED, "thinking_config": {"thinking_level": "low"}},
     )
     return res.text.strip(), res.model_version
 

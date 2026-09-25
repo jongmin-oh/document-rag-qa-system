@@ -13,6 +13,9 @@ class Paths:
 
 load_dotenv(Paths.ENV_PATH)
 
+# 질의 재작성·답변 생성·Judge 호출에 공통으로 넘긴다. 제공사가 결정론을 보장하지는 않는다.
+SEED = 42
+
 
 @dataclass
 class GeminiConfig:

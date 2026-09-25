@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
-from app.config import GeminiConfig, OpenRouterConfig
+from app.config import SEED, GeminiConfig, OpenRouterConfig
 from app.tasks.eval.retrieval import REPORTS, score
 from app.tasks.index.build import OUT, body, client, load_chunks, load_meta
 from app.tasks.qa.ask import AskResponse, AskTrace, ask_with_trace, citation_numbers, pages
@@ -96,6 +96,7 @@ answerable={str(trace.response.answerable).lower()}
     response = client.chat.completions.create(
         model=OpenRouterConfig.JUDGE_MODEL,
         messages=[{"role": "system", "content": JUDGE_SYSTEM}, {"role": "user", "content": prompt}],
+        seed=SEED,
         response_format={
             "type": "json_schema",
             "json_schema": {"name": "judge_result", "strict": True, "schema": JudgeResult.model_json_schema()},
@@ -210,7 +211,7 @@ def evaluate() -> dict:
             "index_sha256": sha256(OUT / "embeddings.f32"),
             "answer_temperature": 0,
             "judge_temperature": None,
-            "seed": None,
+            "seed": SEED,
         },
         "summary": summarize(rows),
         "items": rows,
@@ -273,7 +274,7 @@ def report(result: dict) -> str:
         "",
         f"- 답변 실행: {meta['run_at']} / 커밋 `{meta['git_commit']}` / dirty `{str(meta['git_dirty']).lower()}`",
         f"- 문항: {summary['n_items']}개 / 답변 temperature {meta['answer_temperature']} / "
-        f"Judge temperature {judge_temperature_label}",
+        f"Judge temperature {judge_temperature_label} / seed {meta['seed']}",
         f"- 답변 모델: `{meta['answer_model']}` / Judge: OpenRouter `{meta['judge_model']}`",
         "- 결정론적 지표: answerability, citation 형식, Gold 근거 좌표와 인용 청크의 일치",
         "- 의미 지표: 참고 정답과 실제 인용 문맥을 이용한 0–4점 LLM Judge",

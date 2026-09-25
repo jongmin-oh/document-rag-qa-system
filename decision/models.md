@@ -38,7 +38,7 @@ Gold Set이 준비되면 비교 모델 1개(voyage-4 또는 text-embedding-3-lar
 - 모델 ID `gemini-3.8-flash`, 2026년 9월 GA. 입력 1,048,576 토큰, 출력 65,536 토큰.
 - 가격(유료 등급, 1M 토큰): 입력 $0.75, 출력 $3.75 (2026년 12월 31일까지. 2027년부터 각각 $1.50, $7.50).
 - Flash급을 고른 이유: 답변은 검색된 청크 몇 개만 근거로 하므로 최상위 모델이 필요하지 않고, Gold Set 전체를 반복 평가하는 비용과 속도가 중요하다.
-- 재현성: temperature 0으로 고정하고, 응답의 `model_version`을 평가 리포트에 기록한다. thinking은 `low`/`medium`/`high`만 지원한다(`minimal` 불가).
+- 재현성: temperature 0과 seed 42로 고정하고, 응답의 `model_version`을 평가 리포트에 기록한다. thinking은 `low`/`medium`/`high`만 지원한다(`minimal` 불가).
 
 ## 3. 주의할 점
 
