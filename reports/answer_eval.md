@@ -1,6 +1,6 @@
 # End-to-end 답변 평가 리포트
 
-- 실행: 2026-09-25T08:55:21+00:00 / 커밋 `7042fd1` / dirty `false`
+- 실행: 2026-09-25T08:55:21+00:00 / 커밋 `20931ac` / dirty `false`
 - 문항: 41개 / 생성·Judge temperature 0
 - 답변·Judge 모델: `gemini-3.8-flash` / 같은 모델 Judge 사용(한계는 `decision/evaluation.md`)
 - 결정론적 지표: answerability, citation 형식, Gold 근거 좌표와 인용 청크의 일치
