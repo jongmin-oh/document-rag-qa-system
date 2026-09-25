@@ -33,6 +33,7 @@ JUDGE_SYSTEM = """당신은 문서 기반 질의응답 시스템의 엄격한 �
 - completeness: 질문에서 답할 수 있는 핵심 항목을 빠짐없이 다룬 정도.
 - faithfulness: 생성 답변의 검증 가능한 주장이 실제 인용 자료로 뒷받침되는 정도.
 - partial_handling: Gold answerability가 partial일 때, 답할 수 없는 부분을 자료에 없다고 밝히고 추측하지 않은 정도. partial이 아니면 -1.
+- clarity: 법령을 모르는 일반인이 한 번 읽고 자기 질문의 답을 이해할 수 있는 정도. 질문에 대한 결론이 앞부분에 있는지, 법률 용어를 풀어 쓰는지, 질문과 관계없는 규정 나열 없이 문장이 짧고 명확한지를 봅니다. 내용의 정확성은 다른 항목에서 평가하므로 여기서는 전달 방식만 평가합니다. 거부 답변은 이유와 다음 행동이 명확한지로 평가합니다.
 
 answerability가 none이면 올바른 결과는 답변을 거부하고 정보가 없다고 밝히는 것입니다.
 짧고 구체적인 reason을 쓰고, unsupported_claims와 missing_points에는 생성 답변의 문구를 그대로 길게 복사하지 말고 요약해 적으세요."""
@@ -43,6 +44,7 @@ class JudgeResult(BaseModel):
     completeness: int = Field(ge=0, le=4)
     faithfulness: int = Field(ge=0, le=4)
     partial_handling: int = Field(ge=-1, le=4)
+    clarity: int = Field(ge=0, le=4)
     unsupported_claims: list[str]
     missing_points: list[str]
     reason: str
@@ -152,6 +154,7 @@ def summarize(rows: list[dict]) -> dict:
         "completeness": avg([r["judge"]["completeness"] for r in rows]),
         "faithfulness": avg([r["judge"]["faithfulness"] for r in rows]),
         "partial_handling": avg([r["judge"]["partial_handling"] for r in partial]),
+        "clarity": avg([r["judge"]["clarity"] for r in rows]),
         "refused": sum(not r["response"]["answerable"] for r in none),
         "n_none": len(none),
     }
@@ -304,11 +307,12 @@ def report(result: dict) -> str:
         f"| 답변(0–4) | Completeness | {summary['completeness']:.3f} |",
         f"| 답변(0–4) | Faithfulness | {summary['faithfulness']:.3f} |",
         f"| 답변(0–4) | Partial handling | {summary['partial_handling']:.3f} |",
+        f"| 답변(0–4) | Clarity | {summary['clarity']:.3f} |",
         "",
         "## 그룹별",
         "",
-        "| 그룹 | 문항 | Answerability | Citation integrity | Correctness | Completeness | Faithfulness |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        "| 그룹 | 문항 | Answerability | Citation integrity | Correctness | Completeness | Faithfulness | Clarity |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for field in ("question_type", "answerability"):
         for value in sorted({r[field] for r in rows}):
@@ -316,14 +320,14 @@ def report(result: dict) -> str:
             lines.append(
                 f"| {value} | {group['n_items']} | {group['answerability_accuracy']:.3f} | "
                 f"{group['citation_integrity']:.3f} | {group['correctness']:.2f} | "
-                f"{group['completeness']:.2f} | {group['faithfulness']:.2f} |"
+                f"{group['completeness']:.2f} | {group['faithfulness']:.2f} | {group['clarity']:.2f} |"
             )
     lines += [
         "",
         "## 문항별",
         "",
-        "| id | Gold | 예측 | Citation | Evidence recall | 정답성 | 충실성 |",
-        "|---|---|---|---:|---:|---:|---:|",
+        "| id | Gold | 예측 | Citation | Evidence recall | 정답성 | 완전성 | 충실성 | 이해 용이성 |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|",
     ]
     for row in rows:
         deterministic_result = row["deterministic"]
@@ -334,7 +338,7 @@ def report(result: dict) -> str:
             f"{'answer' if row['response']['answerable'] else 'refuse'} | "
             f"{int(deterministic_result['citation_integrity'])} | "
             f"{evidence_recall} | "
-            f"{row['judge']['correctness']} | {row['judge']['faithfulness']} |"
+            f"{row['judge']['correctness']} | {row['judge']['completeness']} | {row['judge']['faithfulness']} | {row['judge']['clarity']} |"
         )
     return "\n".join(lines) + "\n"
 

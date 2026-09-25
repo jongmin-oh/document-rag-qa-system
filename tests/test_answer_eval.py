@@ -116,7 +116,7 @@ def test_unanswerable_refusal_has_no_citation():
 
 
 def test_summary_reports_false_answers_and_raw_refusal_count():
-    base_judge = {"correctness": 4, "completeness": 4, "faithfulness": 4, "partial_handling": -1}
+    base_judge = {"correctness": 4, "completeness": 4, "faithfulness": 4, "partial_handling": -1, "clarity": 4}
     rows = [
         {
             "answerability": "none",
@@ -151,6 +151,7 @@ def test_openrouter_judge_uses_strict_structured_output():
                 completeness=4,
                 faithfulness=4,
                 partial_handling=-1,
+                clarity=4,
                 unsupported_claims=[],
                 missing_points=[],
                 reason="근거와 일치",
