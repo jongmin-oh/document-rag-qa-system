@@ -53,5 +53,6 @@ pip install -r requirements.txt
 python -m app.tasks.ingest.build           # Markdown → canonical text, 청크
 python -m app.tasks.index.build            # 청크 → Gemini Embedding 2 벡터 (조건 C)
 python -m app.tasks.qa.ask "구직급여 하루 상한액은 얼마인가요?"
+python -m app.tasks.gold.build             # Gold Set 인용문 → 근거 좌표 (decision/gold_set.md)
 pytest tests
 ```
