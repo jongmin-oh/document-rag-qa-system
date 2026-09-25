@@ -181,13 +181,13 @@ def merge(spans: list[Span], text: str) -> list[Span]:
     return out
 
 
+def page_at(pages: list[tuple[int, int]], pos: int) -> int:
+    """load_markdown의 (시작 위치, 쪽) 목록에서 pos가 속한 인쇄 쪽."""
+    return pages[bisect.bisect_right([p for p, _ in pages], pos) - 1][1]
+
+
 def chunk_markdown(md: str, doc_id: str, doc_title: str, as_of: str, id_prefix: str) -> tuple[str, list[Chunk]]:
     text, pages = load_markdown(md)
-    starts = [p for p, _ in pages]
-
-    def page_at(pos: int) -> int:
-        return pages[bisect.bisect_right(starts, pos) - 1][1]
-
     root = build_tree(split_blocks(text))
     spans = merge(split_node(root, text, []), text)
     chunks = []
@@ -205,8 +205,8 @@ def chunk_markdown(md: str, doc_id: str, doc_title: str, as_of: str, id_prefix: 
                 title_prefix=f"[{doc_title} | {as_of} 기준] " + " > ".join(s.path),
                 char_start=s.start,
                 char_end=s.end,
-                page_start=page_at(s.start),
-                page_end=page_at(s.end - 1),
+                page_start=page_at(pages, s.start),
+                page_end=page_at(pages, s.end - 1),
                 n_chars=size(body),
                 cited_laws=cited_laws(body),
                 as_of=as_of,
