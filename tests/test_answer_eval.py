@@ -3,7 +3,7 @@
 from types import SimpleNamespace
 
 from app.config import OpenRouterConfig
-from app.tasks.eval.answer import JudgeResult, deterministic, judge, summarize
+from app.tasks.eval.answer import JudgeResult, deterministic, judge, summarize, trace_from_row
 from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers, clean_answer
 
 
@@ -170,3 +170,19 @@ def test_openrouter_judge_uses_strict_structured_output():
     assert completions.kwargs["model"] == OpenRouterConfig.JUDGE_MODEL
     assert completions.kwargs["response_format"]["json_schema"]["strict"] is True
     assert completions.kwargs["extra_body"]["provider"]["require_parameters"] is True
+
+
+def test_trace_from_saved_row_restores_cited_chunks():
+    original = trace(answer="근거 [2, 1]", citations=(2, 1))
+    row = {
+        "rewritten_query": original.rewritten_query,
+        "top": [chunk["chunk_id"] for _, chunk in original.hits],
+        "annotated_answer": original.annotated_answer,
+        "response": original.response.model_dump(),
+    }
+    chunks = {chunk["chunk_id"]: chunk for _, chunk in original.hits}
+    restored = trace_from_row(row, chunks)
+
+    assert restored.annotated_answer == "근거 [2, 1]"
+    assert [c.n for c in restored.response.citations] == [2, 1]
+    assert restored.hits[1][0] == original.response.citations[0].score

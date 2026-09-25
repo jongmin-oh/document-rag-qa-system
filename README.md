@@ -59,6 +59,7 @@ python main.py                             # API 서버 (http://127.0.0.1:8000/d
 python -m app.tasks.gold.build             # Gold Set 인용문 → 근거 좌표 (decision/gold_set.md)
 python -m app.tasks.eval.retrieval         # 검색 평가 → reports/retrieval.md
 python -m app.tasks.eval.answer            # 답변·거부·인용 평가 → reports/answer_eval.md
+python -m app.tasks.eval.answer --judge-only  # 저장된 동일 답변을 OpenRouter GPT Judge로 재채점
 pytest tests
 ```
 

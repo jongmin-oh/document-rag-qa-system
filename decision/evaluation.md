@@ -7,6 +7,8 @@
 
 `python -m app.tasks.eval.answer`는 Gold Set 41문항 전체에 실제 운영 경로인 질의 재작성 → 하이브리드 검색 →
 답변 생성을 적용한다. API에는 노출하지 않는 trace에 재작성 질의, top-5 청크, 실제 인용 청크와 모델 버전을 남긴다.
+Judge 모델만 비교할 때는 `python -m app.tasks.eval.answer --judge-only`로 저장된 동일 답변을 재채점한다. 답변까지 다시
+생성해 Gemini 출력 변동을 Judge 차이로 잘못 해석하는 것을 막고 OpenRouter 호출도 41회로 줄인다.
 
 ## 2. 결정론적 지표
 
