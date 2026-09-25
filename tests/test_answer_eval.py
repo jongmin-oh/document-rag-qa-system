@@ -1,7 +1,9 @@
 """End-to-end 답변 평가의 결정론적 지표 테스트."""
 
+from types import SimpleNamespace
+
 from app.tasks.eval.answer import deterministic, summarize
-from app.tasks.qa.ask import AskResponse, AskTrace, Citation
+from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers
 
 
 def item(answerability="full", evidence=True):
@@ -74,6 +76,19 @@ def test_answer_and_citation_match_gold_evidence():
 def test_inline_and_response_citations_must_match():
     result = deterministic(item(), trace(answer="잘못된 번호 [2]", citations=(1,)))
     assert not result["citation_integrity"]
+
+
+def test_citation_numbers_supports_single_and_grouped_notation():
+    assert citation_numbers("첫 주장 [1], 다음 주장 [2, 4], 다시 [1]") == [1, 2, 4]
+
+
+def test_api_citations_are_derived_from_answer_text():
+    generated = SimpleNamespace(
+        parsed=Generated(answerable=True, answer="근거 [2, 1]"),
+        model_version="test-model",
+    )
+    response = build_response(generated, trace().hits)
+    assert [c.n for c in response.citations] == [2, 1]
 
 
 def test_answer_needs_inline_citation_even_if_response_lists_one():

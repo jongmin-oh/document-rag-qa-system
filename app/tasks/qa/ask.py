@@ -4,6 +4,7 @@
 먼저 python -m app.tasks.index.build 로 인덱스를 만들어야 한다.
 """
 
+import re
 import sys
 from dataclasses import dataclass
 
@@ -15,6 +16,7 @@ from app.tasks.index.build import body, client
 from app.tasks.qa.search import embed_query, rank, rewrite_with_version
 
 TOP_K = 5
+CITATION_GROUP = re.compile(r"\[((?:\d+\s*,\s*)*\d+)]")
 SYSTEM = """당신은 고용보험 실업급여 안내 도우미입니다. 아래 [자료]만 근거로, 법령을 모르는 사람도 이해할 수 있게 쉬운 한국어로 답하세요.
 - 자료에 답이 전혀 없으면 추측하지 말고 answerable을 false로 하고, answer에는 "제공된 자료에서 찾을 수 없습니다. 고용노동부 고객상담센터(국번 없이 1350)에 문의하세요."라고만 쓰세요.
 - 일부만 답할 수 있으면 answerable을 true로 하고, 답할 수 없는 부분은 자료에 없다고 밝히세요.
@@ -27,7 +29,6 @@ class Generated(BaseModel):
 
     answerable: bool = Field(description="자료로 질문에 답할 수 있으면 true, 자료에 답이 전혀 없으면 false")
     answer: str
-    citations: list[int] = Field(description="answer에 [n]으로 표시한 자료 번호")
 
 
 class Citation(BaseModel):
@@ -60,6 +61,12 @@ def pages(c: dict) -> str:
     return f"{c['page_start']}" + (f"–{c['page_end']}" if c["page_end"] != c["page_start"] else "")
 
 
+def citation_numbers(answer: str) -> list[int]:
+    """본문의 [1]과 [1, 3] 형식에서 번호를 등장 순서대로 중복 없이 뽑는다."""
+    numbers = (int(n.strip()) for group in CITATION_GROUP.findall(answer) for n in group.split(","))
+    return list(dict.fromkeys(numbers))
+
+
 def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
     context = "\n\n".join(f"[{i}] {c['title_prefix']} ({pages(c)}쪽)\n{body(c)}" for i, (_, c) in enumerate(hits, 1))
     return client.models.generate_content(
@@ -77,8 +84,8 @@ def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
 
 def build_response(res, hits: list[tuple[float, dict]]) -> AskResponse:
     out: Generated = res.parsed
-    # 검색된 자료에 없는 번호는 버리고, 응답 불가면 인용하지 않는다.
-    cited = [n for n in dict.fromkeys(out.citations) if 1 <= n <= len(hits)] if out.answerable else []
+    # 본문을 인용 번호의 단일 기준으로 삼고, 검색된 자료에 없는 번호는 버린다.
+    cited = [n for n in citation_numbers(out.answer) if 1 <= n <= len(hits)] if out.answerable else []
     return AskResponse(
         answerable=out.answerable,
         answer=out.answer,

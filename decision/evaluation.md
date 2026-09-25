@@ -14,7 +14,7 @@
 |---|---|---|
 | Answerability accuracy | `full`·`partial`은 답변, `none`은 거부했는지 | partial 답변의 내용 품질은 알 수 없음 |
 | Refusal recall / False answer rate | `none`을 거부한 비율 / 잘못 답한 비율 | none이 5개라 원시 개수도 함께 봐야 함 |
-| Citation integrity | 본문 `[n]`과 응답 citation 목록이 같고 top-5 안의 번호인지 | 인용이 주장을 지지하는지는 판단하지 않음 |
+| Citation integrity | 본문 `[n]`·`[n, m]`이 유효한 top-5 번호인지 | 인용이 주장을 지지하는지는 판단하지 않음 |
 | Citation presence | 답변에는 인용이 있고 거부에는 인용이 없는지 | 인용의 품질은 판단하지 않음 |
 | Gold evidence recall·precision·coverage | 실제 인용 청크와 Gold 근거 문자 구간의 겹침 | Gold에 등록하지 않은 정당한 대체 근거를 낮게 평가할 수 있음 |
 
@@ -28,6 +28,15 @@ LLM Judge가 질문, Gold answerability, 참고 정답, Gold 근거, 생성 답�
 - Partial handling: `partial` 문항에서 자료 밖 부분을 밝히고 추측하지 않았는가
 
 Judge 입력에 검색됐지만 인용하지 않은 청크는 넣지 않는다. 그래야 인용하지 않은 자료로 답변을 사후 정당화하지 않는다.
+
+API의 citation 객체는 LLM이 별도 목록으로 중복 생성하지 않는다. 서버가 최종 답변 본문의 `[n]`·`[n, m]`을 파싱해
+top-5 검색 결과와 연결한다. 따라서 본문이 인용 번호의 단일 기준이며, integrity는 잘못된 범위의 번호나 malformed 표기를
+검출하는 방어 지표다.
+
+최초 평가 커밋 `4a6b284`는 단일 표기 `[n]`만 읽는 평가기 정규식 때문에 Citation integrity를 0.561로 잘못 기록했다.
+원시 응답에는 `[1, 3]` 같은 묶음 표기가 있었으며 이를 올바르게 파싱하면 최초 실행도 41/41(1.000)이었다. 따라서 이후
+리포트와 최초 리포트의 integrity 차이는 모델 품질 개선으로 해석하지 않는다. 이 수정에서 묶음 표기를 지원하는 공용 파서를
+추가하고, LLM이 본문과 citation 배열을 중복 생성하던 잠재 오류원도 함께 제거했다.
 
 ## 4. 근거와 한계
 
