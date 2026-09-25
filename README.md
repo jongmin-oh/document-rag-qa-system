@@ -51,7 +51,7 @@ GEMINI:
 ```bash
 pip install -r requirements.txt
 python -m app.tasks.ingest.build           # Markdown → canonical text, 청크
-python -m app.tasks.index.build            # 청크 → Gemini Embedding 2 벡터 (검색은 임베딩 + BM25 하이브리드)
+python -m app.tasks.index.build            # 청크 → Gemini Embedding 2 벡터 (검색은 LLM 질의 재작성 → 임베딩 + BM25 하이브리드)
 python -m app.tasks.qa.ask "구직급여 하루 상한액은 얼마인가요?"   # CLI
 python main.py                             # API 서버 (http://127.0.0.1:8000/docs)
 python -m app.tasks.gold.build             # Gold Set 인용문 → 근거 좌표 (decision/gold_set.md)
