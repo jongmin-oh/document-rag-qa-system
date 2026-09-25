@@ -11,6 +11,7 @@ Judge가 채점한다. 자동 Judge 결과는 사람 평가의 대체물이 아�
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -111,6 +112,33 @@ answerable={str(trace.response.answerable).lower()}
     return JudgeResponse(JudgeResult.model_validate_json(content), response.model)
 
 
+LEGAL_TERMS = ("수급자격자", "피보험", "「")  # 법조문식 표현의 대표 신호
+COPY_NGRAM = 12
+
+
+def readability(trace: AskTrace) -> dict | None:
+    """사용자용 답변의 가독성 신호. 거부 답변은 고정 문구라 제외한다."""
+    if not trace.response.answerable:
+        return None
+    answer = trace.response.answer
+    sentences = [s for s in re.split(r"(?<=[.!?])\s+", answer.strip()) if s]
+    # 인용 자료와 공백 제외 COPY_NGRAM자 이상 연속으로 같은 부분을 원문 복사로 본다.
+    source = re.sub(r"\s+", "", "".join(body(trace.hits[c.n - 1][1]) for c in trace.response.citations))
+    text = re.sub(r"\s+", "", answer)
+    grams = {source[i : i + COPY_NGRAM] for i in range(len(source) - COPY_NGRAM + 1)}
+    copied = [False] * len(text)
+    for i in range(len(text) - COPY_NGRAM + 1):
+        if text[i : i + COPY_NGRAM] in grams:
+            copied[i : i + COPY_NGRAM] = [True] * COPY_NGRAM
+    return {
+        "length": len(answer),
+        "sentence_length": sum(map(len, sentences)) / len(sentences),
+        "long_sentence_ratio": sum(len(s) > 80 for s in sentences) / len(sentences),
+        "copy_rate": sum(copied) / len(text),
+        "legal_terms": sum(answer.count(t) for t in LEGAL_TERMS),
+    }
+
+
 def deterministic(item: dict, trace: AskTrace) -> dict:
     expected_answerable = item["answerability"] != "none"
     inline = set(citation_numbers(trace.annotated_answer))
@@ -127,6 +155,7 @@ def deterministic(item: dict, trace: AskTrace) -> dict:
         "inline_citations": sorted(inline),
         "returned_citations": sorted(returned),
         "evidence": evidence,
+        "readability": readability(trace),
     }
 
 
@@ -139,6 +168,7 @@ def summarize(rows: list[dict]) -> dict:
     none = [r for r in rows if r["answerability"] == "none"]
     partial = [r for r in rows if r["answerability"] == "partial"]
     evidence = [r["deterministic"]["evidence"] for r in answerable if r["deterministic"]["evidence"]]
+    readable = [r["deterministic"]["readability"] for r in rows if r["deterministic"]["readability"]]
     return {
         "n_items": len(rows),
         "answerability_accuracy": avg([r["deterministic"]["answerability_correct"] for r in rows]),
@@ -155,6 +185,11 @@ def summarize(rows: list[dict]) -> dict:
         "faithfulness": avg([r["judge"]["faithfulness"] for r in rows]),
         "partial_handling": avg([r["judge"]["partial_handling"] for r in partial]),
         "clarity": avg([r["judge"]["clarity"] for r in rows]),
+        "answer_length": avg([s["length"] for s in readable]),
+        "sentence_length": avg([s["sentence_length"] for s in readable]),
+        "long_sentence_ratio": avg([s["long_sentence_ratio"] for s in readable]),
+        "copy_rate": avg([s["copy_rate"] for s in readable]),
+        "legal_terms": avg([s["legal_terms"] for s in readable]),
         "refused": sum(not r["response"]["answerable"] for r in none),
         "n_none": len(none),
     }
@@ -235,13 +270,15 @@ def trace_from_row(row: dict, chunks: dict[str, dict]) -> AskTrace:
 
 
 def rejudge(result: dict) -> dict:
-    """저장된 동일 답변을 유지하고 Judge 결과만 새 모델로 교체한다."""
+    """저장된 동일 답변을 유지하고 Judge 결과와 결정론 지표를 현재 코드로 다시 계산한다."""
     evaluator = judge_client()
     items = {item["id"]: item for item in (json.loads(line) for line in open(OUT / "gold_set.jsonl", encoding="utf-8"))}
     chunks = {chunk["chunk_id"]: chunk for chunk in load_chunks()}
     versions = set()
     for n, row in enumerate(result["items"], 1):
-        judged = judge(evaluator, items[row["id"]], trace_from_row(row, chunks))
+        trace = trace_from_row(row, chunks)
+        judged = judge(evaluator, items[row["id"]], trace)
+        row["deterministic"] = deterministic(items[row["id"]], trace)
         row["judge"] = judged.parsed.model_dump()
         versions.add(judged.model_version)
         print(f"\r{n}/{len(result['items'])}", end="", flush=True)
@@ -308,6 +345,11 @@ def report(result: dict) -> str:
         f"| 답변(0–4) | Faithfulness | {summary['faithfulness']:.3f} |",
         f"| 답변(0–4) | Partial handling | {summary['partial_handling']:.3f} |",
         f"| 답변(0–4) | Clarity | {summary['clarity']:.3f} |",
+        f"| 가독성 | 평균 답변 길이(자) | {summary['answer_length']:.0f} |",
+        f"| 가독성 | 평균 문장 길이(자) | {summary['sentence_length']:.0f} |",
+        f"| 가독성 | 80자 초과 문장 비율 | {summary['long_sentence_ratio']:.3f} |",
+        f"| 가독성 | 인용 자료 원문 복사율 | {summary['copy_rate']:.3f} |",
+        f"| 가독성 | 법조문식 표현 수(답변당) | {summary['legal_terms']:.2f} |",
         "",
         "## 그룹별",
         "",

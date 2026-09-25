@@ -3,7 +3,7 @@
 from types import SimpleNamespace
 
 from app.config import SEED, OpenRouterConfig
-from app.tasks.eval.answer import JudgeResult, deterministic, judge, summarize, trace_from_row
+from app.tasks.eval.answer import JudgeResult, deterministic, judge, readability, summarize, trace_from_row
 from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers, clean_answer
 
 
@@ -189,3 +189,14 @@ def test_trace_from_saved_row_restores_cited_chunks():
     assert restored.annotated_answer == "근거 [2, 1]"
     assert [c.n for c in restored.response.citations] == [2, 1]
     assert restored.hits[1][0] == original.response.citations[0].score
+
+
+def test_readability_measures_length_copying_and_legal_terms():
+    copied = trace(answer="근거 있는 답입니다. 수급자격자는 짧습니다.")
+    copied.hits[0][1]["text"] = "근거 있는 답입니다. 수급자격자는"
+    result = readability(copied)
+    assert result["length"] == len("근거 있는 답입니다. 수급자격자는 짧습니다.")
+    assert result["sentence_length"] == (len("근거 있는 답입니다.") + len("수급자격자는 짧습니다.")) / 2
+    assert result["legal_terms"] == 1
+    assert 0.5 < result["copy_rate"] < 1
+    assert readability(trace(answer="거부", answerable=False, citations=())) is None
