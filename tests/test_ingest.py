@@ -5,7 +5,7 @@ import re
 import pytest
 
 from app.tasks.ingest.build import DATA, build
-from app.tasks.ingest.chunker import HEADING, SOFT_LIMIT
+from app.tasks.ingest.chunker import HEADING, SOFT_LIMIT, load_markdown
 from app.tasks.ingest.laws import cited_laws
 
 EL = "easylaw_unemployment_benefit"
@@ -121,3 +121,15 @@ def test_single_contact_chunk(built):
 )
 def test_cited_laws(text, expected):
     assert cited_laws(text) == expected
+
+
+# --- 조건 A 고정 길이 청크
+def test_fixed_chunks_partition_canonical_text():
+    from app.tasks.ingest.build import build_fixed
+
+    fixed = build_fixed(654)
+    for doc_id in (EL, BK):
+        text = md(doc_id)
+        cs = [c for c in fixed if c.doc_id == doc_id]
+        assert "".join(c.text for c in cs) == load_markdown(text)[0]  # 빈틈·겹침 없음
+        assert all(c.n_chars >= 654 for c in cs[:-1])  # 마지막 조각만 짧을 수 있다

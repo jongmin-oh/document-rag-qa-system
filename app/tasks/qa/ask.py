@@ -10,7 +10,8 @@ from google import genai
 from pydantic import BaseModel, Field
 
 from app.config import GeminiConfig
-from app.tasks.index.build import body, client, embed, load_chunks, load_index
+from app.tasks.index.build import body, client
+from app.tasks.qa.search import SERVICE, embed_query, rank
 
 TOP_K = 5
 SYSTEM = """당신은 고용보험 실업급여 안내 도우미입니다. 아래 [자료]만 근거로, 법령을 모르는 사람도 이해할 수 있게 쉬운 한국어로 답하세요.
@@ -34,7 +35,7 @@ class Citation(BaseModel):
     source: str  # "[문서 | 기준일] 제목 > 경로"
     page_start: int  # 인쇄 쪽
     page_end: int
-    score: float  # 질문과의 코사인 유사도
+    score: float  # 검색 점수 (dense: 코사인 유사도, hybrid: RRF 점수)
 
 
 class AskResponse(BaseModel):
@@ -49,13 +50,7 @@ def pages(c: dict) -> str:
 
 
 def search(client: genai.Client, question: str, k: int = TOP_K) -> list[tuple[float, dict]]:
-    chunks = {c["chunk_id"]: c for c in load_chunks()}
-    ids, vectors = load_index()
-    # decision/models.md: 질의는 이 접두어로 문서와 구분한다.
-    q = embed(client, f"task: search result | query: {question}")
-    # ponytail: 벡터 120개 전수 비교(정규화했으므로 내적 = 코사인). 청크가 수만 개로 늘면 벡터 DB로 바꾼다.
-    scored = sorted(((sum(a * b for a, b in zip(q, v)), ids[i]) for i, v in enumerate(vectors)), reverse=True)
-    return [(score, chunks[cid]) for score, cid in scored[:k]]
+    return rank(embed_query(client, question), question, SERVICE, k)
 
 
 def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):

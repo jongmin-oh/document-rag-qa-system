@@ -5,6 +5,7 @@
 출력: app/data/processed/
   - {doc_id}.canonical.txt   Gold 근거 좌표의 기준 텍스트 (Markdown에서 주석 줄 제거)
   - chunks.structure.jsonl   구조 기반 청크 (조건 B/C 공용, C는 title_prefix 사용)
+  - chunks.fixed.jsonl       고정 길이 청크 (조건 A, 구조 기반 청크의 평균 크기로 자름)
   - chunk_report.md          사람 검수용 청크 목록·분포
 """
 
@@ -12,7 +13,7 @@ import json
 import statistics
 from pathlib import Path
 
-from app.tasks.ingest.chunker import chunk_markdown, to_dict
+from app.tasks.ingest.chunker import chunk_fixed, chunk_markdown, to_dict
 
 DATA = Path(__file__).resolve().parents[2] / "data"
 OUT = DATA / "processed"
@@ -32,17 +33,34 @@ def build() -> dict:
     return result
 
 
+def build_fixed(target: int) -> list:
+    """조건 A 청크. target은 구조 기반 청크의 평균 크기(공백 제외 글자 수)로, 크기 차이가 결과에 섞이지 않게 한다."""
+    sources = {s["id"]: s for s in json.loads((DATA / "sources.json").read_text(encoding="utf-8"))}
+    chunks = []
+    for doc_id, title, prefix in DOCS:
+        md = (DATA / "markdown" / f"{doc_id}.md").read_text(encoding="utf-8")
+        chunks += chunk_fixed(md, doc_id, title, sources[doc_id]["as_of"], f"{prefix}F", target)
+    return chunks
+
+
+def write_jsonl(name: str, chunks: list):
+    with open(OUT / name, "w", encoding="utf-8") as f:
+        for c in chunks:
+            f.write(json.dumps(to_dict(c), ensure_ascii=False) + "\n")
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     all_chunks = []
     for doc_id, (canonical, chunks) in build().items():
         (OUT / f"{doc_id}.canonical.txt").write_text(canonical, encoding="utf-8")
         all_chunks.extend(chunks)
-    with open(OUT / "chunks.structure.jsonl", "w", encoding="utf-8") as f:
-        for c in all_chunks:
-            f.write(json.dumps(to_dict(c), ensure_ascii=False) + "\n")
+    write_jsonl("chunks.structure.jsonl", all_chunks)
     write_report(all_chunks)
-    print(f"{len(all_chunks)} chunks → {OUT}")
+    target = round(statistics.mean(c.n_chars for c in all_chunks))
+    fixed = build_fixed(target)
+    write_jsonl("chunks.fixed.jsonl", fixed)
+    print(f"{len(all_chunks)} structure chunks, {len(fixed)} fixed chunks (공백 제외 {target}자) → {OUT}")
 
 
 def write_report(chunks):
