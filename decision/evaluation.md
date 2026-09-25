@@ -61,6 +61,6 @@ Judge와의 불일치를 기록해야 한다. 문항 수가 41개이고 none은 
 ## 5. 재현성
 
 JSON 리포트에 코드 커밋과 dirty 상태, 설정 모델과 실제 응답 모델 버전, Judge 프롬프트 해시, 임베딩 모델·차원과 인덱스
-해시, temperature와 seed를 기록한다. 재작성·답변·Judge 호출에는 모두 seed 42(`app/config.py`의 `SEED`)를 넘긴다. seed 지정 후
-검색 평가 2회의 재작성 질의가 36문항 모두 같았다. Judge temperature는 요청 호환성 문제로 지정하지 않는다. Gemini·OpenRouter는
+해시, temperature와 seed를 기록한다. 재작성·답변·Judge 호출에는 모두 seed 42(`app/config.py`의 `SEED`)를 넘긴다. seed 없이는
+실행마다 재작성 질의가 모두 달랐지만, seed 지정 후 검색 평가 3회에서는 36문항 중 35~36개가 같았다. Judge temperature는 요청 호환성 문제로 지정하지 않는다. Gemini·OpenRouter는
 seed의 결정론을 보장하지 않으므로 모델 갱신 등으로 결과가 바뀔 수 있다.
