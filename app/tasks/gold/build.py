@@ -21,6 +21,7 @@ from app.tasks.ingest.chunker import load_markdown, page_at
 
 GOLD = DATA / "gold" / "gold_set.yaml"
 ANSWERABILITY = {"full", "partial", "none"}  # 문서로 전부 답함 | 일부만 답함 | 답할 수 없음(거부해야 함)
+QUESTION_TYPES = {"factoid", "procedural", "multi_hop", "summary", "unanswerable"}
 GAP = " ... "
 
 
@@ -73,8 +74,12 @@ def build() -> list[dict]:
         try:
             if item["answerability"] not in ANSWERABILITY:
                 raise ValueError(f"answerability는 {sorted(ANSWERABILITY)} 중 하나")
+            if item["question_type"] not in QUESTION_TYPES:
+                raise ValueError(f"question_type은 {sorted(QUESTION_TYPES)} 중 하나")
             if (item["answerability"] == "none") != (not item["evidence"]):
                 raise ValueError("답할 수 없는(none) 문항만 근거가 비어 있어야 함")
+            if (item["answerability"] == "none") != (item["question_type"] == "unanswerable"):
+                raise ValueError("answerability none과 question_type unanswerable은 함께 써야 함")
             item["evidence"] = [
                 {**resolve(ev, docs), "alt": [resolve(a, docs) for a in ev.get("alt", [])]} for ev in item["evidence"]
             ]
@@ -88,8 +93,9 @@ def main():
     with open(OUT / "gold_set.jsonl", "w", encoding="utf-8") as f:
         for item in items:
             f.write(json.dumps(item, ensure_ascii=False) + "\n")
-    count = {a: sum(i["answerability"] == a for i in items) for a in sorted(ANSWERABILITY)}
-    print(f"{len(items)} items {count} → {OUT / 'gold_set.jsonl'}")
+    answerability = {a: sum(i["answerability"] == a for i in items) for a in sorted(ANSWERABILITY)}
+    types = {t: sum(i["question_type"] == t for i in items) for t in sorted(QUESTION_TYPES)}
+    print(f"{len(items)} items {answerability} {types} → {OUT / 'gold_set.jsonl'}")
 
 
 if __name__ == "__main__":
