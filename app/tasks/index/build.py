@@ -28,6 +28,8 @@ def body(chunk: dict) -> str:
 
 
 def client() -> genai.Client:
+    if not GeminiConfig.API_KEY:
+        raise ValueError(".env에 GEMINI_API_KEY를 설정하세요")
     # 무료 등급은 분당 요청 한도가 낮아 429를 받으면 지수 백오프로 재시도한다.
     retry = {"attempts": 10, "initial_delay": 5, "max_delay": 60}
     return genai.Client(api_key=GeminiConfig.API_KEY, http_options={"retry_options": retry})

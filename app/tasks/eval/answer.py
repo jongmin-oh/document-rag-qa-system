@@ -56,7 +56,7 @@ class JudgeResponse:
 
 def judge_client() -> OpenAI:
     if not OpenRouterConfig.API_KEY:
-        raise ValueError("app/secrets.yml에 OPENROUTER.API_KEY를 설정하세요")
+        raise ValueError(".env에 OPENROUTER_API_KEY를 설정하세요")
     return OpenAI(
         api_key=OpenRouterConfig.API_KEY,
         base_url=OpenRouterConfig.BASE_URL,
