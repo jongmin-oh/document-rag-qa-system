@@ -34,11 +34,10 @@ When editing existing code:
 - Don't "improve" adjacent code, comments, or formatting.
 - Don't refactor things that aren't broken.
 - Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
+- If you notice unrelated dead code, report it and remove it in a separate, clearly described change (see §5).
 
 When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
+- Remove imports/variables/functions/files that YOUR changes made unused, in the same change.
 
 The test: Every changed line should trace directly to the user's request.
 
@@ -59,6 +58,29 @@ For multi-step tasks, state a brief plan:
 ```
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## 5. No Dead Code, No Legacy (project rule)
+
+**The repository contains only code that the current pipeline runs. This rule overrides §3 where they conflict.**
+
+- Every file, function, and branch must be reachable from a documented entry point
+  (`python -m app.ingest.build`, `python -m app.tools.pdf_to_markdown.export`, `pytest tests`, or a later documented command).
+- When an approach is replaced, delete the old implementation in the same change. Do not keep it "just in case".
+  Git history is the archive.
+- Forbidden: commented-out code, `_old`/`_v2`/`legacy`/`deprecated` files or functions, unused parameters or config flags,
+  compatibility shims, fallback paths for removed behavior, and TODOs without an owner and a reason.
+- Moving or renaming a module updates every import, path, and doc reference in the same change. No re-export aliases.
+- Generated files (`app/data/processed/`) must be regenerated whenever their generator changes; never leave outputs
+  from a previous version.
+- Docs (`README.md`, `decision/*.md`) describe only the current design. A replaced decision is recorded as
+  "what changed and why" in the relevant section, not kept as a parallel description.
+
+Before finishing any change, verify:
+```
+1. pyflakes app tests                      → no unused imports/variables
+2. grep for old module/file names           → no stale references
+3. python -m app.ingest.build && pytest tests → outputs regenerated, tests pass
+```
 
 ---
 
