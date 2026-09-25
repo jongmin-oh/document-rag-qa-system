@@ -1,14 +1,10 @@
 {
  "meta": {
-  "run_at": "2026-09-25T05:18:00+00:00",
-  "git_commit": "5d8e4d4",
+  "run_at": "2026-09-25T05:23:55+00:00",
+  "git_commit": "a0bb8bc",
   "embedding_model": "gemini-embedding-2",
   "embedding_dim": 3072,
-  "n_chunks": {
-   "A": 121,
-   "B": 120,
-   "C": 120
-  },
+  "n_chunks": 120,
   "bm25": {
    "k1": 1.2,
    "b": 0.75,
@@ -18,6926 +14,1734 @@
   "n_items": 36,
   "threshold": 0.8
  },
- "retrievers": {
-  "A": [
-   {
-    "id": "KIN-01",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0030",
-     "ELF-0004",
-     "ELF-0012",
-     "ELF-0048",
-     "BKF-0014",
-     "ELF-0006",
-     "BKF-0027",
-     "BKF-0031",
-     "BKF-0028",
-     "ELF-0049"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.2,
-      "coverage": 0.2780979827089337,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.4265129682997118,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.4265129682997118,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.4365994236311239,
-      "precision": 0.4
-     }
+ "items": [
+  {
+   "id": "KIN-01",
+   "question_type": "multi_hop",
+   "answerability": "full",
+   "top": [
+    "EL-0024",
+    "EL-0003",
+    "BK-0041",
+    "EL-0005",
+    "BK-0020",
+    "EL-0002",
+    "BK-0042",
+    "BK-0044",
+    "EL-0004",
+    "EL-0047"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.2,
+     "coverage": 0.2780979827089337,
+     "precision": 1.0
     },
-    "recall_by_threshold": {
-     "0.5": 0.4,
-     "0.8": 0.4,
-     "1.0": 0.4
+    "3": {
+     "hit": 1.0,
+     "recall": 0.2,
+     "coverage": 0.2780979827089337,
+     "precision": 0.6666666666666666
     },
-    "other_doc_rate": null
+    "5": {
+     "hit": 1.0,
+     "recall": 0.4,
+     "coverage": 0.3919308357348703,
+     "precision": 0.6
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.8,
+     "coverage": 0.6844380403458213,
+     "precision": 0.5
+    }
    },
-   {
-    "id": "KIN-02",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0009",
-     "ELF-0008",
-     "ELF-0006",
-     "ELF-0012",
-     "ELF-0007",
-     "ELF-0058",
-     "ELF-0000",
-     "ELF-0001",
-     "ELF-0010",
-     "ELF-0027"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-03",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0033",
-     "ELF-0030",
-     "BKF-0027",
-     "BKF-0036",
-     "BKF-0014",
-     "ELF-0048",
-     "ELF-0016",
-     "ELF-0000",
-     "ELF-0015",
-     "ELF-0065"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7806324110671937,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-04",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0007",
-     "ELF-0008",
-     "ELF-0006",
-     "ELF-0009",
-     "ELF-0001",
-     "ELF-0058",
-     "ELF-0000",
-     "ELF-0027",
-     "ELF-0010",
-     "BKF-0003"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5114155251141552,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-05",
-    "question_type": "factoid",
-    "top": [
-     "BKF-0009",
-     "BKF-0001",
-     "BKF-0008",
-     "ELF-0017",
-     "BKF-0007",
-     "ELF-0016",
-     "ELF-0020",
-     "BKF-0023",
-     "ELF-0018",
-     "BKF-0017"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.5894736842105263,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.5894736842105263,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-06",
-    "question_type": "multi_hop",
-    "top": [
-     "BKF-0008",
-     "BKF-0017",
-     "ELF-0020",
-     "BKF-0009",
-     "BKF-0023",
-     "ELF-0016",
-     "BKF-0001",
-     "ELF-0017",
-     "BKF-0027",
-     "BKF-0006"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.6547945205479452,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.6547945205479452,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.75,
-     "0.8": 0.75,
-     "1.0": 0.75
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-07",
-    "question_type": "factoid",
-    "top": [
-     "BKF-0031",
-     "ELF-0048",
-     "ELF-0049",
-     "ELF-0050",
-     "BKF-0014",
-     "BKF-0030",
-     "BKF-0032",
-     "BKF-0027",
-     "BKF-0025",
-     "BKF-0015"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-08",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0009",
-     "BKF-0031",
-     "ELF-0001",
-     "ELF-0048",
-     "BKF-0014",
-     "ELF-0012",
-     "ELF-0010",
-     "ELF-0000",
-     "ELF-0007",
-     "BKF-0015"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-09",
-    "question_type": "procedural",
-    "top": [
-     "ELF-0012",
-     "BKF-0036",
-     "BKF-0014",
-     "ELF-0015",
-     "BKF-0021",
-     "BKF-0015",
-     "ELF-0010",
-     "ELF-0001",
-     "BKF-0013",
-     "ELF-0014"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.5450236966824644,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.5450236966824644,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.5450236966824644,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-10",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0030",
-     "ELF-0007",
-     "ELF-0009",
-     "ELF-0010",
-     "ELF-0012",
-     "ELF-0048",
-     "ELF-0055",
-     "ELF-0008",
-     "BKF-0027",
-     "ELF-0000"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.2857142857142857,
-      "coverage": 0.3209366391184573,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.42857142857142855,
-      "coverage": 0.371900826446281,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.42857142857142855,
-      "coverage": 0.371900826446281,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.42857142857142855,
-      "coverage": 0.371900826446281,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.42857142857142855,
-     "0.8": 0.42857142857142855,
-     "1.0": 0.42857142857142855
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-11",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0012",
-     "ELF-0009",
-     "ELF-0010",
-     "ELF-0001",
-     "ELF-0004",
-     "ELF-0003",
-     "ELF-0007",
-     "BKF-0021",
-     "BKF-0014",
-     "ELF-0006"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.25,
-      "coverage": 0.2958257713248639,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.25,
-      "coverage": 0.2958257713248639,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.25,
-      "coverage": 0.2958257713248639,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8003629764065335,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.25,
-     "0.8": 0.25,
-     "1.0": 0.25
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-12",
-    "question_type": "multi_hop",
-    "top": [
-     "BKF-0017",
-     "BKF-0009",
-     "ELF-0018",
-     "ELF-0017",
-     "BKF-0010",
-     "ELF-0016",
-     "BKF-0012",
-     "ELF-0020",
-     "BKF-0008",
-     "BKF-0007"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-14",
-    "question_type": "procedural",
-    "top": [
-     "BKF-0014",
-     "ELF-0048",
-     "BKF-0031",
-     "ELF-0001",
-     "BKF-0027",
-     "ELF-0015",
-     "ELF-0049",
-     "ELF-0050",
-     "BKF-0030",
-     "BKF-0015"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-15",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0067",
-     "ELF-0064",
-     "ELF-0066",
-     "ELF-0069",
-     "BKF-0036",
-     "ELF-0065",
-     "BKF-0037",
-     "ELF-0001",
-     "BKF-0035",
-     "ELF-0070"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.2,
-      "coverage": 0.2865731462925852,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6,
-      "coverage": 0.7094188376753507,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.8
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-16",
-    "question_type": "procedural",
-    "top": [
-     "ELF-0025",
-     "BKF-0015",
-     "BKF-0016",
-     "ELF-0009",
-     "BKF-0002",
-     "ELF-0010",
-     "ELF-0028",
-     "BKF-0021",
-     "ELF-0013",
-     "BKF-0004"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7789473684210526,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7789473684210526,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-17",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0006",
-     "ELF-0004",
-     "BKF-0004",
-     "ELF-0030",
-     "ELF-0003",
-     "BKF-0006",
-     "ELF-0016",
-     "ELF-0031",
-     "ELF-0014",
-     "ELF-0012"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.6336633663366337,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7524752475247525,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7524752475247525,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7524752475247525,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-18",
-    "question_type": "factoid",
-    "top": [
-     "BKF-0009",
-     "ELF-0020",
-     "BKF-0017",
-     "BKF-0008",
-     "ELF-0018",
-     "ELF-0021",
-     "ELF-0017",
-     "ELF-0016",
-     "BKF-0034",
-     "BKF-0001"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.20844327176781002,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.20844327176781002,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-19",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0049",
-     "BKF-0031",
-     "ELF-0048",
-     "ELF-0050",
-     "BKF-0014",
-     "BKF-0030",
-     "BKF-0027",
-     "ELF-0030",
-     "BKF-0028",
-     "BKF-0025"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.1590909090909091,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-21",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0007",
-     "ELF-0009",
-     "ELF-0008",
-     "ELF-0001",
-     "ELF-0012",
-     "ELF-0000",
-     "ELF-0010",
-     "ELF-0006",
-     "ELF-0011",
-     "BKF-0021"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.2641509433962264,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.32075471698113206,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.32075471698113206,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-22",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0009",
-     "ELF-0008",
-     "ELF-0007",
-     "ELF-0058",
-     "ELF-0000",
-     "BKF-0018",
-     "ELF-0045",
-     "ELF-0046",
-     "ELF-0025",
-     "ELF-0010"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-23",
-    "question_type": "procedural",
-    "top": [
-     "BKF-0005",
-     "ELF-0023",
-     "ELF-0026",
-     "BKF-0004",
-     "ELF-0024",
-     "BKF-0006",
-     "BKF-0015",
-     "ELF-0014",
-     "ELF-0025",
-     "BKF-0021"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-24",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0066",
-     "BKF-0007",
-     "ELF-0068",
-     "BKF-0037",
-     "BKF-0008",
-     "ELF-0030",
-     "ELF-0065",
-     "BKF-0001",
-     "ELF-0067",
-     "BKF-0027"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.6129032258064516,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.6129032258064516,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.6129032258064516,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-25",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0001",
-     "ELF-0007",
-     "ELF-0009",
-     "ELF-0008",
-     "ELF-0062",
-     "ELF-0000",
-     "ELF-0064",
-     "ELF-0010",
-     "ELF-0006",
-     "ELF-0058"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-26",
-    "question_type": "multi_hop",
-    "top": [
-     "BKF-0019",
-     "ELF-0045",
-     "ELF-0028",
-     "ELF-0046",
-     "ELF-0029",
-     "ELF-0047",
-     "BKF-0018",
-     "ELF-0034",
-     "ELF-0019",
-     "ELF-0015"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.25,
-      "coverage": 0.07966457023060797,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8553459119496856,
-      "precision": 1.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8553459119496856,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.5
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.75,
-     "0.8": 0.75,
-     "1.0": 0.75
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-27",
-    "question_type": "procedural",
-    "top": [
-     "ELF-0037",
-     "ELF-0038",
-     "BKF-0029",
-     "ELF-0039",
-     "BKF-0027",
-     "ELF-0044",
-     "ELF-0042",
-     "BKF-0028",
-     "ELF-0052",
-     "ELF-0036"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6367521367521367,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6367521367521367,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8012820512820513,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.6
-   },
-   {
-    "id": "KIN-28",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0008",
-     "ELF-0007",
-     "ELF-0009",
-     "ELF-0055",
-     "ELF-0054",
-     "ELF-0006",
-     "ELF-0025",
-     "ELF-0004",
-     "BKF-0015",
-     "ELF-0027"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-29",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0008",
-     "ELF-0055",
-     "ELF-0007",
-     "ELF-0004",
-     "ELF-0009",
-     "ELF-0054",
-     "ELF-0010",
-     "ELF-0012",
-     "ELF-0006",
-     "ELF-0025"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-30",
-    "question_type": "procedural",
-    "top": [
-     "BKF-0035",
-     "ELF-0014",
-     "BKF-0034",
-     "ELF-0011",
-     "BKF-0020",
-     "ELF-0002",
-     "ELF-0015",
-     "ELF-0013",
-     "ELF-0047",
-     "ELF-0064"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.329073482428115,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-31",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0012",
-     "BKF-0020",
-     "ELF-0001",
-     "BKF-0031",
-     "ELF-0007",
-     "ELF-0009",
-     "ELF-0006",
-     "ELF-0048",
-     "ELF-0010",
-     "ELF-0000"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.13421052631578947,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.13421052631578947,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.13421052631578947,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.23157894736842105,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-34",
-    "question_type": "factoid",
-    "top": [
-     "BKF-0042",
-     "BKF-0041",
-     "BKF-0027",
-     "BKF-0009",
-     "ELF-0052",
-     "BKF-0035",
-     "BKF-0039",
-     "BKF-0017",
-     "BKF-0034",
-     "BKF-0008"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.10950080515297907,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-36",
-    "question_type": "multi_hop",
-    "top": [
-     "BKF-0008",
-     "BKF-0007",
-     "BKF-0001",
-     "ELF-0066",
-     "ELF-0042",
-     "ELF-0030",
-     "ELF-0013",
-     "ELF-0001",
-     "ELF-0000",
-     "ELF-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-37",
-    "question_type": "summary",
-    "top": [
-     "BKF-0001",
-     "BKF-0008",
-     "BKF-0004",
-     "BKF-0006",
-     "ELF-0014",
-     "BKF-0007",
-     "ELF-0013",
-     "ELF-0025",
-     "BKF-0015",
-     "ELF-0027"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.1436077057793345,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.8704028021015762,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.8704028021015762,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-38",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0009",
-     "ELF-0008",
-     "ELF-0000",
-     "ELF-0007",
-     "ELF-0012",
-     "ELF-0001",
-     "ELF-0010",
-     "ELF-0011",
-     "BKF-0021",
-     "ELF-0058"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-39",
-    "question_type": "factoid",
-    "top": [
-     "ELF-0012",
-     "ELF-0009",
-     "ELF-0011",
-     "ELF-0010",
-     "ELF-0001",
-     "BKF-0021",
-     "ELF-0000",
-     "ELF-0013",
-     "ELF-0027",
-     "ELF-0014"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-40",
-    "question_type": "multi_hop",
-    "top": [
-     "ELF-0012",
-     "ELF-0001",
-     "BKF-0021",
-     "ELF-0015",
-     "ELF-0000",
-     "BKF-0014",
-     "ELF-0005",
-     "ELF-0031",
-     "BKF-0036",
-     "BKF-0031"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.25,
-      "coverage": 0.35805626598465473,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-41",
-    "question_type": "procedural",
-    "top": [
-     "ELF-0025",
-     "BKF-0021",
-     "BKF-0024",
-     "BKF-0015",
-     "BKF-0004",
-     "BKF-0023",
-     "ELF-0014",
-     "ELF-0027",
-     "BKF-0001",
-     "ELF-0026"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 0.8
+   "recall_by_threshold": {
+    "0.5": 0.4,
+    "0.8": 0.4,
+    "1.0": 0.4
    }
-  ],
-  "B": [
-   {
-    "id": "KIN-01",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0020",
-     "EL-0024",
-     "EL-0005",
-     "EL-0003",
-     "BK-0041",
-     "EL-0010",
-     "BK-0040",
-     "EL-0041",
-     "EL-0004",
-     "BK-0044"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.3919308357348703,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.3919308357348703,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6,
-      "coverage": 0.5403458213256485,
-      "precision": 0.4
-     }
+  },
+  {
+   "id": "KIN-02",
+   "question_type": "factoid",
+   "answerability": "partial",
+   "top": [
+    "EL-0006",
+    "EL-0007",
+    "EL-0010",
+    "BK-0033",
+    "BK-0048",
+    "BK-0027",
+    "EL-0003",
+    "BK-0029",
+    "EL-0024",
+    "EL-0000"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
     },
-    "recall_by_threshold": {
-     "0.5": 0.4,
-     "0.8": 0.4,
-     "1.0": 0.4
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3333333333333333
     },
-    "other_doc_rate": null
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.1
+    }
    },
-   {
-    "id": "KIN-02",
-    "question_type": "factoid",
-    "top": [
-     "EL-0007",
-     "BK-0040",
-     "EL-0006",
-     "EL-0000",
-     "EL-0002",
-     "EL-0003",
-     "EL-0010",
-     "EL-0023",
-     "EL-0048",
-     "EL-0025"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-03",
-    "question_type": "factoid",
-    "top": [
-     "BK-0018",
-     "EL-0013",
-     "EL-0026",
-     "EL-0025",
-     "EL-0027",
-     "BK-0041",
-     "BK-0020",
-     "BK-0032",
-     "EL-0055",
-     "BK-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.21936758893280633,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-04",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "EL-0007",
-     "BK-0040",
-     "EL-0048",
-     "BK-0041",
-     "EL-0000",
-     "EL-0055",
-     "BK-0028",
-     "BK-0003",
-     "EL-0010"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-05",
-    "question_type": "factoid",
-    "top": [
-     "BK-0035",
-     "BK-0013",
-     "EL-0015",
-     "BK-0001",
-     "BK-0025",
-     "BK-0014",
-     "BK-0012",
-     "BK-0015",
-     "EL-0016",
-     "BK-0003"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-06",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0035",
-     "BK-0025",
-     "BK-0013",
-     "BK-0001",
-     "BK-0014",
-     "EL-0015",
-     "BK-0010",
-     "EL-0017",
-     "BK-0004",
-     "BK-0021"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.6547945205479452,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-07",
-    "question_type": "factoid",
-    "top": [
-     "EL-0041",
-     "BK-0044",
-     "EL-0042",
-     "BK-0045",
-     "BK-0020",
-     "BK-0038",
-     "EL-0040",
-     "BK-0019",
-     "BK-0014",
-     "EL-0015"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-08",
-    "question_type": "factoid",
-    "top": [
-     "BK-0020",
-     "BK-0040",
-     "EL-0007",
-     "EL-0005",
-     "EL-0000",
-     "EL-0003",
-     "EL-0041",
-     "EL-0010",
-     "BK-0045",
-     "BK-0044"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-09",
-    "question_type": "procedural",
-    "top": [
-     "EL-0013",
-     "BK-0018",
-     "EL-0008",
-     "BK-0020",
-     "BK-0032",
-     "BK-0048",
-     "BK-0019",
-     "EL-0011",
-     "BK-0037",
-     "BK-0041"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.5450236966824644,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-10",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0040",
-     "BK-0041",
-     "EL-0024",
-     "BK-0020",
-     "EL-0003",
-     "EL-0007",
-     "EL-0047",
-     "EL-0005",
-     "EL-0041",
-     "BK-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.14285714285714285,
-      "coverage": 0.26584022038567495,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.14285714285714285,
-      "coverage": 0.26584022038567495,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.42857142857142855,
-      "coverage": 0.4696969696969697,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.14285714285714285,
-     "0.8": 0.14285714285714285,
-     "1.0": 0.14285714285714285
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-11",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0003",
-     "BK-0040",
-     "BK-0020",
-     "EL-0010",
-     "EL-0013",
-     "EL-0008",
-     "EL-0024",
-     "EL-0007",
-     "EL-0000",
-     "EL-0002"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.4954627949183303,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.7186932849364791,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-12",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0025",
-     "EL-0015",
-     "BK-0014",
-     "EL-0016",
-     "BK-0013",
-     "BK-0012",
-     "BK-0015",
-     "BK-0046",
-     "BK-0011",
-     "BK-0001"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-14",
-    "question_type": "procedural",
-    "top": [
-     "BK-0020",
-     "EL-0041",
-     "BK-0044",
-     "BK-0019",
-     "BK-0040",
-     "BK-0003",
-     "EL-0013",
-     "EL-0042",
-     "BK-0045",
-     "BK-0030"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-15",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0048",
-     "EL-0056",
-     "EL-0055",
-     "BK-0049",
-     "EL-0057",
-     "EL-0054",
-     "EL-0058",
-     "EL-0020",
-     "BK-0027",
-     "BK-0020"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.2,
-      "coverage": 0.08216432865731463,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6,
-      "coverage": 0.6613226452905812,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.8,
-      "coverage": 0.8697394789579158,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.8,
-     "0.8": 0.8,
-     "1.0": 0.8
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-16",
-    "question_type": "procedural",
-    "top": [
-     "BK-0023",
-     "BK-0024",
-     "EL-0008",
-     "EL-0021",
-     "BK-0040",
-     "BK-0041",
-     "EL-0023",
-     "BK-0020",
-     "EL-0028",
-     "EL-0011"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.11368421052631579,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-17",
-    "question_type": "factoid",
-    "top": [
-     "EL-0003",
-     "EL-0024",
-     "BK-0007",
-     "BK-0040",
-     "EL-0005",
-     "BK-0020",
-     "EL-0013",
-     "EL-0014",
-     "EL-0011",
-     "EL-0002"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.6336633663366337,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.8811881188118812,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-18",
-    "question_type": "factoid",
-    "top": [
-     "EL-0015",
-     "BK-0046",
-     "BK-0014",
-     "BK-0025",
-     "BK-0013",
-     "BK-0001",
-     "EL-0017",
-     "EL-0016",
-     "BK-0015",
-     "BK-0052"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-19",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0041",
-     "BK-0044",
-     "EL-0042",
-     "BK-0020",
-     "BK-0038",
-     "EL-0024",
-     "BK-0019",
-     "BK-0045",
-     "BK-0041",
-     "EL-0040"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.2264808362369338,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.1590909090909091,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.1590909090909091,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-21",
-    "question_type": "factoid",
-    "top": [
-     "BK-0040",
-     "EL-0007",
-     "EL-0006",
-     "EL-0000",
-     "BK-0028",
-     "BK-0048",
-     "EL-0008",
-     "BK-0020",
-     "EL-0003",
-     "EL-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-22",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0007",
-     "BK-0040",
-     "BK-0029",
-     "EL-0037",
-     "EL-0006",
-     "EL-0038",
-     "BK-0020",
-     "EL-0048",
-     "EL-0000",
-     "BK-0041"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-23",
-    "question_type": "procedural",
-    "top": [
-     "BK-0022",
-     "BK-0008",
-     "BK-0007",
-     "EL-0019",
-     "EL-0022",
-     "EL-0011",
-     "BK-0021",
-     "EL-0012",
-     "BK-0009",
-     "EL-0021"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-24",
-    "question_type": "factoid",
-    "top": [
-     "BK-0049",
-     "EL-0054",
-     "BK-0004",
-     "BK-0012",
-     "EL-0056",
-     "EL-0010",
-     "BK-0001",
-     "BK-0003",
-     "EL-0024",
-     "EL-0005"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.10557184750733138,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.718475073313783,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.718475073313783,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-25",
-    "question_type": "factoid",
-    "top": [
-     "BK-0040",
-     "EL-0007",
-     "EL-0000",
-     "EL-0006",
-     "EL-0053",
-     "BK-0020",
-     "BK-0041",
-     "EL-0003",
-     "BK-0048",
-     "BK-0033"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-26",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0029",
-     "EL-0038",
-     "EL-0023",
-     "EL-0037",
-     "EL-0028",
-     "BK-0041",
-     "EL-0030",
-     "EL-0039",
-     "BK-0043",
-     "EL-0035"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.36907216494845363,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8577319587628865,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.8
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-27",
-    "question_type": "procedural",
-    "top": [
-     "EL-0030",
-     "BK-0042",
-     "EL-0036",
-     "EL-0034",
-     "EL-0031",
-     "BK-0043",
-     "EL-0033",
-     "EL-0035",
-     "BK-0041",
-     "EL-0043"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8012820512820513,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8012820512820513,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.75,
-     "0.8": 0.75,
-     "1.0": 0.75
-    },
-    "other_doc_rate": 0.8
-   },
-   {
-    "id": "KIN-28",
-    "question_type": "factoid",
-    "top": [
-     "EL-0007",
-     "EL-0006",
-     "EL-0045",
-     "BK-0040",
-     "EL-0003",
-     "BK-0041",
-     "BK-0020",
-     "EL-0055",
-     "EL-0008",
-     "EL-0044"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-29",
-    "question_type": "factoid",
-    "top": [
-     "EL-0045",
-     "EL-0003",
-     "EL-0007",
-     "EL-0006",
-     "BK-0040",
-     "EL-0044",
-     "BK-0043",
-     "BK-0041",
-     "EL-0005",
-     "EL-0010"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-30",
-    "question_type": "procedural",
-    "top": [
-     "BK-0047",
-     "EL-0012",
-     "EL-0009",
-     "EL-0000",
-     "EL-0011",
-     "EL-0014",
-     "BK-0032",
-     "EL-0001",
-     "BK-0040",
-     "EL-0008"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.8
-   },
-   {
-    "id": "KIN-31",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0020",
-     "BK-0040",
-     "BK-0005",
-     "BK-0048",
-     "BK-0033",
-     "BK-0041",
-     "BK-0032",
-     "EL-0000",
-     "BK-0023",
-     "EL-0013"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 1.0
-   },
-   {
-    "id": "KIN-34",
-    "question_type": "factoid",
-    "top": [
-     "BK-0052",
-     "BK-0003",
-     "BK-0014",
-     "BK-0050",
-     "BK-0025",
-     "BK-0005",
-     "BK-0015",
-     "EL-0015",
-     "BK-0040",
-     "BK-0035"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-36",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0004",
-     "BK-0001",
-     "BK-0003",
-     "BK-0049",
-     "EL-0056",
-     "BK-0005",
-     "BK-0013",
-     "EL-0010",
-     "EL-0000",
-     "BK-0012"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.23076923076923078,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.23076923076923078,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.23076923076923078,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-37",
-    "question_type": "summary",
-    "top": [
-     "BK-0003",
-     "BK-0001",
-     "BK-0010",
-     "EL-0011",
-     "BK-0006",
-     "BK-0022",
-     "EL-0012",
-     "BK-0041",
-     "BK-0021",
-     "BK-0013"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.8704028021015762,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-38",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0040",
-     "EL-0007",
-     "EL-0000",
-     "BK-0003",
-     "EL-0006",
-     "EL-0008",
-     "BK-0005",
-     "EL-0010",
-     "EL-0009",
-     "BK-0041"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-39",
-    "question_type": "factoid",
-    "top": [
-     "EL-0008",
-     "EL-0010",
-     "BK-0040",
-     "EL-0009",
-     "EL-0000",
-     "EL-0022",
-     "BK-0021",
-     "EL-0012",
-     "EL-0011",
-     "BK-0006"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-40",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0054",
-     "BK-0026",
-     "EL-0013",
-     "BK-0027",
-     "BK-0048",
-     "EL-0000",
-     "EL-0027",
-     "BK-0020",
-     "BK-0005",
-     "BK-0040"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.25,
-      "coverage": 0.15601023017902813,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.47570332480818417,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.47570332480818417,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-41",
-    "question_type": "procedural",
-    "top": [
-     "BK-0010",
-     "BK-0022",
-     "BK-0021",
-     "BK-0054",
-     "BK-0034",
-     "BK-0036",
-     "EL-0021",
-     "EL-0022",
-     "BK-0037",
-     "BK-0006"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 1.0
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
    }
-  ],
-  "C": [
-   {
-    "id": "KIN-01",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0020",
-     "EL-0024",
-     "EL-0005",
-     "EL-0003",
-     "EL-0004",
-     "EL-0002",
-     "BK-0041",
-     "BK-0042",
-     "BK-0040",
-     "EL-0010"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.3919308357348703,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6,
-      "coverage": 0.5403458213256485,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.8,
-      "coverage": 0.6844380403458213,
-      "precision": 0.5
-     }
+  },
+  {
+   "id": "KIN-03",
+   "question_type": "factoid",
+   "answerability": "partial",
+   "top": [
+    "EL-0013",
+    "EL-0026",
+    "BK-0032",
+    "BK-0020",
+    "BK-0048",
+    "EL-0027",
+    "EL-0024",
+    "BK-0027",
+    "BK-0025",
+    "BK-0014"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.7806324110671937,
+     "precision": 1.0
     },
-    "recall_by_threshold": {
-     "0.5": 0.6,
-     "0.8": 0.6,
-     "1.0": 0.6
+    "3": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.7806324110671937,
+     "precision": 0.3333333333333333
     },
-    "other_doc_rate": null
+    "5": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.7806324110671937,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.7806324110671937,
+     "precision": 0.1
+    }
    },
-   {
-    "id": "KIN-02",
-    "question_type": "factoid",
-    "top": [
-     "EL-0007",
-     "EL-0006",
-     "BK-0040",
-     "EL-0003",
-     "EL-0010",
-     "EL-0002",
-     "EL-0000",
-     "BK-0041",
-     "EL-0024",
-     "EL-0023"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-03",
-    "question_type": "factoid",
-    "top": [
-     "EL-0026",
-     "BK-0018",
-     "EL-0025",
-     "EL-0013",
-     "EL-0027",
-     "BK-0020",
-     "BK-0032",
-     "BK-0041",
-     "EL-0024",
-     "BK-0019"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.21936758893280633,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-04",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "EL-0007",
-     "BK-0040",
-     "EL-0048",
-     "EL-0002",
-     "EL-0003",
-     "BK-0041",
-     "EL-0000",
-     "EL-0010",
-     "BK-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-05",
-    "question_type": "factoid",
-    "top": [
-     "BK-0013",
-     "BK-0025",
-     "EL-0015",
-     "BK-0014",
-     "BK-0001",
-     "BK-0035",
-     "BK-0015",
-     "BK-0012",
-     "BK-0010",
-     "EL-0016"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.4105263157894737,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-06",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0025",
-     "BK-0013",
-     "BK-0035",
-     "BK-0010",
-     "BK-0014",
-     "BK-0001",
-     "BK-0004",
-     "EL-0017",
-     "BK-0021",
-     "EL-0015"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.6547945205479452,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.6547945205479452,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.6547945205479452,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.75,
-     "0.8": 0.75,
-     "1.0": 0.75
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-07",
-    "question_type": "factoid",
-    "top": [
-     "BK-0044",
-     "EL-0041",
-     "BK-0020",
-     "BK-0045",
-     "EL-0042",
-     "EL-0040",
-     "BK-0038",
-     "BK-0019",
-     "BK-0016",
-     "BK-0014"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-08",
-    "question_type": "factoid",
-    "top": [
-     "BK-0020",
-     "BK-0040",
-     "EL-0007",
-     "EL-0005",
-     "EL-0003",
-     "BK-0045",
-     "EL-0000",
-     "EL-0010",
-     "BK-0016",
-     "EL-0002"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-09",
-    "question_type": "procedural",
-    "top": [
-     "BK-0018",
-     "EL-0013",
-     "EL-0008",
-     "BK-0020",
-     "EL-0011",
-     "BK-0019",
-     "BK-0032",
-     "EL-0010",
-     "BK-0033",
-     "BK-0045"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 0.6
-   },
-   {
-    "id": "KIN-10",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0041",
-     "BK-0040",
-     "BK-0020",
-     "EL-0024",
-     "EL-0003",
-     "BK-0042",
-     "EL-0007",
-     "EL-0005",
-     "BK-0045",
-     "EL-0041"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.14285714285714285,
-      "coverage": 0.2797297297297297,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.14285714285714285,
-      "coverage": 0.2797297297297297,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.14285714285714285,
-      "coverage": 0.26584022038567495,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.42857142857142855,
-      "coverage": 0.4696969696969697,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.14285714285714285,
-     "0.8": 0.14285714285714285,
-     "1.0": 0.14285714285714285
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-11",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0010",
-     "EL-0003",
-     "BK-0020",
-     "BK-0040",
-     "EL-0002",
-     "EL-0008",
-     "BK-0041",
-     "EL-0007",
-     "BK-0033",
-     "EL-0024"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.4954627949183303,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.4954627949183303,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.7186932849364791,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.7186932849364791,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.75,
-     "0.8": 0.75,
-     "1.0": 0.75
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-12",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0025",
-     "EL-0015",
-     "BK-0014",
-     "BK-0013",
-     "BK-0015",
-     "BK-0012",
-     "EL-0016",
-     "BK-0046",
-     "BK-0011",
-     "BK-0016"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-14",
-    "question_type": "procedural",
-    "top": [
-     "BK-0020",
-     "BK-0019",
-     "BK-0044",
-     "BK-0030",
-     "BK-0045",
-     "EL-0041",
-     "BK-0040",
-     "EL-0005",
-     "BK-0016",
-     "BK-0014"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-15",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0048",
-     "BK-0049",
-     "EL-0054",
-     "EL-0055",
-     "EL-0057",
-     "EL-0056",
-     "EL-0058",
-     "BK-0027",
-     "BK-0028",
-     "EL-0008"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.2,
-      "coverage": 0.08216432865731463,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.2124248496993988,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.8
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-16",
-    "question_type": "procedural",
-    "top": [
-     "BK-0023",
-     "BK-0024",
-     "EL-0008",
-     "EL-0021",
-     "EL-0011",
-     "BK-0040",
-     "BK-0020",
-     "EL-0023",
-     "BK-0041",
-     "EL-0028"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.11368421052631579,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-17",
-    "question_type": "factoid",
-    "top": [
-     "EL-0003",
-     "EL-0002",
-     "EL-0024",
-     "EL-0005",
-     "BK-0007",
-     "EL-0004",
-     "BK-0042",
-     "EL-0014",
-     "BK-0040",
-     "EL-0011"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.24752475247524752,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.8811881188118812,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-18",
-    "question_type": "factoid",
-    "top": [
-     "BK-0013",
-     "BK-0025",
-     "BK-0014",
-     "BK-0046",
-     "EL-0015",
-     "BK-0001",
-     "EL-0017",
-     "EL-0016",
-     "BK-0015",
-     "BK-0052"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-19",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0041",
-     "BK-0020",
-     "BK-0044",
-     "EL-0042",
-     "BK-0038",
-     "BK-0019",
-     "EL-0040",
-     "BK-0030",
-     "EL-0024",
-     "BK-0041"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.2264808362369338,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.1590909090909091,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.1590909090909091,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-21",
-    "question_type": "factoid",
-    "top": [
-     "EL-0007",
-     "EL-0006",
-     "BK-0040",
-     "EL-0000",
-     "EL-0008",
-     "EL-0010",
-     "EL-0003",
-     "EL-0009",
-     "EL-0002",
-     "BK-0028"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-22",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0007",
-     "BK-0029",
-     "EL-0037",
-     "EL-0006",
-     "BK-0040",
-     "EL-0038",
-     "EL-0039",
-     "EL-0003",
-     "BK-0041",
-     "EL-0022"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-23",
-    "question_type": "procedural",
-    "top": [
-     "BK-0022",
-     "BK-0007",
-     "EL-0022",
-     "BK-0008",
-     "EL-0019",
-     "EL-0011",
-     "EL-0012",
-     "BK-0021",
-     "BK-0009",
-     "EL-0014"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-24",
-    "question_type": "factoid",
-    "top": [
-     "BK-0049",
-     "EL-0054",
-     "BK-0004",
-     "BK-0012",
-     "EL-0056",
-     "EL-0005",
-     "EL-0010",
-     "BK-0020",
-     "BK-0001",
-     "BK-0040"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.10557184750733138,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.718475073313783,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.718475073313783,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-25",
-    "question_type": "factoid",
-    "top": [
-     "BK-0040",
-     "EL-0007",
-     "EL-0006",
-     "EL-0003",
-     "EL-0053",
-     "EL-0000",
-     "BK-0033",
-     "BK-0020",
-     "BK-0041",
-     "BK-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-26",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0029",
-     "EL-0038",
-     "EL-0023",
-     "EL-0037",
-     "EL-0028",
-     "EL-0039",
-     "EL-0007",
-     "EL-0003",
-     "BK-0041",
-     "BK-0023"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.36907216494845363,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8577319587628865,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.8
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-27",
-    "question_type": "procedural",
-    "top": [
-     "EL-0030",
-     "EL-0031",
-     "BK-0042",
-     "EL-0034",
-     "EL-0036",
-     "BK-0043",
-     "EL-0035",
-     "EL-0017",
-     "EL-0033",
-     "EL-0043"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8012820512820513,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8012820512820513,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.75,
-     "0.8": 0.75,
-     "1.0": 0.75
-    },
-    "other_doc_rate": 0.8
-   },
-   {
-    "id": "KIN-28",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "EL-0007",
-     "EL-0045",
-     "EL-0003",
-     "BK-0040",
-     "BK-0041",
-     "EL-0008",
-     "EL-0002",
-     "EL-0000",
-     "BK-0043"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-29",
-    "question_type": "factoid",
-    "top": [
-     "EL-0045",
-     "EL-0006",
-     "EL-0003",
-     "EL-0007",
-     "BK-0043",
-     "BK-0041",
-     "BK-0040",
-     "EL-0010",
-     "EL-0008",
-     "EL-0005"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-30",
-    "question_type": "procedural",
-    "top": [
-     "BK-0047",
-     "EL-0012",
-     "EL-0009",
-     "EL-0011",
-     "BK-0032",
-     "BK-0040",
-     "EL-0014",
-     "EL-0028",
-     "EL-0001",
-     "BK-0031"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.6
-   },
-   {
-    "id": "KIN-31",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0020",
-     "BK-0033",
-     "BK-0040",
-     "BK-0032",
-     "BK-0023",
-     "BK-0005",
-     "BK-0018",
-     "EL-0010",
-     "BK-0031",
-     "BK-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.9026315789473685,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 1.0
-   },
-   {
-    "id": "KIN-34",
-    "question_type": "factoid",
-    "top": [
-     "BK-0052",
-     "BK-0014",
-     "BK-0025",
-     "BK-0003",
-     "BK-0005",
-     "BK-0015",
-     "BK-0040",
-     "BK-0047",
-     "BK-0050",
-     "BK-0031"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-36",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0004",
-     "BK-0049",
-     "EL-0054",
-     "BK-0003",
-     "EL-0005",
-     "BK-0001",
-     "BK-0013",
-     "BK-0012",
-     "BK-0048",
-     "EL-0010"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.23076923076923078,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.23076923076923078,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.23076923076923078,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-37",
-    "question_type": "summary",
-    "top": [
-     "BK-0010",
-     "EL-0011",
-     "BK-0003",
-     "BK-0022",
-     "BK-0001",
-     "BK-0021",
-     "EL-0012",
-     "BK-0040",
-     "BK-0011",
-     "BK-0042"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-38",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0040",
-     "EL-0007",
-     "EL-0006",
-     "EL-0000",
-     "EL-0008",
-     "EL-0009",
-     "EL-0002",
-     "EL-0003",
-     "EL-0010",
-     "EL-0011"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-39",
-    "question_type": "factoid",
-    "top": [
-     "EL-0010",
-     "EL-0008",
-     "EL-0009",
-     "BK-0040",
-     "EL-0002",
-     "BK-0021",
-     "EL-0022",
-     "EL-0011",
-     "EL-0012",
-     "EL-0007"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-40",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0026",
-     "BK-0054",
-     "BK-0027",
-     "BK-0048",
-     "BK-0040",
-     "BK-0018",
-     "BK-0033",
-     "BK-0041",
-     "BK-0005",
-     "BK-0049"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.25,
-      "coverage": 0.15601023017902813,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.47570332480818417,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.47570332480818417,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.47570332480818417,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-41",
-    "question_type": "procedural",
-    "top": [
-     "BK-0010",
-     "BK-0022",
-     "BK-0021",
-     "BK-0054",
-     "BK-0020",
-     "BK-0034",
-     "BK-0023",
-     "EL-0011",
-     "EL-0022",
-     "BK-0006"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 1.0
+   "recall_by_threshold": {
+    "0.5": 0.5,
+    "0.8": 0.5,
+    "1.0": 0.5
    }
-  ],
-  "C_hybrid": [
-   {
-    "id": "KIN-01",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0024",
-     "EL-0003",
-     "BK-0041",
-     "EL-0005",
-     "BK-0020",
-     "EL-0002",
-     "BK-0042",
-     "BK-0044",
-     "EL-0004",
-     "EL-0047"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.2,
-      "coverage": 0.2780979827089337,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.2,
-      "coverage": 0.2780979827089337,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.3919308357348703,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.8,
-      "coverage": 0.6844380403458213,
-      "precision": 0.5
-     }
+  },
+  {
+   "id": "KIN-04",
+   "question_type": "factoid",
+   "answerability": "full",
+   "top": [
+    "EL-0006",
+    "BK-0016",
+    "EL-0003",
+    "EL-0048",
+    "EL-0000",
+    "BK-0006",
+    "BK-0048",
+    "BK-0030",
+    "EL-0010",
+    "EL-0024"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
     },
-    "recall_by_threshold": {
-     "0.5": 0.4,
-     "0.8": 0.4,
-     "1.0": 0.4
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3333333333333333
     },
-    "other_doc_rate": null
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.1
+    }
    },
-   {
-    "id": "KIN-02",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "EL-0007",
-     "EL-0010",
-     "BK-0033",
-     "BK-0048",
-     "BK-0027",
-     "EL-0003",
-     "BK-0029",
-     "EL-0024",
-     "EL-0000"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-03",
-    "question_type": "factoid",
-    "top": [
-     "EL-0013",
-     "EL-0026",
-     "BK-0032",
-     "BK-0020",
-     "BK-0048",
-     "EL-0027",
-     "EL-0024",
-     "BK-0027",
-     "BK-0025",
-     "BK-0014"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7806324110671937,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7806324110671937,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7806324110671937,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7806324110671937,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-04",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "BK-0016",
-     "EL-0003",
-     "EL-0048",
-     "EL-0000",
-     "BK-0006",
-     "BK-0048",
-     "BK-0030",
-     "EL-0010",
-     "EL-0024"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-05",
-    "question_type": "factoid",
-    "top": [
-     "BK-0013",
-     "BK-0025",
-     "BK-0035",
-     "BK-0014",
-     "BK-0001",
-     "BK-0010",
-     "BK-0015",
-     "BK-0012",
-     "EL-0015",
-     "EL-0016"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.4105263157894737,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-06",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0025",
-     "BK-0013",
-     "BK-0001",
-     "BK-0014",
-     "BK-0004",
-     "BK-0010",
-     "BK-0035",
-     "BK-0012",
-     "BK-0041",
-     "BK-0050"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.6547945205479452,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-07",
-    "question_type": "factoid",
-    "top": [
-     "BK-0044",
-     "EL-0041",
-     "EL-0042",
-     "EL-0040",
-     "BK-0020",
-     "BK-0038",
-     "BK-0030",
-     "BK-0041",
-     "BK-0016",
-     "BK-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-08",
-    "question_type": "factoid",
-    "top": [
-     "BK-0020",
-     "EL-0007",
-     "BK-0040",
-     "EL-0000",
-     "EL-0006",
-     "EL-0024",
-     "BK-0045",
-     "EL-0008",
-     "EL-0002",
-     "EL-0003"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.27007299270072993,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-09",
-    "question_type": "procedural",
-    "top": [
-     "BK-0018",
-     "BK-0033",
-     "BK-0032",
-     "EL-0013",
-     "EL-0008",
-     "EL-0010",
-     "BK-0048",
-     "BK-0010",
-     "BK-0019",
-     "BK-0007"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.5450236966824644,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-10",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0020",
-     "BK-0048",
-     "EL-0003",
-     "EL-0008",
-     "BK-0041",
-     "BK-0040",
-     "EL-0024",
-     "EL-0000",
-     "EL-0055",
-     "BK-0027"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.14285714285714285,
-      "coverage": 0.2797297297297297,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.14285714285714285,
-      "coverage": 0.26584022038567495,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.14285714285714285,
-     "0.8": 0.14285714285714285,
-     "1.0": 0.14285714285714285
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-11",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0020",
-     "EL-0010",
-     "EL-0003",
-     "BK-0033",
-     "EL-0002",
-     "EL-0008",
-     "BK-0048",
-     "EL-0024",
-     "BK-0044",
-     "BK-0006"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.4954627949183303,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.7186932849364791,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.7186932849364791,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.75,
-     "0.8": 0.75,
-     "1.0": 0.75
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-12",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0025",
-     "BK-0013",
-     "EL-0015",
-     "BK-0012",
-     "EL-0016",
-     "BK-0046",
-     "BK-0015",
-     "BK-0001",
-     "BK-0014",
-     "BK-0017"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5185185185185185,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-14",
-    "question_type": "procedural",
-    "top": [
-     "BK-0020",
-     "BK-0030",
-     "BK-0044",
-     "BK-0019",
-     "BK-0041",
-     "EL-0041",
-     "BK-0009",
-     "EL-0042",
-     "BK-0006",
-     "BK-0029"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.5509138381201044,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-15",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0048",
-     "BK-0049",
-     "EL-0057",
-     "EL-0055",
-     "EL-0054",
-     "BK-0027",
-     "EL-0058",
-     "EL-0056",
-     "BK-0023",
-     "BK-0028"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.2,
-      "coverage": 0.08216432865731463,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.4,
-      "coverage": 0.2905811623246493,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.8
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-16",
-    "question_type": "procedural",
-    "top": [
-     "BK-0024",
-     "EL-0021",
-     "BK-0023",
-     "EL-0008",
-     "BK-0020",
-     "BK-0007",
-     "BK-0021",
-     "BK-0033",
-     "BK-0006",
-     "BK-0002"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.6652631578947369,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7789473684210526,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-17",
-    "question_type": "factoid",
-    "top": [
-     "EL-0003",
-     "BK-0041",
-     "EL-0002",
-     "EL-0005",
-     "BK-0020",
-     "EL-0013",
-     "BK-0009",
-     "EL-0024",
-     "BK-0013",
-     "BK-0042"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.24752475247524752,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.8811881188118812,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.8811881188118812,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-18",
-    "question_type": "factoid",
-    "top": [
-     "BK-0013",
-     "BK-0025",
-     "BK-0014",
-     "BK-0046",
-     "BK-0052",
-     "BK-0001",
-     "EL-0016",
-     "EL-0015",
-     "BK-0015",
-     "BK-0012"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.7097625329815304,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-19",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0044",
-     "EL-0041",
-     "BK-0020",
-     "BK-0019",
-     "BK-0038",
-     "EL-0024",
-     "EL-0042",
-     "BK-0041",
-     "EL-0040",
-     "BK-0030"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.1590909090909091,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.1590909090909091,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-21",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "EL-0000",
-     "BK-0048",
-     "BK-0020",
-     "EL-0010",
-     "EL-0008",
-     "EL-0047",
-     "BK-0033",
-     "BK-0028",
-     "EL-0007"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-22",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0007",
-     "BK-0029",
-     "EL-0006",
-     "BK-0020",
-     "EL-0003",
-     "EL-0000",
-     "BK-0040",
-     "EL-0008",
-     "EL-0038",
-     "EL-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.3256880733944954,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-23",
-    "question_type": "procedural",
-    "top": [
-     "BK-0007",
-     "BK-0022",
-     "BK-0008",
-     "BK-0009",
-     "BK-0034",
-     "BK-0021",
-     "EL-0012",
-     "BK-0006",
-     "EL-0019",
-     "BK-0002"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7714285714285715,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.5,
-     "0.8": 0.5,
-     "1.0": 0.5
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-24",
-    "question_type": "factoid",
-    "top": [
-     "BK-0004",
-     "EL-0056",
-     "BK-0012",
-     "BK-0013",
-     "BK-0048",
-     "BK-0020",
-     "BK-0001",
-     "EL-0024",
-     "EL-0010",
-     "EL-0004"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.10557184750733138,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.718475073313783,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.718475073313783,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.718475073313783,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.6666666666666666,
-     "0.8": 0.6666666666666666,
-     "1.0": 0.6666666666666666
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-25",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "BK-0020",
-     "BK-0048",
-     "EL-0000",
-     "EL-0003",
-     "BK-0041",
-     "EL-0052",
-     "EL-0054",
-     "BK-0033",
-     "BK-0030"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.4
-   },
-   {
-    "id": "KIN-26",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0029",
-     "EL-0038",
-     "EL-0023",
-     "EL-0028",
-     "EL-0030",
-     "BK-0024",
-     "BK-0041",
-     "EL-0000",
-     "EL-0037",
-     "EL-0039"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.36907216494845363,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8577319587628865,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-27",
-    "question_type": "procedural",
-    "top": [
-     "EL-0031",
-     "EL-0030",
-     "BK-0042",
-     "BK-0041",
-     "EL-0035",
-     "BK-0020",
-     "EL-0034",
-     "EL-0036",
-     "EL-0000",
-     "EL-0038"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8012820512820513,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8012820512820513,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.75,
-      "coverage": 0.8012820512820513,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.75,
-     "0.8": 0.75,
-     "1.0": 0.75
-    },
-    "other_doc_rate": 0.6
-   },
-   {
-    "id": "KIN-28",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "EL-0008",
-     "EL-0002",
-     "EL-0045",
-     "BK-0020",
-     "EL-0048",
-     "EL-0007",
-     "BK-0023",
-     "BK-0040",
-     "BK-0048"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-29",
-    "question_type": "factoid",
-    "top": [
-     "EL-0006",
-     "EL-0045",
-     "EL-0008",
-     "BK-0041",
-     "EL-0024",
-     "EL-0009",
-     "EL-0000",
-     "BK-0043",
-     "EL-0003",
-     "EL-0044"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-30",
-    "question_type": "procedural",
-    "top": [
-     "BK-0047",
-     "EL-0012",
-     "EL-0009",
-     "EL-0008",
-     "EL-0028",
-     "EL-0038",
-     "BK-0021",
-     "EL-0000",
-     "BK-0018",
-     "BK-0027"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.8
-   },
-   {
-    "id": "KIN-31",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0033",
-     "BK-0048",
-     "BK-0020",
-     "BK-0019",
-     "BK-0032",
-     "EL-0038",
-     "EL-0008",
-     "BK-0023",
-     "BK-0006",
-     "EL-0006"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 1.0
-   },
-   {
-    "id": "KIN-34",
-    "question_type": "factoid",
-    "top": [
-     "BK-0052",
-     "BK-0003",
-     "BK-0013",
-     "BK-0047",
-     "BK-0005",
-     "EL-0015",
-     "BK-0014",
-     "BK-0016",
-     "BK-0031",
-     "BK-0050"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.7359098228663447,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.0
-   },
-   {
-    "id": "KIN-36",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0013",
-     "BK-0001",
-     "EL-0054",
-     "BK-0004",
-     "BK-0048",
-     "BK-0012",
-     "BK-0042",
-     "BK-0010",
-     "BK-0041",
-     "EL-0024"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-37",
-    "question_type": "summary",
-    "top": [
-     "BK-0010",
-     "BK-0001",
-     "BK-0021",
-     "EL-0008",
-     "BK-0006",
-     "EL-0012",
-     "BK-0013",
-     "BK-0020",
-     "BK-0034",
-     "BK-0009"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 0.3333333333333333,
-      "coverage": 0.7267950963222417,
-      "precision": 0.2
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.6666666666666666,
-      "coverage": 0.8704028021015762,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.3333333333333333,
-     "0.8": 0.3333333333333333,
-     "1.0": 0.3333333333333333
-    },
-    "other_doc_rate": 0.2
-   },
-   {
-    "id": "KIN-38",
-    "question_type": "multi_hop",
-    "top": [
-     "EL-0007",
-     "EL-0006",
-     "EL-0000",
-     "BK-0048",
-     "EL-0008",
-     "EL-0015",
-     "BK-0020",
-     "EL-0003",
-     "EL-0012",
-     "BK-0002"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.6790697674418604,
-      "precision": 0.3333333333333333
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-39",
-    "question_type": "factoid",
-    "top": [
-     "EL-0010",
-     "EL-0008",
-     "BK-0033",
-     "BK-0015",
-     "EL-0005",
-     "BK-0041",
-     "EL-0009",
-     "BK-0034",
-     "EL-0000",
-     "EL-0012"
-    ],
-    "scores": {
-     "1": {
-      "hit": 1.0,
-      "recall": 0.5,
-      "coverage": 0.5137614678899083,
-      "precision": 1.0
-     },
-     "3": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.6666666666666666
-     },
-     "5": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.4
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 1.0,
-      "coverage": 1.0,
-      "precision": 0.2
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 1.0,
-     "0.8": 1.0,
-     "1.0": 1.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-40",
-    "question_type": "multi_hop",
-    "top": [
-     "BK-0033",
-     "BK-0048",
-     "BK-0020",
-     "BK-0044",
-     "BK-0041",
-     "BK-0034",
-     "BK-0027",
-     "BK-0019",
-     "EL-0000",
-     "BK-0017"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 1.0,
-      "recall": 0.25,
-      "coverage": 0.319693094629156,
-      "precision": 0.1
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": null
-   },
-   {
-    "id": "KIN-41",
-    "question_type": "procedural",
-    "top": [
-     "BK-0020",
-     "BK-0034",
-     "BK-0010",
-     "BK-0024",
-     "BK-0006",
-     "BK-0021",
-     "BK-0022",
-     "EL-0008",
-     "BK-0013",
-     "BK-0023"
-    ],
-    "scores": {
-     "1": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "3": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "5": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     },
-     "10": {
-      "hit": 0.0,
-      "recall": 0.0,
-      "coverage": 0.0,
-      "precision": 0.0
-     }
-    },
-    "recall_by_threshold": {
-     "0.5": 0.0,
-     "0.8": 0.0,
-     "1.0": 0.0
-    },
-    "other_doc_rate": 1.0
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
    }
-  ]
- }
+  },
+  {
+   "id": "KIN-05",
+   "question_type": "factoid",
+   "answerability": "full",
+   "top": [
+    "BK-0013",
+    "BK-0025",
+    "BK-0035",
+    "BK-0014",
+    "BK-0001",
+    "BK-0010",
+    "BK-0015",
+    "BK-0012",
+    "EL-0015",
+    "EL-0016"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.4105263157894737,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-06",
+   "question_type": "multi_hop",
+   "answerability": "partial",
+   "top": [
+    "BK-0025",
+    "BK-0013",
+    "BK-0001",
+    "BK-0014",
+    "BK-0004",
+    "BK-0010",
+    "BK-0035",
+    "BK-0012",
+    "BK-0041",
+    "BK-0050"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.75,
+     "coverage": 0.6547945205479452,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-07",
+   "question_type": "factoid",
+   "answerability": "full",
+   "top": [
+    "BK-0044",
+    "EL-0041",
+    "EL-0042",
+    "EL-0040",
+    "BK-0020",
+    "BK-0038",
+    "BK-0030",
+    "BK-0041",
+    "BK-0016",
+    "BK-0048"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-08",
+   "question_type": "factoid",
+   "answerability": "full",
+   "top": [
+    "BK-0020",
+    "EL-0007",
+    "BK-0040",
+    "EL-0000",
+    "EL-0006",
+    "EL-0024",
+    "BK-0045",
+    "EL-0008",
+    "EL-0002",
+    "EL-0003"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.27007299270072993,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.27007299270072993,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.5,
+    "0.8": 0.5,
+    "1.0": 0.5
+   }
+  },
+  {
+   "id": "KIN-09",
+   "question_type": "procedural",
+   "answerability": "full",
+   "top": [
+    "BK-0018",
+    "BK-0033",
+    "BK-0032",
+    "EL-0013",
+    "EL-0008",
+    "EL-0010",
+    "BK-0048",
+    "BK-0010",
+    "BK-0019",
+    "BK-0007"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "5": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.5450236966824644,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.0,
+    "0.8": 0.0,
+    "1.0": 0.0
+   }
+  },
+  {
+   "id": "KIN-10",
+   "question_type": "multi_hop",
+   "answerability": "full",
+   "top": [
+    "BK-0020",
+    "BK-0048",
+    "EL-0003",
+    "EL-0008",
+    "BK-0041",
+    "BK-0040",
+    "EL-0024",
+    "EL-0000",
+    "EL-0055",
+    "BK-0027"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.14285714285714285,
+     "coverage": 0.2797297297297297,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.14285714285714285,
+     "coverage": 0.26584022038567495,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.14285714285714285,
+    "0.8": 0.14285714285714285,
+    "1.0": 0.14285714285714285
+   }
+  },
+  {
+   "id": "KIN-11",
+   "question_type": "multi_hop",
+   "answerability": "partial",
+   "top": [
+    "BK-0020",
+    "EL-0010",
+    "EL-0003",
+    "BK-0033",
+    "EL-0002",
+    "EL-0008",
+    "BK-0048",
+    "EL-0024",
+    "BK-0044",
+    "BK-0006"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.4954627949183303,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.75,
+     "coverage": 0.7186932849364791,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.75,
+     "coverage": 0.7186932849364791,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.75,
+    "0.8": 0.75,
+    "1.0": 0.75
+   }
+  },
+  {
+   "id": "KIN-12",
+   "question_type": "multi_hop",
+   "answerability": "full",
+   "top": [
+    "BK-0025",
+    "BK-0013",
+    "EL-0015",
+    "BK-0012",
+    "EL-0016",
+    "BK-0046",
+    "BK-0015",
+    "BK-0001",
+    "BK-0014",
+    "BK-0017"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.5185185185185185,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.5185185185185185,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.5185185185185185,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.3333333333333333,
+    "0.8": 0.3333333333333333,
+    "1.0": 0.3333333333333333
+   }
+  },
+  {
+   "id": "KIN-14",
+   "question_type": "procedural",
+   "answerability": "full",
+   "top": [
+    "BK-0020",
+    "BK-0030",
+    "BK-0044",
+    "BK-0019",
+    "BK-0041",
+    "EL-0041",
+    "BK-0009",
+    "EL-0042",
+    "BK-0006",
+    "BK-0029"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.5509138381201044,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.5509138381201044,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.5509138381201044,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.5509138381201044,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.3333333333333333,
+    "0.8": 0.3333333333333333,
+    "1.0": 0.3333333333333333
+   }
+  },
+  {
+   "id": "KIN-15",
+   "question_type": "multi_hop",
+   "answerability": "partial",
+   "top": [
+    "BK-0048",
+    "BK-0049",
+    "EL-0057",
+    "EL-0055",
+    "EL-0054",
+    "BK-0027",
+    "EL-0058",
+    "EL-0056",
+    "BK-0023",
+    "BK-0028"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.2,
+     "coverage": 0.08216432865731463,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.4,
+     "coverage": 0.2905811623246493,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.8
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-16",
+   "question_type": "procedural",
+   "answerability": "full",
+   "top": [
+    "BK-0024",
+    "EL-0021",
+    "BK-0023",
+    "EL-0008",
+    "BK-0020",
+    "BK-0007",
+    "BK-0021",
+    "BK-0033",
+    "BK-0006",
+    "BK-0002"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.6652631578947369,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.7789473684210526,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.6
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-17",
+   "question_type": "factoid",
+   "answerability": "full",
+   "top": [
+    "EL-0003",
+    "BK-0041",
+    "EL-0002",
+    "EL-0005",
+    "BK-0020",
+    "EL-0013",
+    "BK-0009",
+    "EL-0024",
+    "BK-0013",
+    "BK-0042"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.24752475247524752,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.8811881188118812,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.8811881188118812,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.6666666666666666,
+    "0.8": 0.6666666666666666,
+    "1.0": 0.6666666666666666
+   }
+  },
+  {
+   "id": "KIN-18",
+   "question_type": "factoid",
+   "answerability": "full",
+   "top": [
+    "BK-0013",
+    "BK-0025",
+    "BK-0014",
+    "BK-0046",
+    "BK-0052",
+    "BK-0001",
+    "EL-0016",
+    "EL-0015",
+    "BK-0015",
+    "BK-0012"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.7097625329815304,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.7097625329815304,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.7097625329815304,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.6666666666666666,
+    "0.8": 0.6666666666666666,
+    "1.0": 0.6666666666666666
+   }
+  },
+  {
+   "id": "KIN-19",
+   "question_type": "multi_hop",
+   "answerability": "full",
+   "top": [
+    "BK-0044",
+    "EL-0041",
+    "BK-0020",
+    "BK-0019",
+    "BK-0038",
+    "EL-0024",
+    "EL-0042",
+    "BK-0041",
+    "EL-0040",
+    "BK-0030"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.1590909090909091,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.1590909090909091,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.6
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-21",
+   "question_type": "factoid",
+   "answerability": "partial",
+   "top": [
+    "EL-0006",
+    "EL-0000",
+    "BK-0048",
+    "BK-0020",
+    "EL-0010",
+    "EL-0008",
+    "EL-0047",
+    "BK-0033",
+    "BK-0028",
+    "EL-0007"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-22",
+   "question_type": "multi_hop",
+   "answerability": "full",
+   "top": [
+    "EL-0007",
+    "BK-0029",
+    "EL-0006",
+    "BK-0020",
+    "EL-0003",
+    "EL-0000",
+    "BK-0040",
+    "EL-0008",
+    "EL-0038",
+    "EL-0048"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.3256880733944954,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.3256880733944954,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.3256880733944954,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.3256880733944954,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.3333333333333333,
+    "0.8": 0.3333333333333333,
+    "1.0": 0.3333333333333333
+   }
+  },
+  {
+   "id": "KIN-23",
+   "question_type": "procedural",
+   "answerability": "full",
+   "top": [
+    "BK-0007",
+    "BK-0022",
+    "BK-0008",
+    "BK-0009",
+    "BK-0034",
+    "BK-0021",
+    "EL-0012",
+    "BK-0006",
+    "EL-0019",
+    "BK-0002"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.7714285714285715,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.7714285714285715,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.5,
+    "0.8": 0.5,
+    "1.0": 0.5
+   }
+  },
+  {
+   "id": "KIN-24",
+   "question_type": "factoid",
+   "answerability": "partial",
+   "top": [
+    "BK-0004",
+    "EL-0056",
+    "BK-0012",
+    "BK-0013",
+    "BK-0048",
+    "BK-0020",
+    "BK-0001",
+    "EL-0024",
+    "EL-0010",
+    "EL-0004"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.10557184750733138,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.718475073313783,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.718475073313783,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.718475073313783,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.6666666666666666,
+    "0.8": 0.6666666666666666,
+    "1.0": 0.6666666666666666
+   }
+  },
+  {
+   "id": "KIN-25",
+   "question_type": "factoid",
+   "answerability": "partial",
+   "top": [
+    "EL-0006",
+    "BK-0020",
+    "BK-0048",
+    "EL-0000",
+    "EL-0003",
+    "BK-0041",
+    "EL-0052",
+    "EL-0054",
+    "BK-0033",
+    "BK-0030"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-26",
+   "question_type": "multi_hop",
+   "answerability": "full",
+   "top": [
+    "BK-0029",
+    "EL-0038",
+    "EL-0023",
+    "EL-0028",
+    "EL-0030",
+    "BK-0024",
+    "BK-0041",
+    "EL-0000",
+    "EL-0037",
+    "EL-0039"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.36907216494845363,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.75,
+     "coverage": 0.8577319587628865,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.6
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-27",
+   "question_type": "procedural",
+   "answerability": "full",
+   "top": [
+    "EL-0031",
+    "EL-0030",
+    "BK-0042",
+    "BK-0041",
+    "EL-0035",
+    "BK-0020",
+    "EL-0034",
+    "EL-0036",
+    "EL-0000",
+    "EL-0038"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.75,
+     "coverage": 0.8012820512820513,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.75,
+     "coverage": 0.8012820512820513,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.75,
+     "coverage": 0.8012820512820513,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.75,
+    "0.8": 0.75,
+    "1.0": 0.75
+   }
+  },
+  {
+   "id": "KIN-28",
+   "question_type": "factoid",
+   "answerability": "full",
+   "top": [
+    "EL-0006",
+    "EL-0008",
+    "EL-0002",
+    "EL-0045",
+    "BK-0020",
+    "EL-0048",
+    "EL-0007",
+    "BK-0023",
+    "BK-0040",
+    "BK-0048"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-29",
+   "question_type": "factoid",
+   "answerability": "partial",
+   "top": [
+    "EL-0006",
+    "EL-0045",
+    "EL-0008",
+    "BK-0041",
+    "EL-0024",
+    "EL-0009",
+    "EL-0000",
+    "BK-0043",
+    "EL-0003",
+    "EL-0044"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-30",
+   "question_type": "procedural",
+   "answerability": "partial",
+   "top": [
+    "BK-0047",
+    "EL-0012",
+    "EL-0009",
+    "EL-0008",
+    "EL-0028",
+    "EL-0038",
+    "BK-0021",
+    "EL-0000",
+    "BK-0018",
+    "BK-0027"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-31",
+   "question_type": "multi_hop",
+   "answerability": "partial",
+   "top": [
+    "BK-0033",
+    "BK-0048",
+    "BK-0020",
+    "BK-0019",
+    "BK-0032",
+    "EL-0038",
+    "EL-0008",
+    "BK-0023",
+    "BK-0006",
+    "EL-0006"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "5": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "10": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.0,
+    "0.8": 0.0,
+    "1.0": 0.0
+   }
+  },
+  {
+   "id": "KIN-34",
+   "question_type": "factoid",
+   "answerability": "partial",
+   "top": [
+    "BK-0052",
+    "BK-0003",
+    "BK-0013",
+    "BK-0047",
+    "BK-0005",
+    "EL-0015",
+    "BK-0014",
+    "BK-0016",
+    "BK-0031",
+    "BK-0050"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.7359098228663447,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-36",
+   "question_type": "multi_hop",
+   "answerability": "partial",
+   "top": [
+    "BK-0013",
+    "BK-0001",
+    "EL-0054",
+    "BK-0004",
+    "BK-0048",
+    "BK-0012",
+    "BK-0042",
+    "BK-0010",
+    "BK-0041",
+    "EL-0024"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-37",
+   "question_type": "summary",
+   "answerability": "partial",
+   "top": [
+    "BK-0010",
+    "BK-0001",
+    "BK-0021",
+    "EL-0008",
+    "BK-0006",
+    "EL-0012",
+    "BK-0013",
+    "BK-0020",
+    "BK-0034",
+    "BK-0009"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.7267950963222417,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.7267950963222417,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 0.3333333333333333,
+     "coverage": 0.7267950963222417,
+     "precision": 0.2
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.6666666666666666,
+     "coverage": 0.8704028021015762,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.3333333333333333,
+    "0.8": 0.3333333333333333,
+    "1.0": 0.3333333333333333
+   }
+  },
+  {
+   "id": "KIN-38",
+   "question_type": "multi_hop",
+   "answerability": "partial",
+   "top": [
+    "EL-0007",
+    "EL-0006",
+    "EL-0000",
+    "BK-0048",
+    "EL-0008",
+    "EL-0015",
+    "BK-0020",
+    "EL-0003",
+    "EL-0012",
+    "BK-0002"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.6790697674418604,
+     "precision": 0.3333333333333333
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-39",
+   "question_type": "factoid",
+   "answerability": "partial",
+   "top": [
+    "EL-0010",
+    "EL-0008",
+    "BK-0033",
+    "BK-0015",
+    "EL-0005",
+    "BK-0041",
+    "EL-0009",
+    "BK-0034",
+    "EL-0000",
+    "EL-0012"
+   ],
+   "scores": {
+    "1": {
+     "hit": 1.0,
+     "recall": 0.5,
+     "coverage": 0.5137614678899083,
+     "precision": 1.0
+    },
+    "3": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.6666666666666666
+    },
+    "5": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.4
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 1.0,
+     "coverage": 1.0,
+     "precision": 0.2
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 1.0,
+    "0.8": 1.0,
+    "1.0": 1.0
+   }
+  },
+  {
+   "id": "KIN-40",
+   "question_type": "multi_hop",
+   "answerability": "partial",
+   "top": [
+    "BK-0033",
+    "BK-0048",
+    "BK-0020",
+    "BK-0044",
+    "BK-0041",
+    "BK-0034",
+    "BK-0027",
+    "BK-0019",
+    "EL-0000",
+    "BK-0017"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "5": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "10": {
+     "hit": 1.0,
+     "recall": 0.25,
+     "coverage": 0.319693094629156,
+     "precision": 0.1
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.0,
+    "0.8": 0.0,
+    "1.0": 0.0
+   }
+  },
+  {
+   "id": "KIN-41",
+   "question_type": "procedural",
+   "answerability": "partial",
+   "top": [
+    "BK-0020",
+    "BK-0034",
+    "BK-0010",
+    "BK-0024",
+    "BK-0006",
+    "BK-0021",
+    "BK-0022",
+    "EL-0008",
+    "BK-0013",
+    "BK-0023"
+   ],
+   "scores": {
+    "1": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "3": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "5": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    },
+    "10": {
+     "hit": 0.0,
+     "recall": 0.0,
+     "coverage": 0.0,
+     "precision": 0.0
+    }
+   },
+   "recall_by_threshold": {
+    "0.5": 0.0,
+    "0.8": 0.0,
+    "1.0": 0.0
+   }
+  }
+ ]
 }
