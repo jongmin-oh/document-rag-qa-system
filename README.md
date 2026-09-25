@@ -56,8 +56,12 @@ python -m app.tasks.qa.ask "구직급여 하루 상한액은 얼마인가요?"  
 python main.py                             # API 서버 (http://127.0.0.1:8000/docs)
 python -m app.tasks.gold.build             # Gold Set 인용문 → 근거 좌표 (decision/gold_set.md)
 python -m app.tasks.eval.retrieval         # 검색 평가 → reports/retrieval.md
+python -m app.tasks.eval.answer            # 답변·거부·인용 평가 → reports/answer_eval.md
 pytest tests
 ```
+
+검색 평가는 Gold 근거의 회수율을, end-to-end 평가는 41문항 전체의 답변 가능성 판정, 거부, 실제 인용 청크와 Gold 근거의
+일치, 답변 정확성·완전성·충실성을 측정한다. 지표 정의와 LLM Judge의 한계는 `decision/evaluation.md`에 기록했다.
 
 ### API
 

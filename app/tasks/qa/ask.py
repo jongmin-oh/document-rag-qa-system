@@ -5,13 +5,14 @@
 """
 
 import sys
+from dataclasses import dataclass
 
 from google import genai
 from pydantic import BaseModel, Field
 
 from app.config import GeminiConfig
 from app.tasks.index.build import body, client
-from app.tasks.qa.search import embed_query, rank, rewrite
+from app.tasks.qa.search import embed_query, rank, rewrite_with_version
 
 TOP_K = 5
 SYSTEM = """당신은 고용보험 실업급여 안내 도우미입니다. 아래 [자료]만 근거로, 법령을 모르는 사람도 이해할 수 있게 쉬운 한국어로 답하세요.
@@ -45,14 +46,18 @@ class AskResponse(BaseModel):
     model_version: str
 
 
+@dataclass
+class AskTrace:
+    """평가기에서 쓰는 검색·생성 전체 실행 기록. API 응답에는 노출하지 않는다."""
+
+    rewritten_query: str
+    hits: list[tuple[float, dict]]
+    response: AskResponse
+    rewrite_model_version: str
+
+
 def pages(c: dict) -> str:
     return f"{c['page_start']}" + (f"–{c['page_end']}" if c["page_end"] != c["page_start"] else "")
-
-
-def search(client: genai.Client, question: str, k: int = TOP_K) -> list[tuple[float, dict]]:
-    # 검색만 재작성한 질의로 하고, 답변은 사용자가 실제로 물은 원래 질문으로 만든다.
-    query = rewrite(client, question)
-    return rank(embed_query(client, query), query, k)
 
 
 def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
@@ -70,9 +75,7 @@ def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
     )
 
 
-def ask(client: genai.Client, question: str) -> AskResponse:
-    hits = search(client, question)
-    res = answer(client, question, hits)
+def build_response(res, hits: list[tuple[float, dict]]) -> AskResponse:
     out: Generated = res.parsed
     # 검색된 자료에 없는 번호는 버리고, 응답 불가면 인용하지 않는다.
     cited = [n for n in dict.fromkeys(out.citations) if 1 <= n <= len(hits)] if out.answerable else []
@@ -93,6 +96,18 @@ def ask(client: genai.Client, question: str) -> AskResponse:
         ],
         model_version=res.model_version,
     )
+
+
+def ask_with_trace(client: genai.Client, question: str) -> AskTrace:
+    """운영 ask와 같은 경로를 실행하고 평가에 필요한 중간 결과도 돌려준다."""
+    query, rewrite_model_version = rewrite_with_version(client, question)
+    hits = rank(embed_query(client, query), query, TOP_K)
+    res = answer(client, question, hits)
+    return AskTrace(query, hits, build_response(res, hits), rewrite_model_version)
+
+
+def ask(client: genai.Client, question: str) -> AskResponse:
+    return ask_with_trace(client, question).response
 
 
 def main():

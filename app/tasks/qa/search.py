@@ -61,13 +61,17 @@ def load():
     return ordered, vectors, BM25([c["title_prefix"] + "\n" + body(c) for c in ordered])
 
 
-def rewrite(client: genai.Client, question: str) -> str:
+def rewrite_with_version(client: genai.Client, question: str) -> tuple[str, str]:
     res = client.models.generate_content(
         model=GeminiConfig.LLM_MODEL,
         contents=REWRITE.format(question=question),
         config={"temperature": 0, "thinking_config": {"thinking_level": "low"}},
     )
-    return res.text.strip()
+    return res.text.strip(), res.model_version
+
+
+def rewrite(client: genai.Client, question: str) -> str:
+    return rewrite_with_version(client, question)[0]
 
 
 def embed_query(client: genai.Client, question: str) -> list[float]:

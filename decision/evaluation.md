@@ -1,0 +1,47 @@
+# End-to-end 평가 체계
+
+> 검색 품질과 최종 답변 품질을 분리해 진단한다. 검색 평가는 `retrieval.py`, 답변·거부·인용 평가는
+> `answer.py`가 담당하며 두 평가 모두 같은 Gold Set과 운영 검색·답변 코드를 사용한다.
+
+## 1. 평가 단위
+
+`python -m app.tasks.eval.answer`는 Gold Set 41문항 전체에 실제 운영 경로인 질의 재작성 → 하이브리드 검색 →
+답변 생성을 적용한다. API에는 노출하지 않는 trace에 재작성 질의, top-5 청크, 실제 인용 청크와 모델 버전을 남긴다.
+
+## 2. 결정론적 지표
+
+| 지표 | 정의 | 한계 |
+|---|---|---|
+| Answerability accuracy | `full`·`partial`은 답변, `none`은 거부했는지 | partial 답변의 내용 품질은 알 수 없음 |
+| Refusal recall / False answer rate | `none`을 거부한 비율 / 잘못 답한 비율 | none이 5개라 원시 개수도 함께 봐야 함 |
+| Citation integrity | 본문 `[n]`과 응답 citation 목록이 같고 top-5 안의 번호인지 | 인용이 주장을 지지하는지는 판단하지 않음 |
+| Citation presence | 답변에는 인용이 있고 거부에는 인용이 없는지 | 인용의 품질은 판단하지 않음 |
+| Gold evidence recall·precision·coverage | 실제 인용 청크와 Gold 근거 문자 구간의 겹침 | Gold에 등록하지 않은 정당한 대체 근거를 낮게 평가할 수 있음 |
+
+## 3. 의미 지표
+
+LLM Judge가 질문, Gold answerability, 참고 정답, Gold 근거, 생성 답변, 실제 인용 자료만 보고 0–4점으로 채점한다.
+
+- Correctness: 참고 정답과 의미상 일치하는가
+- Completeness: 문서로 답할 수 있는 핵심 항목을 빠짐없이 다뤘는가
+- Faithfulness: 검증 가능한 주장이 실제 인용 자료로 뒷받침되는가
+- Partial handling: `partial` 문항에서 자료 밖 부분을 밝히고 추측하지 않았는가
+
+Judge 입력에 검색됐지만 인용하지 않은 청크는 넣지 않는다. 그래야 인용하지 않은 자료로 답변을 사후 정당화하지 않는다.
+
+## 4. 근거와 한계
+
+- RAGAS는 검색 문맥, 답변 충실성, 답변 관련성을 분리해 평가한다: https://aclanthology.org/2024.eacl-demo.16/
+- ARES는 context relevance, answer faithfulness, answer relevance를 별도 축으로 둔다: https://aclanthology.org/2024.naacl-long.20/
+- ALCE는 citation correctness와 completeness를 평가한다: https://aclanthology.org/2023.emnlp-main.398/
+- RGB는 근거가 없을 때 답하지 않는 negative rejection과 여러 근거를 합치는 information integration을 평가한다:
+  https://arxiv.org/abs/2309.01431
+
+현재는 비용과 API 구성을 단순하게 유지하기 위해 답변 모델과 같은 Gemini 모델을 Judge로 쓴다. 자기 선호 편향이 있을 수
+있으므로 점수를 절대적인 정답으로 보지 않는다. 최종 분석에서는 유형별 표본을 사람이 같은 기준으로 채점해 Judge와의
+불일치를 기록해야 한다. 문항 수가 41개이고 none은 5개뿐이므로 작은 차이를 일반화하지 않으며 하나의 종합 점수로 합치지 않는다.
+
+## 5. 재현성
+
+JSON 리포트에 코드 커밋과 dirty 상태, 설정 모델과 실제 응답 모델 버전, Judge 프롬프트 해시, 임베딩 모델·차원과 인덱스
+해시, temperature와 seed 지원 여부를 기록한다. Gemini API 호출 결과는 제공사 변경으로 완전히 결정론적이지 않을 수 있다.
