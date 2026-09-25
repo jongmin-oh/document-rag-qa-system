@@ -14,9 +14,10 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
+from app.config import GeminiConfig
 from app.tasks.index.build import client, load_meta
 from app.tasks.ingest.build import OUT
-from app.tasks.qa.search import BM25_B, BM25_K1, RRF_K, embed_query, rank
+from app.tasks.qa.search import BM25_B, BM25_K1, RRF_K, embed_query, rank, rewrite
 
 REPORTS = Path(__file__).resolve().parents[3] / "reports"
 KS = (1, 3, 5, 10)
@@ -68,10 +69,12 @@ def evaluate() -> dict:
     items = [i for i in items if i["evidence"]]
     rows = []
     for n, item in enumerate(items, 1):
-        ranked = [c for _, c in rank(embed_query(gemini, item["question"]), item["question"], max(KS))]
+        query = rewrite(gemini, item["question"])
+        ranked = [c for _, c in rank(embed_query(gemini, query), query, max(KS))]
         rows.append(
             {
                 "id": item["id"],
+                "query": query,
                 "question_type": item["question_type"],
                 "answerability": item["answerability"],
                 "top": [c["chunk_id"] for c in ranked],
@@ -86,6 +89,7 @@ def evaluate() -> dict:
         "meta": {
             "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "git_commit": git_commit(),
+            "rewrite_model": GeminiConfig.LLM_MODEL,
             "embedding_model": index["model"],
             "embedding_dim": index["dim"],
             "n_chunks": len(index["chunk_ids"]),
@@ -104,6 +108,7 @@ def report(result: dict) -> str:
         "# 검색 평가 리포트",
         "",
         f"- 실행: {meta['run_at']} / 커밋 `{meta['git_commit']}`",
+        f"- 질의 재작성: `{meta['rewrite_model']}` (temperature 0), 재작성 결과는 맨 아래 표",
         f"- 검색: 하이브리드 — `{meta['embedding_model']}` {meta['embedding_dim']}차원 + BM25(글자 2-gram, "
         f"k1={meta['bm25']['k1']}, b={meta['bm25']['b']}), RRF k={meta['rrf_k']} / 청크 {meta['n_chunks']}개",
         f"- 문항: {meta['n_items']}개 (answerability none 제외), 근거 회수 임계값 {meta['threshold']}",
@@ -129,6 +134,8 @@ def report(result: dict) -> str:
         s = r["scores"][str(MAIN_K)]
         top = ", ".join(r["top"][:MAIN_K])
         lines.append(f"| {r['id']} | {r['question_type']} | {s['hit']:.0f} | {s['recall']:.2f} | {s['coverage']:.2f} | {top} |")
+    lines += ["", "## 재작성 질의", "", "| id | 검색에 쓴 질의 |", "|---|---|"]
+    lines += [f"| {r['id']} | {r['query']} |" for r in rows]
     return "\n".join(lines) + "\n"
 
 

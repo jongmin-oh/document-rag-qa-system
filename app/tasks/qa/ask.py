@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 from app.config import GeminiConfig
 from app.tasks.index.build import body, client
-from app.tasks.qa.search import embed_query, rank
+from app.tasks.qa.search import embed_query, rank, rewrite
 
 TOP_K = 5
 SYSTEM = """당신은 고용보험 실업급여 안내 도우미입니다. 아래 [자료]만 근거로, 법령을 모르는 사람도 이해할 수 있게 쉬운 한국어로 답하세요.
@@ -50,7 +50,9 @@ def pages(c: dict) -> str:
 
 
 def search(client: genai.Client, question: str, k: int = TOP_K) -> list[tuple[float, dict]]:
-    return rank(embed_query(client, question), question, k)
+    # 검색만 재작성한 질의로 하고, 답변은 사용자가 실제로 물은 원래 질문으로 만든다.
+    query = rewrite(client, question)
+    return rank(embed_query(client, query), query, k)
 
 
 def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
