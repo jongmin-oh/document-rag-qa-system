@@ -3,3 +3,5 @@ pytest==8.4.2
 pyflakes==4.0.0
 pyyaml==6.0.2
 google-genai==2.25.0
+fastapi==0.141.1
+uvicorn==0.53.0
