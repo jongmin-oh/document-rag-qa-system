@@ -10,7 +10,7 @@ import re
 
 import pdfplumber
 
-from app.ingest.common import Line, Unit, make_unit, normalize, page_lines
+from tools.pdf_to_markdown.common import Line, Unit, make_unit, normalize, page_lines
 
 DOC_ID = "easylaw_unemployment_benefit"
 BODY_START_PAGE = 4  # 1쪽 표지, 2쪽 안내문, 3쪽 목차
@@ -31,6 +31,7 @@ def _clean(cell) -> str:
 
 
 def serialize_table(rows: list[list], title: str) -> str:
+    """셀 표 → Markdown 표. 병합 셀을 채우고 행·열 머리글은 원문 표현 그대로 둔다."""
     rows = [[_clean(c) for c in r] for r in rows]
     header_rows = [rows[0]]
     for r in rows[1:]:
@@ -40,44 +41,49 @@ def serialize_table(rows: list[list], title: str) -> str:
     data_rows = rows[len(header_rows) :]
 
     top = rows[0]
-    n_label = 1
+    n_label = 1  # 왼쪽 행 머리글 열 수 (첫 머리글 칸의 가로 병합 범위)
     while n_label < len(top) and top[n_label] == "":
         n_label += 1
 
-    filled = []
-    for hr in header_rows:  # 가로 병합된 머리글 채우기
-        out, last = [], ""
-        for j, c in enumerate(hr):
-            last = c or (last if j >= n_label else "")
-            out.append(last)
-        filled.append(out)
     col_headers = []
     for j in range(n_label, len(top)):
         parts = []
-        for hr in filled:
-            if hr[j] and hr[j] not in parts:
-                parts.append(hr[j])
+        for hr in header_rows:
+            k = j
+            while k > n_label and not hr[k]:  # 가로 병합된 머리글
+                k -= 1
+            if hr[k] and hr[k] not in parts:
+                parts.append(hr[k])
         col_headers.append(" ".join(parts))
 
-    lines = [f"표: {title}"]
-    if any(col_headers):
-        lines.append("열: " + " | ".join(h for h in col_headers if h))
+    md = [f"표: {title}", "", "| " + " | ".join([top[0]] + col_headers) + " |", "|" + "---|" * (len(col_headers) + 1)]
     labels = [""] * n_label
     for r in data_rows:
-        for j in range(n_label):  # 세로 병합된 행 머리글 채우기
+        for j in range(n_label):  # 세로 병합된 행 머리글
             if r[j]:
                 labels[j] = r[j]
-                for k in range(j + 1, n_label):
-                    labels[k] = ""
-        row_label = " ".join(dict.fromkeys(l for l in labels if l))
-        cells = []
-        for j, v in enumerate(r[n_label:]):
-            if v:
-                h = col_headers[j]
-                cells.append(f"{h}: {v}" if h else v)
-        if cells:
-            lines.append(f"{row_label}: " + " | ".join(cells) if row_label else " | ".join(cells))
+                labels[j + 1 :] = [""] * (n_label - j - 1)
+        cells = [" ".join(dict.fromkeys(l for l in labels if l))] + r[n_label:]
+        md.append("| " + " | ".join(c.replace("|", "/") for c in cells) + " |")
+    return "\n".join(md)
+
+
+def serialize_tree(rows: list[list], title: str) -> str:
+    """분류표(구분 > 종류 > 세부 종류)처럼 값 열 없이 계층만 있는 표 → "상위 > 하위" 목록."""
+    rows = [[_clean(c) for c in r] for r in rows]
+    header = " > ".join(dict.fromkeys(h for h in rows[0] if h))
+    lines, path = [f"표: {title} ({header})", ""], [""] * len(rows[0])
+    for r in rows[1:]:
+        for j, c in enumerate(r):
+            if c:
+                path[j] = c
+                path[j + 1 :] = [""] * (len(path) - j - 1)
+        lines.append("- " + " > ".join(p for p in path if p))
     return "\n".join(lines)
+
+
+# 표별 직렬화 방식 (쪽 번호 → 방식). 기본은 serialize_table.
+TABLE_MODES = {5: serialize_tree}  # 5쪽 실업급여의 종류: 계층 분류표
 
 
 def _heading_level(block: list[Line]) -> int:
@@ -141,7 +147,7 @@ def parse(pdf_path) -> list[Unit]:
                 flush()
                 table, pno = obj
                 title = subpath[-1] if subpath else section_path[-1]
-                text = serialize_table(table.extract(), title)
+                text = TABLE_MODES.get(pno, serialize_table)(table.extract(), title)
                 fake = Line(text, 0, table.bbox[1], 0, 0, "", pno, pno)
                 units.append(make_unit(DOC_ID, section_id, section_path, subpath, "table", [fake], text=text))
                 prev = None

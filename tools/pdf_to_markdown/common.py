@@ -1,10 +1,9 @@
-"""추출·청킹 공통 자료구조와 유틸리티."""
+"""PDF 추출 공통 자료구조와 유틸리티."""
 
 import re
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-LAW_REF = re.compile(r"「([^」]+)」\s*(제\d+조(?:의\d+)?)")
 
 
 @dataclass
@@ -32,9 +31,8 @@ class Unit:
     pdf_pages: tuple[int, int]
     printed_pages: tuple[int, int]
     question: str = ""  # Q&A 단위일 때 원래 질문 (분할 시 앞에 다시 붙임)
-    is_heading: bool = False  # 제목만 있는 단위. 분할 시 뒤따르는 내용과 같은 청크에 둔다
-    char_start: int = -1
-    char_end: int = -1
+    is_heading: bool = False  # 제목만 있는 단위
+    line_pages: tuple[int, ...] = ()  # 줄별 인쇄 쪽 번호 (Markdown 쪽 표시용)
 
 
 def page_lines(page, pdf_page: int, printed_page: int, x_offset: float = 0.0, infer_spaces: bool = False) -> list[Line]:
@@ -61,15 +59,6 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def cited_laws(text: str) -> list[str]:
-    seen = []
-    for law, art in LAW_REF.findall(normalize(text)):
-        ref = f"{law} {art}"
-        if ref not in seen:
-            seen.append(ref)
-    return seen
-
-
 def make_unit(
     doc_id, section_id, section_path, subpath, content_type, lines: list[Line], question="", text=None, is_heading=False
 ) -> Unit:
@@ -84,4 +73,5 @@ def make_unit(
         printed_pages=(lines[0].printed_page, lines[-1].printed_page),
         question=question,
         is_heading=is_heading,
+        line_pages=tuple(l.printed_page for l in lines) if text is None else (lines[0].printed_page,) * (text.count("\n") + 1),
     )
