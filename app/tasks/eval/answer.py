@@ -96,7 +96,6 @@ answerable={str(trace.response.answerable).lower()}
     response = client.chat.completions.create(
         model=OpenRouterConfig.JUDGE_MODEL,
         messages=[{"role": "system", "content": JUDGE_SYSTEM}, {"role": "user", "content": prompt}],
-        temperature=0,
         response_format={
             "type": "json_schema",
             "json_schema": {"name": "judge_result", "strict": True, "schema": JudgeResult.model_json_schema()},
@@ -209,7 +208,8 @@ def evaluate() -> dict:
             "embedding_model": meta["model"],
             "embedding_dim": meta["dim"],
             "index_sha256": sha256(OUT / "embeddings.f32"),
-            "temperature": 0,
+            "answer_temperature": 0,
+            "judge_temperature": None,
             "seed": None,
         },
         "summary": summarize(rows),
@@ -244,6 +244,7 @@ def rejudge(result: dict) -> dict:
     print()
     meta = result["meta"]
     meta["answer_model"] = meta.pop("configured_model", meta.get("answer_model", GeminiConfig.LLM_MODEL))
+    meta["answer_temperature"] = meta.pop("temperature", meta.get("answer_temperature", 0))
     meta.setdefault("answer_git_commit", meta["git_commit"])
     meta.setdefault("answer_git_dirty", meta["git_dirty"])
     meta.update(
@@ -256,6 +257,7 @@ def rejudge(result: dict) -> dict:
             "judge_model_versions": sorted(versions),
             "judge_is_answer_model": False,
             "judge_prompt_sha256": hashlib.sha256(JUDGE_SYSTEM.encode()).hexdigest(),
+            "judge_temperature": None,
         }
     )
     result["summary"] = summarize(result["items"])
@@ -268,12 +270,16 @@ def group_summary(rows: list[dict], field: str, value: str) -> dict:
 
 def report(result: dict) -> str:
     meta, summary, rows = result["meta"], result["summary"], result["items"]
+    answer_temperature = meta.get("answer_temperature", meta.get("temperature", 0))
+    judge_temperature = meta.get("judge_temperature")
+    judge_temperature_label = "API 기본값" if judge_temperature is None else str(judge_temperature)
     lines = [
         "# End-to-end 답변 평가 리포트",
         "",
         f"- 답변 실행: {meta['run_at']} / 커밋 `{meta.get('answer_git_commit', meta['git_commit'])}` / "
         f"dirty `{str(meta.get('answer_git_dirty', meta['git_dirty'])).lower()}`",
-        f"- 문항: {summary['n_items']}개 / 생성·Judge temperature {meta['temperature']}",
+        f"- 문항: {summary['n_items']}개 / 답변 temperature {answer_temperature} / "
+        f"Judge temperature {judge_temperature_label}",
         f"- 답변 모델: `{meta['answer_model']}` / Judge: OpenRouter `{meta['judge_model']}`",
         "- 결정론적 지표: answerability, citation 형식, Gold 근거 좌표와 인용 청크의 일치",
         "- 의미 지표: 참고 정답과 실제 인용 문맥을 이용한 0–4점 LLM Judge",

@@ -168,6 +168,7 @@ def test_openrouter_judge_uses_strict_structured_output():
     assert result.parsed.correctness == 4
     assert result.model_version == "openai/gpt-5.4-mini-actual"
     assert completions.kwargs["model"] == OpenRouterConfig.JUDGE_MODEL
+    assert "temperature" not in completions.kwargs
     assert completions.kwargs["response_format"]["json_schema"]["strict"] is True
     assert completions.kwargs["extra_body"]["provider"]["require_parameters"] is True
 
