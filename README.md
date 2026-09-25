@@ -38,3 +38,20 @@
 - **수첩 레이아웃**: PDF 한 장에 책자 2쪽이 좌우로 배치되어 있어 좌우를 분리해 추출해야 한다. citation에는 책자 인쇄 쪽 번호를 사용한다.
 - **서식 페이지**: 수첩 1–10장은 실업인정 기록표, 달력 등 빈 서식이라 인덱싱에서 제외한다.
 - **단일 발행처 편향**: 정부 공식 안내만 포함하므로 실제 심사 사례, 판례, 예외 처리 관행은 다루지 못한다.
+
+## 실행
+
+모델 선정 근거는 `decision/models.md`에 있다. `app/secrets.yml`(git 추적 제외)에 Gemini API 키를 넣는다.
+
+```yaml
+GEMINI:
+  API_KEY: <키>
+```
+
+```bash
+pip install -r requirements.txt
+python -m app.tasks.ingest.build           # Markdown → canonical text, 청크
+python -m app.tasks.index.build            # 청크 → Gemini Embedding 2 벡터 (조건 C)
+python -m app.tasks.qa.ask "구직급여 하루 상한액은 얼마인가요?"
+pytest tests
+```
