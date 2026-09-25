@@ -3,7 +3,7 @@
 from types import SimpleNamespace
 
 from app.tasks.eval.answer import deterministic, summarize
-from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers
+from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers, clean_answer
 
 
 def item(answerability="full", evidence=True):
@@ -62,7 +62,7 @@ def trace(answer="근거 있는 답 [1]", answerable=True, citations=(1,)):
         ],
         model_version="test-model",
     )
-    return AskTrace("검색 질의", hits, response, "test-model")
+    return AskTrace("검색 질의", hits, response, "test-model", answer)
 
 
 def test_answer_and_citation_match_gold_evidence():
@@ -82,6 +82,11 @@ def test_citation_numbers_supports_single_and_grouped_notation():
     assert citation_numbers("첫 주장 [1], 다음 주장 [2, 4], 다시 [1]") == [1, 2, 4]
 
 
+def test_clean_answer_removes_internal_citations_and_extra_spaces():
+    assert clean_answer("첫 주장 [1]. 다음 주장 [2, 4]!") == "첫 주장. 다음 주장!"
+    assert clean_answer("앞 [1] 뒤") == "앞 뒤"
+
+
 def test_api_citations_are_derived_from_answer_text():
     generated = SimpleNamespace(
         parsed=Generated(answerable=True, answer="근거 [2, 1]"),
@@ -89,6 +94,7 @@ def test_api_citations_are_derived_from_answer_text():
     )
     response = build_response(generated, trace().hits)
     assert [c.n for c in response.citations] == [2, 1]
+    assert response.answer == "근거"
 
 
 def test_answer_needs_inline_citation_even_if_response_lists_one():

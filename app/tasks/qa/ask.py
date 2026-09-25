@@ -55,6 +55,7 @@ class AskTrace:
     hits: list[tuple[float, dict]]
     response: AskResponse
     rewrite_model_version: str
+    annotated_answer: str
 
 
 def pages(c: dict) -> str:
@@ -65,6 +66,13 @@ def citation_numbers(answer: str) -> list[int]:
     """본문의 [1]과 [1, 3] 형식에서 번호를 등장 순서대로 중복 없이 뽑는다."""
     numbers = (int(n.strip()) for group in CITATION_GROUP.findall(answer) for n in group.split(","))
     return list(dict.fromkeys(numbers))
+
+
+def clean_answer(answer: str) -> str:
+    """내부 인용 번호를 사용자에게 보여 줄 답변에서 제거한다."""
+    cleaned = CITATION_GROUP.sub("", answer)
+    cleaned = re.sub(r"[ \t]+([.,!?])", r"\1", cleaned)
+    return re.sub(r"[ \t]{2,}", " ", cleaned).strip()
 
 
 def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
@@ -88,7 +96,7 @@ def build_response(res, hits: list[tuple[float, dict]]) -> AskResponse:
     cited = [n for n in citation_numbers(out.answer) if 1 <= n <= len(hits)] if out.answerable else []
     return AskResponse(
         answerable=out.answerable,
-        answer=out.answer,
+        answer=clean_answer(out.answer),
         citations=[
             Citation(
                 n=n,
@@ -110,7 +118,7 @@ def ask_with_trace(client: genai.Client, question: str) -> AskTrace:
     query, rewrite_model_version = rewrite_with_version(client, question)
     hits = rank(embed_query(client, query), query, TOP_K)
     res = answer(client, question, hits)
-    return AskTrace(query, hits, build_response(res, hits), rewrite_model_version)
+    return AskTrace(query, hits, build_response(res, hits), rewrite_model_version, res.parsed.answer)
 
 
 def ask(client: genai.Client, question: str) -> AskResponse:

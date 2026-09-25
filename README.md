@@ -74,7 +74,7 @@ pytest tests
 // 응답
 {
   "answerable": true,
-  "answer": "... 하루 최대 6만8,100원을 초과할 수 없습니다 [1].",
+  "answer": "... 하루 최대 6만8,100원을 초과할 수 없습니다.",
   "citations": [
     {"n": 1, "chunk_id": "EL-0027", "source": "[생활법령 실업급여 | 2026-08-31 기준] 2. 구직급여 > ...", "page_start": 27, "page_end": 27, "score": 0.8143}
   ],
@@ -83,4 +83,4 @@ pytest tests
 ```
 
 - `answerable: false`: 검색된 자료에 답이 없어 응답 불가. 이때 `citations`는 비어 있다.
-- `citations`: 답변 안의 `[n]`이 가리키는 자료. 검색 결과에 없는 번호는 버린다.
+- `citations`: 답변 생성에 사용한 자료 목록. 내부 인용 번호는 사용자용 `answer`에서 제거한다.

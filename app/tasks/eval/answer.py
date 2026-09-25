@@ -71,7 +71,7 @@ def judge(client: genai.Client, item: dict, trace: AskTrace):
 
 [생성 답변]
 answerable={str(trace.response.answerable).lower()}
-{trace.response.answer}
+{trace.annotated_answer}
 
 [생성 답변이 실제 인용한 자료]
 {cited_context(trace) or '(인용 없음)'}"""
@@ -90,7 +90,7 @@ answerable={str(trace.response.answerable).lower()}
 
 def deterministic(item: dict, trace: AskTrace) -> dict:
     expected_answerable = item["answerability"] != "none"
-    inline = set(citation_numbers(trace.response.answer))
+    inline = set(citation_numbers(trace.annotated_answer))
     returned = {c.n for c in trace.response.citations}
     valid = set(range(1, len(trace.hits) + 1))
     cited_chunks = [trace.hits[c.n - 1][1] for c in trace.response.citations]
@@ -162,6 +162,7 @@ def evaluate() -> dict:
                 "answerability": item["answerability"],
                 "rewritten_query": trace.rewritten_query,
                 "top": [c["chunk_id"] for _, c in trace.hits],
+                "annotated_answer": trace.annotated_answer,
                 "response": trace.response.model_dump(),
                 "deterministic": deterministic(item, trace),
                 "judge": judged.parsed.model_dump(),
