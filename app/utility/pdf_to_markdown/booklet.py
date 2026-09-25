@@ -14,7 +14,7 @@ import re
 
 import pdfplumber
 
-from app.tools.pdf_to_markdown.common import Line, Unit, make_unit, nonspace_len, normalize, page_lines
+from app.utility.pdf_to_markdown.common import Line, Unit, make_unit, nonspace_len, normalize, page_lines
 
 DOC_ID = "work24_employment_dream_booklet"
 FOOTER_TOP = 390  # 쪽 번호

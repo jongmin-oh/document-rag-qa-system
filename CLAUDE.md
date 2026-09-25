@@ -64,7 +64,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 **The repository contains only code that the current pipeline runs. This rule overrides §3 where they conflict.**
 
 - Every file, function, and branch must be reachable from a documented entry point
-  (`python -m app.ingest.build`, `python -m app.tools.pdf_to_markdown.export`, `pytest tests`, or a later documented command).
+  (`python -m app.tasks.ingest.build`, `python -m app.utility.pdf_to_markdown.export`, `pytest tests`, or a later documented command).
 - When an approach is replaced, delete the old implementation in the same change. Do not keep it "just in case".
   Git history is the archive.
 - Forbidden: commented-out code, `_old`/`_v2`/`legacy`/`deprecated` files or functions, unused parameters or config flags,
@@ -79,7 +79,7 @@ Before finishing any change, verify:
 ```
 1. pyflakes app tests                      → no unused imports/variables
 2. grep for old module/file names           → no stale references
-3. python -m app.ingest.build && pytest tests → outputs regenerated, tests pass
+3. python -m app.tasks.ingest.build && pytest tests → outputs regenerated, tests pass
 ```
 
 ---

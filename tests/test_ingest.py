@@ -4,9 +4,9 @@ import re
 
 import pytest
 
-from app.ingest.build import DATA, build
-from app.ingest.chunker import HEADING, SOFT_LIMIT
-from app.ingest.laws import cited_laws
+from app.tasks.ingest.build import DATA, build
+from app.tasks.ingest.chunker import HEADING, SOFT_LIMIT
+from app.tasks.ingest.laws import cited_laws
 
 EL = "easylaw_unemployment_benefit"
 BK = "work24_employment_dream_booklet"

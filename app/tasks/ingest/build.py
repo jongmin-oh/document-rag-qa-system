@@ -1,6 +1,6 @@
 """검수된 Markdown → canonical text + 구조 기반 청크 + 검수 리포트.
 
-사용법: python -m app.ingest.build
+사용법: python -m app.tasks.ingest.build
 입력: app/data/markdown/{doc_id}.md  (PDF에서 1회 변환 후 사람이 검수한 원문)
 출력: app/data/processed/
   - {doc_id}.canonical.txt   Gold 근거 좌표의 기준 텍스트 (Markdown에서 주석 줄 제거)
@@ -12,9 +12,9 @@ import json
 import statistics
 from pathlib import Path
 
-from app.ingest.chunker import chunk_markdown, to_dict
+from app.tasks.ingest.chunker import chunk_markdown, to_dict
 
-DATA = Path(__file__).resolve().parents[1] / "data"
+DATA = Path(__file__).resolve().parents[2] / "data"
 OUT = DATA / "processed"
 DOCS = [  # (doc_id, 제목 접두어용 짧은 이름, 청크 ID 접두어)
     ("easylaw_unemployment_benefit", "생활법령 실업급여", "EL"),
