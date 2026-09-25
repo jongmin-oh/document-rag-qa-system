@@ -1,176 +1,222 @@
-"""Unit 목록 → canonical text + 구조 기반 청크.
+"""검수된 Markdown → canonical text + 구조 기반 청크.
 
-규칙은 docs/chunking_strategy.md 3절을 따른다.
-- 청크는 최하위 절(section_id)과 content_type 경계를 넘지 않는다. 표는 항상 단독 청크.
-- 절이 SOFT_LIMIT를 넘으면 소제목 1단계 → 2단계 → 문단 순으로 나눈다.
-- MIN_CHARS 미만 조각은 같은 절·같은 1단계 소제목·같은 content_type 안에서만 이웃과 합친다.
+청킹 규칙 (decision/chunking_strategy.md):
+1. Markdown 제목(#)으로 트리를 만든다.
+2. 제목 아래 전체(하위 제목 포함)가 SOFT_LIMIT 이하면 하나의 청크로 둔다.
+   넘으면 하위 제목으로 내려가 같은 규칙을 반복한다.
+   하위 제목이 없는데도 길면 문단(빈 줄 경계) 단위로 SOFT_LIMIT까지 채워 나눈다. 문단과 표는 쪼개지 않는다.
+3. 병합: 제목만 있는 조각은 다음 조각에 붙인다. MIN_CHARS 미만 조각은 같은 상위 제목 아래의
+   이웃 조각과 합친다. 단 Q&A(Q로 시작하는 제목)끼리는 합치지 않는다.
+
+canonical text = Markdown에서 주석 줄(<!-- p.N --> 쪽 표시 등)을 뺀 텍스트.
+모든 청크는 canonical text의 연속 구간이고, Gold 근거도 같은 좌표를 쓴다.
 """
 
+import bisect
+import re
 from dataclasses import asdict, dataclass, field
 
-from app.ingest.common import Unit, cited_laws, nonspace_len
+from app.ingest.laws import cited_laws
 
-SOFT_LIMIT = 1500  # 공백 제외 글자 수. 분할 판단용 (최종 hard limit는 임베딩 tokenizer로 확정)
+SOFT_LIMIT = 1500  # 공백 제외 글자 수
 MIN_CHARS = 300
-UNIT_SEP = "\n\n"
+PAGE = re.compile(r"^<!-- p\.(\d+) -->$")
+COMMENT = re.compile(r"^<!--.*-->$")
+HEADING = re.compile(r"^(#{1,6}) (.+)$")
+QA_TITLE = re.compile(r"^Q\d")
+
+
+def size(text: str) -> int:
+    return len(re.sub(r"\s", "", text))
+
+
+@dataclass
+class Block:  # 빈 줄로 구분되는 문단·표·목록, 또는 제목 한 줄
+    start: int
+    end: int
+    level: int = 0  # 제목이면 1–6
+    title: str = ""
+
+
+@dataclass
+class Node:  # 제목 하나와 그 아래 내용
+    title: str
+    level: int
+    blocks: list[Block] = field(default_factory=list)  # 자기 제목 줄 + 첫 하위 제목 전까지의 본문
+    children: list["Node"] = field(default_factory=list)
+    start: int = 0
+    end: int = 0
+
+
+@dataclass
+class Span:  # 청크 후보 구간
+    start: int
+    end: int
+    path: list[str]
+    question_prefix: str = ""
 
 
 @dataclass
 class Chunk:
     chunk_id: str
     doc_id: str
-    parent_section_id: str
     section_path: list[str]
-    content_type: str
-    text: str  # canonical text의 [char_start, char_end) 구간 그대로
-    question_prefix: str  # 분할된 Q&A 조각 앞에 다시 붙이는 원래 질문 (canonical text 밖)
-    title_prefix: str  # 조건 C에서만 쓰는 제목 경로 접두어
+    content_type: str  # qa | prose
+    has_table: bool
+    text: str  # canonical text[char_start:char_end]
+    question_prefix: str  # 나뉜 Q&A의 뒤쪽 조각에 다시 붙이는 질문 (canonical text 밖)
+    title_prefix: str  # 조건 C에서만 쓰는 "[문서 | 기준일] 제목 > 경로"
     char_start: int
     char_end: int
-    pdf_page_start: int
-    pdf_page_end: int
-    printed_page_start: int
-    printed_page_end: int
-    n_chars: int  # 공백 제외
-    cited_laws: list[str] = field(default_factory=list)
-    as_of: str = ""
+    page_start: int
+    page_end: int
+    n_chars: int
+    cited_laws: list[str]
+    as_of: str
 
     def embedding_text(self, with_title: bool) -> str:
         body = f"{self.question_prefix}\n{self.text}" if self.question_prefix else self.text
         return f"{self.title_prefix}\n{body}" if with_title else body
 
 
-def build_canonical(units: list[Unit]) -> str:
-    """Unit 텍스트를 이어 붙이고 각 Unit의 좌표를 기록한다."""
-    parts, pos = [], 0
-    for i, u in enumerate(units):
-        if i:
-            parts.append(UNIT_SEP)
-            pos += len(UNIT_SEP)
-        u.char_start, u.char_end = pos, pos + len(u.text)
-        parts.append(u.text)
-        pos = u.char_end
-    return "".join(parts)
+def load_markdown(md: str) -> tuple[str, list[tuple[int, int]]]:
+    """주석 줄을 뺀 canonical text와 (시작 위치, 쪽) 목록을 만든다."""
+    out, pages, pos, page = [], [], 0, 0
+    for line in md.split("\n"):
+        m = PAGE.match(line)
+        if m:
+            page = int(m.group(1))
+            continue
+        if COMMENT.match(line):
+            continue
+        if not pages or pages[-1][1] != page:
+            pages.append((pos, page))
+        out.append(line + "\n")
+        pos += len(line) + 1
+    return "".join(out), pages
 
 
-def _size(units: list[Unit]) -> int:
-    return sum(nonspace_len(u.text) for u in units)
+def split_blocks(text: str) -> list[Block]:
+    blocks, start, pos = [], None, 0
+    for line in text.split("\n"):
+        end = pos + len(line)
+        h = HEADING.match(line)
+        if h or not line.strip():  # 제목 줄과 빈 줄은 앞 문단을 닫는다
+            if start is not None:
+                blocks.append(Block(start, pos - 1))
+                start = None
+            if h:
+                blocks.append(Block(pos, end, len(h.group(1)), h.group(2).strip()))
+        elif start is None:
+            start = pos
+        pos = end + 1
+    if start is not None:
+        blocks.append(Block(start, len(text.rstrip("\n"))))
+    return blocks
 
 
-def _runs(units: list[Unit], key) -> list[list[Unit]]:
-    runs = []
-    for u in units:
-        if runs and key(runs[-1][-1]) == key(u):
-            runs[-1].append(u)
-        else:
-            runs.append([u])
-    return runs
+def build_tree(blocks: list[Block]) -> Node:
+    root = Node("", 0)
+    stack = [root]
+    for b in blocks:
+        if b.level:
+            while stack[-1].level >= b.level:
+                stack.pop()
+            node = Node(b.title, b.level, [b], start=b.start)
+            stack[-1].children.append(node)
+            stack.append(node)
+        else:  # 본문은 가장 최근에 열린(가장 깊은) 제목에 속한다
+            stack[-1].blocks.append(b)
+        for n in stack:  # 조상 노드의 끝 위치를 늘린다
+            n.end = max(n.end, b.end)
+    return root
 
 
-def _runs_attaching_headings(units: list[Unit], depth: int) -> list[list[Unit]]:
-    """subpath[:depth+1]로 묶되, 제목 단위는 뒤따르는 내용의 묶음에 붙인다."""
-    keys, nxt = [], None
-    for u in reversed(units):
-        k = nxt if (u.is_heading and nxt is not None) else u.subpath[: depth + 1]
-        keys.append(k)
-        nxt = k
-    keys.reverse()
-    groups = []
-    for u, k in zip(units, keys):
-        if groups and groups[-1][0] == k:
-            groups[-1][1].append(u)
-        else:
-            groups.append((k, [u]))
-    return [g for _, g in groups]
-
-
-def _pack(units: list[Unit]) -> list[list[Unit]]:
-    groups, cur = [], []
-    for u in units:
-        if cur and _size(cur) + nonspace_len(u.text) > SOFT_LIMIT:
-            groups.append(cur)
+def pack(blocks: list[Block], text: str, path: list[str]) -> list[Span]:
+    """연속된 블록을 SOFT_LIMIT까지 채워 묶는다. 블록 하나는 쪼개지 않는다."""
+    spans, cur = [], []
+    for b in blocks:
+        if cur and size(text[cur[0].start : b.end]) > SOFT_LIMIT:
+            spans.append(Span(cur[0].start, cur[-1].end, path))
             cur = []
-        cur.append(u)
+        cur.append(b)
     if cur:
-        groups.append(cur)
-    return groups
+        spans.append(Span(cur[0].start, cur[-1].end, path))
+    return spans
 
 
-def _split(units: list[Unit], depth: int = 0) -> list[list[Unit]]:
-    if _size(units) <= SOFT_LIMIT or len(units) == 1:
-        return [units]
-    max_depth = max(len(u.subpath) for u in units)
-    if depth >= max_depth:
-        return _pack(units)
-    groups = _runs_attaching_headings(units, depth)
-    if len(groups) == 1:
-        return _split(units, depth + 1)
-    return [g for grp in groups for g in _split(grp, depth + 1)]
+def split_node(node: Node, text: str, path: list[str]) -> list[Span]:
+    if node.level and size(text[node.start : node.end]) <= SOFT_LIMIT:
+        return [Span(node.start, node.end, path)]
+    spans = pack(node.blocks, text, path)
+    if QA_TITLE.match(node.title):  # 나뉜 Q&A는 뒤쪽 조각에도 질문을 붙인다
+        for s in spans[1:]:
+            s.question_prefix = node.title
+    for child in node.children:
+        spans += split_node(child, text, path + [child.title])
+    return spans
 
 
-def _common_subpath(units: list[Unit]) -> tuple[str, ...]:
-    first = units[0].subpath
-    n = 0
-    while n < len(first) and all(len(u.subpath) > n and u.subpath[n] == first[n] for u in units):
-        n += 1
-    return first[:n]
+def is_heading_only(span: Span, text: str) -> bool:
+    return all(HEADING.match(l) or not l.strip() for l in text[span.start : span.end].split("\n"))
 
 
-def _merge_small(groups: list[list[Unit]]) -> list[list[Unit]]:
-    out: list[list[Unit]] = []
-    for g in groups:
-        if out:
+def mergeable(a: Span, b: Span, text: str) -> bool:
+    if any(QA_TITLE.match(t) for t in a.path + b.path):
+        return False
+    # 같은 제목의 조각 / 상위 도입부와 첫 하위 항목 / 같은 상위 제목 아래 형제 (최상위 섹션끼리는 제외)
+    related = a.path == b.path or a.path == b.path[:-1] or (a.path[:-1] == b.path[:-1] and len(a.path) > 1)
+    small = size(text[a.start : a.end]) < MIN_CHARS or size(text[b.start : b.end]) < MIN_CHARS
+    return related and small and size(text[a.start : b.end]) <= SOFT_LIMIT
+
+
+def merge(spans: list[Span], text: str) -> list[Span]:
+    out: list[Span] = []
+    for s in spans:
+        if out and is_heading_only(out[-1], text):  # 제목만 있는 조각은 다음 조각에 붙인다
+            out[-1] = Span(out[-1].start, s.end, s.path, s.question_prefix)
+        elif out and not is_heading_only(s, text) and mergeable(out[-1], s, text):
             prev = out[-1]
-            # 같은 1단계 소제목 안의 형제 조각끼리만 합친다 (1단계 소제목 경계, 표, content_type 경계는 넘지 않음)
-            # 절 도입부(소제목 없는 조각: 절 제목, 출처 표기 등)는 뒤따르는 조각과 합칠 수 있다
-            preamble = not _common_subpath(prev) and _size(prev) < MIN_CHARS
-            same_parent = preamble or _common_subpath(prev)[:1] == _common_subpath(g)[:1]
-            same = same_parent and prev[0].content_type == g[0].content_type != "table"
-            small = _size(prev) < MIN_CHARS or _size(g) < MIN_CHARS
-            if same and small and _size(prev) + _size(g) <= SOFT_LIMIT:
-                out[-1] = prev + g
-                continue
-        out.append(g)
+            # 상위 도입부 + 첫 하위 항목이면 하위 경로를, 형제끼리면 공통 상위 경로를 쓴다
+            path = s.path if prev.path == s.path[:-1] else [x for x, y in zip(prev.path, s.path) if x == y]
+            out[-1] = Span(prev.start, s.end, path)
+        else:
+            out.append(s)
     return out
 
 
-def chunk_units(units: list[Unit], canonical: str, doc_title: str, as_of: str, id_prefix: str) -> list[Chunk]:
-    chunks: list[Chunk] = []
-    for section in _runs(units, lambda u: u.section_id):
-        groups = []
-        # 표는 단독 청크, 나머지는 content_type이 같은 연속 구간끼리 분할
-        for run in _runs(section, lambda u: (u.content_type, id(u) if u.content_type == "table" else 0)):
-            groups.extend(_merge_small(_split(run)))
-        for g in groups:
-            first, last = g[0], g[-1]
-            # 절 도입부(소제목 없음)가 합쳐진 경우 제목 경로는 나머지 조각의 소제목을 따른다
-            sub = _common_subpath([u for u in g if u.subpath] or g)
-            path = list(first.section_path) + list(sub)
-            text = canonical[first.char_start : last.char_end]
-            squash = lambda s: "".join(s.split())
-            has_question = bool(first.question) and squash(first.question) in squash(text[: len(first.question) + 40])
-            chunks.append(
-                Chunk(
-                    chunk_id=f"{id_prefix}-{len(chunks):04d}",
-                    doc_id=first.doc_id,
-                    parent_section_id=first.section_id,
-                    section_path=path,
-                    content_type=first.content_type,
-                    text=text,
-                    question_prefix="" if (not first.question or has_question) else f"Q. {first.question}",
-                    title_prefix=f"[{doc_title} | {as_of} 기준] " + " > ".join(path),
-                    char_start=first.char_start,
-                    char_end=last.char_end,
-                    pdf_page_start=first.pdf_pages[0],
-                    pdf_page_end=last.pdf_pages[1],
-                    printed_page_start=first.printed_pages[0],
-                    printed_page_end=last.printed_pages[1],
-                    n_chars=nonspace_len(text),
-                    cited_laws=cited_laws(text),
-                    as_of=as_of,
-                )
+def chunk_markdown(md: str, doc_id: str, doc_title: str, as_of: str, id_prefix: str) -> tuple[str, list[Chunk]]:
+    text, pages = load_markdown(md)
+    starts = [p for p, _ in pages]
+
+    def page_at(pos: int) -> int:
+        return pages[bisect.bisect_right(starts, pos) - 1][1]
+
+    root = build_tree(split_blocks(text))
+    spans = merge(split_node(root, text, []), text)
+    chunks = []
+    for s in spans:
+        body = text[s.start : s.end]
+        chunks.append(
+            Chunk(
+                chunk_id=f"{id_prefix}-{len(chunks):04d}",
+                doc_id=doc_id,
+                section_path=s.path,
+                content_type="qa" if any(QA_TITLE.match(t) for t in s.path) else "prose",
+                has_table=any(l.startswith("|") for l in body.split("\n")),
+                text=body,
+                question_prefix=f"Q. {s.question_prefix}" if s.question_prefix else "",
+                title_prefix=f"[{doc_title} | {as_of} 기준] " + " > ".join(s.path),
+                char_start=s.start,
+                char_end=s.end,
+                page_start=page_at(s.start),
+                page_end=page_at(s.end - 1),
+                n_chars=size(body),
+                cited_laws=cited_laws(body),
+                as_of=as_of,
             )
-    return chunks
+        )
+    return text, chunks
 
 
 def to_dict(chunk: Chunk) -> dict:
