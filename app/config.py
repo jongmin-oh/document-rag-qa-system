@@ -17,3 +17,6 @@ with open(Paths.SECRETS_PATH, "r", encoding="utf-8") as file:
 @dataclass
 class GeminiConfig:
     API_KEY: str = SECRETS["GEMINI"]["API_KEY"]
+    EMBEDDING_MODEL: str = "gemini-embedding-2"
+    EMBEDDING_DIM: int = 3072
+    LLM_MODEL: str = "gemini-3.8-flash"
