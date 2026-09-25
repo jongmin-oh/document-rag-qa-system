@@ -1,15 +1,14 @@
-"""청크 → Gemini Embedding 2 벡터 인덱스. 실험 조건(decision/chunking_strategy.md 4절)마다 따로 만든다.
+"""청크 → Gemini Embedding 2 벡터 인덱스. 임베딩 입력에 제목 경로 접두어를 넣는다.
 
-사용법: python -m app.tasks.index.build [A B C]   (조건을 생략하면 전부)
-입력: app/data/processed/chunks.{fixed,structure}.jsonl
+사용법: python -m app.tasks.index.build
+입력: app/data/processed/chunks.structure.jsonl
 출력: app/data/processed/
-  - embeddings.{조건}.f32    청크 순서대로 이어 붙인 float32 벡터 (L2 정규화)
-  - embeddings.{조건}.json   모델 ID, 차원, 청크 ID 순서
+  - embeddings.f32    청크 순서대로 이어 붙인 float32 벡터 (L2 정규화)
+  - embeddings.json   모델 ID, 차원, 청크 ID 순서
 """
 
 import json
 import math
-import sys
 from array import array
 
 from google import genai
@@ -17,27 +16,15 @@ from google import genai
 from app.config import GeminiConfig
 from app.tasks.ingest.build import OUT
 
-CONDITIONS = {  # 조건 → (청크 파일, 제목 경로 접두어를 임베딩에 넣는가)
-    "A": ("chunks.fixed.jsonl", False),
-    "B": ("chunks.structure.jsonl", False),
-    "C": ("chunks.structure.jsonl", True),
-}
 
-
-def load_chunks(condition: str) -> list[dict]:
-    with open(OUT / CONDITIONS[condition][0], encoding="utf-8") as f:
+def load_chunks() -> list[dict]:
+    with open(OUT / "chunks.structure.jsonl", encoding="utf-8") as f:
         return [json.loads(line) for line in f]
 
 
 def body(chunk: dict) -> str:
     """나뉜 Q&A 조각은 원래 질문을 앞에 다시 붙인다."""
     return f"{chunk['question_prefix']}\n{chunk['text']}" if chunk["question_prefix"] else chunk["text"]
-
-
-def document_text(chunk: dict, condition: str) -> str:
-    # decision/models.md: Gemini Embedding 2는 task_type 대신 접두어로 문서를 표시한다. 제목이 없으면 "none".
-    title = chunk["title_prefix"] if CONDITIONS[condition][1] else "none"
-    return f"title: {title} | text: {body(chunk)}"
 
 
 def client() -> genai.Client:
@@ -57,38 +44,34 @@ def embed(client: genai.Client, text: str) -> list[float]:
     return [v / norm for v in values]
 
 
-def load_meta(condition: str) -> dict:
-    return json.loads((OUT / f"embeddings.{condition}.json").read_text(encoding="utf-8"))
+def load_meta() -> dict:
+    return json.loads((OUT / "embeddings.json").read_text(encoding="utf-8"))
 
 
-def load_index(condition: str) -> tuple[list[str], list[list[float]]]:
-    meta = load_meta(condition)
+def load_index() -> tuple[list[str], list[list[float]]]:
+    meta = load_meta()
     flat = array("f")
-    flat.frombytes((OUT / f"embeddings.{condition}.f32").read_bytes())
+    flat.frombytes((OUT / "embeddings.f32").read_bytes())
     dim = meta["dim"]
     return meta["chunk_ids"], [flat[i : i + dim] for i in range(0, len(flat), dim)]
 
 
-def build(gemini: genai.Client, condition: str):
-    chunks = load_chunks(condition)
+def main():
+    gemini = client()
+    chunks = load_chunks()
     flat = array("f")
     for i, c in enumerate(chunks, 1):
-        flat.extend(embed(gemini, document_text(c, condition)))
-        print(f"\r{condition}: {i}/{len(chunks)}", end="", flush=True)
-    (OUT / f"embeddings.{condition}.f32").write_bytes(flat.tobytes())
+        # decision/models.md: Gemini Embedding 2는 task_type 대신 접두어로 문서를 표시한다.
+        flat.extend(embed(gemini, f"title: {c['title_prefix']} | text: {body(c)}"))
+        print(f"\r{i}/{len(chunks)}", end="", flush=True)
+    (OUT / "embeddings.f32").write_bytes(flat.tobytes())
     meta = {
         "model": GeminiConfig.EMBEDDING_MODEL,
         "dim": GeminiConfig.EMBEDDING_DIM,
         "chunk_ids": [c["chunk_id"] for c in chunks],
     }
-    (OUT / f"embeddings.{condition}.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"\n{condition}: {len(chunks)} vectors ({meta['dim']}d) → {OUT}")
-
-
-def main():
-    gemini = client()
-    for condition in sys.argv[1:] or CONDITIONS:
-        build(gemini, condition)
+    (OUT / "embeddings.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"\n{len(chunks)} vectors ({meta['dim']}d) → {OUT}")
 
 
 if __name__ == "__main__":

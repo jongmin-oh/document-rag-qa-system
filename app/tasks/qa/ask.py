@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 from app.config import GeminiConfig
 from app.tasks.index.build import body, client
-from app.tasks.qa.search import SERVICE, embed_query, rank
+from app.tasks.qa.search import embed_query, rank
 
 TOP_K = 5
 SYSTEM = """당신은 고용보험 실업급여 안내 도우미입니다. 아래 [자료]만 근거로, 법령을 모르는 사람도 이해할 수 있게 쉬운 한국어로 답하세요.
@@ -35,7 +35,7 @@ class Citation(BaseModel):
     source: str  # "[문서 | 기준일] 제목 > 경로"
     page_start: int  # 인쇄 쪽
     page_end: int
-    score: float  # 검색 점수 (dense: 코사인 유사도, hybrid: RRF 점수)
+    score: float  # 하이브리드 검색의 RRF 점수
 
 
 class AskResponse(BaseModel):
@@ -50,7 +50,7 @@ def pages(c: dict) -> str:
 
 
 def search(client: genai.Client, question: str, k: int = TOP_K) -> list[tuple[float, dict]]:
-    return rank(embed_query(client, question), question, SERVICE, k)
+    return rank(embed_query(client, question), question, k)
 
 
 def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):

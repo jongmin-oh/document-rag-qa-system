@@ -65,7 +65,7 @@ class Chunk:
     has_table: bool
     text: str  # canonical text[char_start:char_end]
     question_prefix: str  # 나뉜 Q&A의 뒤쪽 조각에 다시 붙이는 질문 (canonical text 밖)
-    title_prefix: str  # 조건 C에서만 쓰는 "[문서 | 기준일] 제목 > 경로"
+    title_prefix: str  # 검색(임베딩·BM25)에 붙이는 "[문서 | 기준일] 제목 > 경로"
     char_start: int
     char_end: int
     page_start: int
@@ -186,7 +186,10 @@ def page_at(pages: list[tuple[int, int]], pos: int) -> int:
     return pages[bisect.bisect_right([p for p, _ in pages], pos) - 1][1]
 
 
-def to_chunks(text: str, pages, spans: list[Span], doc_id: str, doc_title: str, as_of: str, id_prefix: str) -> list[Chunk]:
+def chunk_markdown(md: str, doc_id: str, doc_title: str, as_of: str, id_prefix: str) -> tuple[str, list[Chunk]]:
+    text, pages = load_markdown(md)
+    root = build_tree(split_blocks(text))
+    spans = merge(split_node(root, text, []), text)
     chunks = []
     for s in spans:
         body = text[s.start : s.end]
@@ -209,33 +212,7 @@ def to_chunks(text: str, pages, spans: list[Span], doc_id: str, doc_title: str, 
                 as_of=as_of,
             )
         )
-    return chunks
-
-
-def chunk_markdown(md: str, doc_id: str, doc_title: str, as_of: str, id_prefix: str) -> tuple[str, list[Chunk]]:
-    text, pages = load_markdown(md)
-    spans = merge(split_node(build_tree(split_blocks(text)), text, []), text)
-    return text, to_chunks(text, pages, spans, doc_id, doc_title, as_of, id_prefix)
-
-
-def chunk_fixed(md: str, doc_id: str, doc_title: str, as_of: str, id_prefix: str, target: int) -> list[Chunk]:
-    """조건 A(비교 기준): 제목·문단 구조를 무시하고 공백 제외 target자마다 자른다.
-
-    단어 중간에서 자르지 않도록 target자에 이른 뒤 처음 나오는 공백에서 끊는다. 청크는 canonical text를 빈틈없이 나눈다.
-    """
-    text, pages = load_markdown(md)
-    spans, start, n = [], 0, 0
-    for i, ch in enumerate(text):
-        if not ch.isspace():
-            n += 1
-        elif n >= target:
-            spans.append(Span(start, i, []))
-            start, n = i, 0
-    if n:
-        spans.append(Span(start, len(text), []))
-    else:
-        spans[-1].end = len(text)
-    return to_chunks(text, pages, spans, doc_id, doc_title, as_of, id_prefix)
+    return text, chunks
 
 
 def to_dict(chunk: Chunk) -> dict:

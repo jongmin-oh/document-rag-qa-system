@@ -1,9 +1,9 @@
-"""검색: 조건별 인덱스에서 질문과 가까운 청크를 찾는다.
+"""하이브리드 검색: 임베딩(dense) 순위와 BM25 순위를 RRF로 합친다.
 
 - dense: 질문 임베딩과 청크 임베딩의 코사인 유사도 (벡터를 정규화했으므로 내적)
-- hybrid: dense 순위와 BM25 순위를 RRF로 합친다. BM25 토큰은 공백을 뺀 글자 2-gram이다.
-  형태소 분석(kiwipiepy)과 비교했을 때 2-gram이 같거나 나았고 의존성도 없다 (decision/chunking_strategy.md 4절 H3).
-  BM25·RRF 파라미터는 널리 쓰는 기본값으로 고정한다. Gold Set에 맞춰 조정하면 과적합이 된다.
+- BM25: 공백을 뺀 글자 2-gram. 형태소 분석(kiwipiepy)보다 같거나 나았고 의존성도 없다.
+- BM25·RRF 파라미터는 널리 쓰는 기본값으로 고정한다. Gold Set에 맞춰 조정하면 과적합이 된다.
+채택 근거(고정 길이·구조 기반·제목 접두어·하이브리드 비교)는 decision/chunking_strategy.md 4절.
 """
 
 import math
@@ -15,13 +15,6 @@ from google import genai
 
 from app.tasks.index.build import body, embed, load_chunks, load_index
 
-RETRIEVERS = {  # 검색 조건 → (인덱스 조건, BM25 결합 여부)
-    "A": ("A", False),
-    "B": ("B", False),
-    "C": ("C", False),
-    "C_hybrid": ("C", True),
-}
-SERVICE = "C"  # API·CLI가 쓰는 검색 조건
 BM25_K1, BM25_B = 1.2, 0.75
 RRF_K = 60
 
@@ -52,9 +45,9 @@ class BM25:
 
 
 @lru_cache
-def load(index: str):
-    chunks = {c["chunk_id"]: c for c in load_chunks(index)}
-    ids, vectors = load_index(index)
+def load():
+    chunks = {c["chunk_id"]: c for c in load_chunks()}
+    ids, vectors = load_index()
     ordered = [chunks[i] for i in ids]
     return ordered, vectors, BM25([c["title_prefix"] + "\n" + body(c) for c in ordered])
 
@@ -67,18 +60,15 @@ def embed_query(client: genai.Client, question: str) -> list[float]:
 def rrf(*rankings: list[int]) -> list[tuple[float, int]]:
     score = Counter()
     for ranking in rankings:
-        for rank, i in enumerate(ranking):
-            score[i] += 1 / (RRF_K + rank + 1)
+        for pos, i in enumerate(ranking):
+            score[i] += 1 / (RRF_K + pos + 1)
     return sorted(((s, i) for i, s in score.items()), reverse=True)
 
 
-def rank(query_vec: list[float], question: str, retriever: str, k: int) -> list[tuple[float, dict]]:
-    """(점수, 청크) top-k. 점수는 dense면 코사인 유사도, hybrid면 RRF 점수."""
-    index, hybrid = RETRIEVERS[retriever]
-    chunks, vectors, bm25 = load(index)
+def rank(query_vec: list[float], question: str, k: int) -> list[tuple[float, dict]]:
+    """(RRF 점수, 청크) top-k."""
+    chunks, vectors, bm25 = load()
     # ponytail: 벡터 120개 전수 비교. 청크가 수만 개로 늘면 벡터 DB로 바꾼다.
     dense = sorted(((sum(a * b for a, b in zip(query_vec, v)), i) for i, v in enumerate(vectors)), reverse=True)
-    if hybrid:
-        keyword = sorted(((s, i) for i, s in enumerate(bm25.scores(question))), reverse=True)
-        dense = rrf([i for _, i in dense], [i for _, i in keyword])
-    return [(score, chunks[i]) for score, i in dense[:k]]
+    keyword = sorted(((s, i) for i, s in enumerate(bm25.scores(question))), reverse=True)
+    return [(score, chunks[i]) for score, i in rrf([i for _, i in dense], [i for _, i in keyword])[:k]]
