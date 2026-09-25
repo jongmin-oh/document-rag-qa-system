@@ -48,14 +48,14 @@ def pages(c: dict) -> str:
     return f"{c['page_start']}" + (f"–{c['page_end']}" if c["page_end"] != c["page_start"] else "")
 
 
-def search(client: genai.Client, question: str) -> list[tuple[float, dict]]:
+def search(client: genai.Client, question: str, k: int = TOP_K) -> list[tuple[float, dict]]:
     chunks = {c["chunk_id"]: c for c in load_chunks()}
     ids, vectors = load_index()
     # decision/models.md: 질의는 이 접두어로 문서와 구분한다.
     q = embed(client, f"task: search result | query: {question}")
     # ponytail: 벡터 120개 전수 비교(정규화했으므로 내적 = 코사인). 청크가 수만 개로 늘면 벡터 DB로 바꾼다.
     scored = sorted(((sum(a * b for a, b in zip(q, v)), ids[i]) for i, v in enumerate(vectors)), reverse=True)
-    return [(score, chunks[cid]) for score, cid in scored[:TOP_K]]
+    return [(score, chunks[cid]) for score, cid in scored[:k]]
 
 
 def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
