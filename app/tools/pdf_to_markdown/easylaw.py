@@ -10,7 +10,7 @@ import re
 
 import pdfplumber
 
-from tools.pdf_to_markdown.common import Line, Unit, make_unit, normalize, page_lines
+from app.tools.pdf_to_markdown.common import Line, Unit, make_unit, normalize, page_lines
 
 DOC_ID = "easylaw_unemployment_benefit"
 BODY_START_PAGE = 4  # 1쪽 표지, 2쪽 안내문, 3쪽 목차

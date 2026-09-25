@@ -61,7 +61,7 @@
 그래서 **PDF는 한 번만 Markdown으로 변환하고 사람이 검수**한다. 이후 파이프라인은 Markdown만 읽는다.
 
 ```
-[1회성]      PDF ──(tools/pdf_to_markdown: 초안 생성)──▶ Markdown ──(사람이 원문과 대조·수정)──▶ 커밋
+[1회성]      PDF ──(app/tools/pdf_to_markdown: 초안 생성)──▶ Markdown ──(사람이 원문과 대조·수정)──▶ 커밋
 [파이프라인] app/data/markdown/*.md ──(app/ingest: 제목 기반 청킹)──▶ 청크
 ```
 
@@ -78,7 +78,7 @@
 - **제외한 내용**: 목차, 매 쪽 머리말·쪽 번호, 수첩의 빈 서식·달력·인사말·뒤표지(중복). 서식 장의 안내 문장은 남기고, 여러 장에 반복되는 안내문과 문의처는 한 번만 둔다.
 - **원문 수정 금지**: 문구는 바꾸지 않는다. 구조(제목·표·목록)만 입힌다.
 
-초안은 `tools/pdf_to_markdown`이 만든다(pdfplumber로 좌표·글꼴을 읽어 제목·표를 추정). 자동 추출이 깨지는 수첩 표 3개는 원문 이미지를 보고 사람이 옮겨 적었다(`tools/pdf_to_markdown/curated.py`). 초안 생성 후에도 사람이 수정할 수 있으며, **커밋된 Markdown이 원본(source of truth)**이다.
+초안은 `app/tools/pdf_to_markdown`이 만든다(pdfplumber로 좌표·글꼴을 읽어 제목·표를 추정). 자동 추출이 깨지는 수첩 표 3개(5쪽, 51–52쪽)는 검수 단계에서 원문 이미지를 보고 Markdown에 직접 옮겨 적었다. 초안 생성 후에도 사람이 수정할 수 있으며, **커밋된 Markdown이 원본(source of truth)**이다.
 
 ### 3.3 청킹 규칙 (`app/ingest/chunker.py`)
 

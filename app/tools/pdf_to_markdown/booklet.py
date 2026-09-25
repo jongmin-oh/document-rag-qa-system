@@ -7,15 +7,14 @@
   번호 없는 항목 제목은 소제목 그룹(예: "직업능력개발 지원")으로 두고, 뒤따르는 번호 항목의 경로에 넣는다.
 - 섹션·그룹 도입부가 짧으면 독립 청크로 두지 않고 바로 뒤 첫 항목에 붙인다.
 - 문의처 상자는 여러 쪽에 문구만 조금 다르게 반복되므로 마지막(68쪽) 것 하나만 남긴다.
-- 자동 추출로 구조가 깨지는 표는 app/ingest/curated.py의 검수된 직렬화로 대체한다.
+- 수첩 표는 괘선이 없어 자동 추출 시 행·열이 섞인다. 초안 생성 후 Markdown에서 사람이 직접 고친다.
 """
 
 import re
 
 import pdfplumber
 
-from tools.pdf_to_markdown.common import Line, Unit, make_unit, nonspace_len, normalize, page_lines
-from tools.pdf_to_markdown.curated import BOOKLET as CURATED
+from app.tools.pdf_to_markdown.common import Line, Unit, make_unit, nonspace_len, normalize, page_lines
 
 DOC_ID = "work24_employment_dream_booklet"
 FOOTER_TOP = 390  # 쪽 번호
@@ -216,24 +215,4 @@ def parse(pdf_path) -> list[Unit]:
         flush_item()
     if contact:  # 마지막 문의처 상자 하나만 남긴다
         units.append(make_unit(DOC_ID, "notice-contact", ("서식 안내문", "문의처"), (), "notice", contact))
-    return apply_curated(units)
-
-
-def apply_curated(units: list[Unit]) -> list[Unit]:
-    """검수된 Markdown이 있는 항목은 자동 추출 결과를 대체한다.
-    항목 제목 줄 앞에 붙은 섹션 도입 문장은 그대로 보존한다."""
-    out: list[Unit] = []
-    for u in units:
-        if u.section_id not in CURATED:
-            out.append(u)
-            continue
-        if any(x.section_id == u.section_id for x in out):
-            continue
-        lines, pages = u.text.split("\n"), list(u.line_pages)
-        k = next((i + 1 for i, s in enumerate(lines) if re.match(r"^\d+\.\s", s)), 0)  # 항목 제목 줄까지 보존
-        start, md = CURATED[u.section_id]
-        md_lines = md.split("\n")
-        text = "\n".join(lines[:k] + md_lines)
-        line_pages = tuple(pages[:k] + [start] * len(md_lines))
-        out.append(Unit(DOC_ID, u.section_id, u.section_path, (), "table", text, u.pdf_pages, (line_pages[0], line_pages[-1]), line_pages=line_pages))
-    return out
+    return units

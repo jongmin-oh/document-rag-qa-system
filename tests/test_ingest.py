@@ -1,7 +1,6 @@
 """Markdown 원문과 청커 회귀 테스트. 실행: pytest tests"""
 
 import re
-from pathlib import Path
 
 import pytest
 
