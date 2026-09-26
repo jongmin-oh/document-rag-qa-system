@@ -2,6 +2,8 @@
 
 from types import SimpleNamespace
 
+import pytest
+
 from app.config import SEED, OpenRouterConfig
 from app.tasks.eval.answer import JudgeResult, deterministic, judge, readability, summarize, trace_from_row
 from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers, clean_answer
@@ -116,7 +118,7 @@ def test_unanswerable_refusal_has_no_citation():
 
 
 def test_summary_reports_false_answers_and_raw_refusal_count():
-    base_judge = {"correctness": 4, "completeness": 4, "faithfulness": 4, "partial_handling": -1, "clarity": 4}
+    base_judge = {"correctness": 5, "completeness": 5, "faithfulness": 5, "partial_handling": -1, "clarity": 5}
     rows = [
         {
             "answerability": "none",
@@ -138,6 +140,7 @@ def test_summary_reports_false_answers_and_raw_refusal_count():
     assert result["refusal_recall"] == 0.5
     assert result["false_answer_rate"] == 0.5
     assert result["refused"] == 1 and result["n_none"] == 2
+    assert result["correctness"] is None  # none 문항은 Judge 평균에서 제외
 
 
 def test_openrouter_judge_uses_strict_structured_output():
@@ -147,11 +150,11 @@ def test_openrouter_judge_uses_strict_structured_output():
         def create(self, **kwargs):
             self.kwargs = kwargs
             content = JudgeResult(
-                correctness=4,
-                completeness=4,
-                faithfulness=4,
+                correctness=5,
+                completeness=5,
+                faithfulness=5,
                 partial_handling=-1,
-                clarity=4,
+                clarity=5,
                 unsupported_claims=[],
                 missing_points=[],
                 reason="근거와 일치",
@@ -166,7 +169,7 @@ def test_openrouter_judge_uses_strict_structured_output():
     gold = {"question": "질문", "answerability": "full", "answer": "참고 정답", "evidence": []}
     result = judge(client, gold, trace())
 
-    assert result.parsed.correctness == 4
+    assert result.parsed.correctness == 5
     assert result.model_version == "openai/gpt-6-sol-actual"
     assert completions.kwargs["model"] == OpenRouterConfig.JUDGE_MODEL
     assert "temperature" not in completions.kwargs
@@ -200,3 +203,21 @@ def test_readability_measures_length_copying_and_legal_terms():
     assert result["legal_terms"] == 1
     assert 0.5 < result["copy_rate"] < 1
     assert readability(trace(answer="거부", answerable=False, citations=())) is None
+
+
+def test_judge_rejects_partial_handling_that_does_not_match_answerability():
+    content = JudgeResult(
+        correctness=5,
+        completeness=5,
+        faithfulness=5,
+        partial_handling=0,
+        clarity=5,
+        unsupported_claims=[],
+        missing_points=[],
+        reason="",
+    ).model_dump_json()
+    response = SimpleNamespace(model="m", choices=[SimpleNamespace(message=SimpleNamespace(content=content))])
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=lambda **_: response)))
+    gold = {"question": "질문", "answerability": "partial", "answer": "참고 정답", "evidence": []}
+    with pytest.raises(ValueError):
+        judge(client, gold, trace())

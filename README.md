@@ -127,7 +127,7 @@ pytest tests
 - 네이버 지식iN 실제 질문 41문항(full 18, partial 18, none 5). 유형은 factoid 15, multi_hop 13, procedural 7, summary 1, unanswerable 5.
   구축 방식, 판정 기준, **편향과 한계**는 `decision/gold_set.md`.
 - 근거는 청크 ID가 아닌 canonical text의 문자 구간으로 표시해, 청킹 방식을 바꿔도 같은 Gold Set으로 비교한다.
-- 지표 정의(검색 지표, 거부·인용 결정론 지표, Judge 0–4점 지표)와 각 지표의 한계는 `decision/evaluation.md`와
+- 지표 정의(검색 지표, 거부·인용 결정론 지표, Judge 1–5점 지표)와 각 지표의 한계는 `decision/evaluation.md`와
   `decision/chunking_strategy.md` 4절.
 - LLM Judge 프롬프트를 신뢰성·일관성·Human Alignment 측면에서 어떻게 설계했는지와 그 약점은 `decision/evaluation.md` 3절
   "Judge 프롬프트 설계 배경".
