@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from app.config import OPENROUTER_PROVIDER, SEED, OpenRouterConfig
+from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig, OpenRouterConfig
 from app.tasks.eval.answer import JudgeResult, deterministic, judge, readability, summarize, trace_from_row
 from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, answer, build_response, citation_numbers, clean_answer
 
@@ -100,29 +100,24 @@ def test_api_citations_are_derived_from_answer_text():
     assert response.answer == "근거"
 
 
-def test_openrouter_answer_uses_gemma_structured_output_and_private_routing():
-    class Completions:
+def test_answer_uses_gemini_structured_output():
+    class Models:
         kwargs = None
 
-        def create(self, **kwargs):
+        def generate_content(self, **kwargs):
             self.kwargs = kwargs
-            content = Generated(answerable=True, answer="근거 [1]").model_dump_json()
-            return SimpleNamespace(
-                model="google/gemma-4-31b-it",
-                choices=[SimpleNamespace(message=SimpleNamespace(content=content))],
-            )
+            return SimpleNamespace(parsed=Generated(answerable=True, answer="근거 [1]"), model_version="gemini-test")
 
-    completions = Completions()
-    client = SimpleNamespace(chat=SimpleNamespace(completions=completions))
-    result = answer(client, "질문", trace().hits)
+    models = Models()
+    result = answer(SimpleNamespace(models=models), "질문", trace().hits)
 
     assert result.parsed.answerable
-    assert result.model_version == "google/gemma-4-31b-it"
-    assert completions.kwargs["model"] == OpenRouterConfig.LLM_MODEL
-    assert completions.kwargs["temperature"] == 0
-    assert completions.kwargs["seed"] == SEED
-    assert completions.kwargs["response_format"]["json_schema"]["strict"] is True
-    assert completions.kwargs["extra_body"]["provider"] == OPENROUTER_PROVIDER
+    assert result.model_version == "gemini-test"
+    assert models.kwargs["model"] == GeminiConfig.LLM_MODEL
+    assert models.kwargs["config"]["temperature"] == 0
+    assert models.kwargs["config"]["seed"] == SEED
+    assert models.kwargs["config"]["thinking_config"] == {"thinking_level": "low"}
+    assert models.kwargs["config"]["response_schema"] is Generated
 
 
 def test_answer_needs_inline_citation_even_if_response_lists_one():

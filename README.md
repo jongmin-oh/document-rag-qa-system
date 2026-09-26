@@ -41,9 +41,10 @@
 
 ## 실행
 
-모델 선정 근거는 `decision/models.md`에 있다. `.env.example`을 `.env`로 복사하고 OpenRouter API 키를 넣는다.
+모델 선정 근거는 `decision/models.md`에 있다. `.env.example`을 `.env`로 복사하고 Gemini와 OpenRouter API 키를 넣는다.
 
 ```dotenv
+GEMINI_API_KEY=<키>
 OPENROUTER_API_KEY=<키>
 ```
 
@@ -80,7 +81,7 @@ pytest tests
   "citations": [
     {"n": 1, "chunk_id": "EL-0027", "source": "[생활법령 실업급여 | 2026-08-31 기준] 2. 구직급여 > ...", "page_start": 27, "page_end": 27, "score": 0.0328}
   ],
-  "model_version": "google/gemma-4-31b-it"
+  "model_version": "gemini-3.7-flash"
 }
 ```
 
@@ -95,9 +96,9 @@ pytest tests
 [Ingest]   Markdown ──(app/tasks/ingest)──▶ canonical text + 제목 기반 청크 120개 (chunks.structure.jsonl)
 [Index]    청크 ──(app/tasks/index, pplx-embed-v1-4b)──▶ embeddings.f32 (2560차원, L2 정규화)
 
-[질의]     질문 ──▶ ① 질의 재작성 (OpenRouter Gemma 4 31B)
+[질의]     질문 ──▶ ① 질의 재작성 (Gemini 3.7 Flash)
                 ──▶ ② 하이브리드 검색: 임베딩 코사인 + BM25(글자 2-gram) → RRF → top-5
-                ──▶ ③ 답변 생성 (OpenRouter Gemma 4 31B, 구조화 출력 {answerable, answer})
+                ──▶ ③ 답변 생성 (Gemini 3.7 Flash, 구조화 출력 {answerable, answer})
                 ──▶ ④ 서버가 본문의 [n]을 파싱해 citation 객체 생성, 사용자용 답변에서 번호 제거
                 ──▶ POST /ask 응답 (main.py, FastAPI)
 
@@ -115,8 +116,8 @@ pytest tests
 |---|---|---|
 | 언어·서버 | Python, FastAPI | Pydantic 스키마가 곧 Request/Response 정의와 OpenAPI 문서(`/docs`)가 된다 |
 | PDF 추출 | pdfplumber (1회성 초안) | 좌표·글꼴 정보로 제목과 표를 추정. 이후는 검수된 Markdown만 읽는다 |
-| 임베딩 | OpenRouter `perplexity/pplx-embed-v1-4b` | Korean-MTEB v2 Dense 검색 1위이며 법령·공공 QA 검색에서도 최상위권 (`decision/models.md`) |
-| 답변·재작성 LLM | OpenRouter `google/gemma-4-31b-it` | FACTS Grounding 80.7%의 근거 충실도와 낮은 API 단가를 우선 (`decision/models.md`) |
+| 임베딩 | OpenRouter `perplexity/pplx-embed-v1-4b` | Korean-MTEB v2 Dense 검색 1위. Gold Set 검색에서 이전 Gemini Embedding 2와 동등 이상이면서 가격은 약 1/7 (`decision/models.md`) |
+| 답변·재작성 LLM | Gemini API `gemini-3.7-flash` (thinking low) | FACTS Grounding 6위. Gold Set에서 Gemma 4 31B보다 근거 충실도·partial 처리가 높고, Gemini 3.8 Flash와 같은 가격에 정답성·완전성이 높음 (`decision/models.md`) |
 | Judge | OpenRouter `openai/gpt-6-sol` | 답변 모델과 다른 개발사 모델로 자기 선호 편향을 줄이고, JSON Schema structured output으로 채점 형식 강제. 재채점이 41회 호출뿐이라 비용보다 판단력을 우선해 상위 모델 사용 |
 | 키워드 검색 | 직접 구현한 BM25 (글자 2-gram) | 형태소 분석(kiwipiepy)보다 Recall@5가 높았고(0.691 vs 0.605) 의존성이 없다 |
 | 프레임워크 | 사용 안 함 (LangChain·LlamaIndex 미사용) | 파이프라인이 재작성 → 검색 → 생성 세 단계라 직접 구현해도 짧고, 각 단계를 평가 trace로 그대로 노출할 수 있다 |
@@ -150,9 +151,10 @@ pytest tests
 ## 비용·컴퓨팅 제약
 
 - GPU 없이 누구나 재현할 수 있도록 로컬 모델 대신 API 모델을 썼다. 인덱싱 비용은 청크 120개에 0.05달러 미만이다.
-- Gold Set 전체 평가 한 번에 질문당 OpenRouter Gemma 2회(재작성·답변), Perplexity 임베딩 1회, OpenRouter Judge 1회를 호출한다.
-  Gemma는 입력 $0.09/M, 출력 $0.34/M 토큰이라 31B Dense 모델의 품질을 택해도 반복 평가 비용이 낮다.
-- OpenRouter 요청은 ZDR과 데이터 수집 거부를 강제한다. 다만 외부 전송은 발생하므로 실제 사용자 질문을 받기 전 기관 보안 정책을 확인해야 한다.
+- Gold Set 전체 평가 한 번에 질문당 Gemini 2회(재작성·답변), Perplexity 임베딩 1회, OpenRouter Judge 1회를 호출한다.
+  Gemini 3.7 Flash는 입력 $0.75/M, 출력 $3.75/M 토큰으로 질문당 약 1센트 미만이다. Gemma 4 31B는 약 1/10 가격이었지만 근거 충실도가 낮아 바꿨다.
+- OpenRouter 요청(임베딩·Judge)은 ZDR과 데이터 수집 거부를 강제하지만, Gemini API 직접 호출(재작성·답변)에는 ZDR이 적용되지 않는다.
+  실제 사용자 질문을 받기 전 유료 등급의 데이터 처리 조건과 기관 보안 정책을 확인해야 한다.
 - 청크가 120개라 벡터 DB를 두지 않았다. 문서가 수만 청크로 늘면 벡터 DB로 바꾼다.
 - 질의 재작성 대신 청크마다 예상 질문을 미리 생성해 색인하는 방식(doc2query)은 질의 시 호출이 없지만, 측정 비용 때문에 비교하지 않았다.
 
@@ -161,7 +163,7 @@ pytest tests
 - **Corpus 범위**: 정부 공식 안내 2종만 담아 실제 심사 사례, 판례, 예외 처리 관행은 답할 수 없다. 두 문서의 기준일이 다르다.
 - **평가 규모**: 41문항, 거부 문항 5개라 한 문항이 거부 지표를 20%p 움직인다. 작은 차이는 경향으로만 읽는다.
 - **Judge 검증**: Judge 점수를 사람 채점과 대조하지 않았다. 신뢰성·일관성은 설계로 다뤘지만 사람과의 정합성은 측정되지 않았다.
-- **비결정성**: temperature 0과 seed 42를 지정하지만 OpenRouter 제공자는 완전한 결정론을 보장하지 않는다. 리포트에 문항별 재작성 질의와 실제 응답 모델을 남겨 추적한다.
+- **비결정성**: temperature 0과 seed 42를 지정하지만 Gemini·OpenRouter는 완전한 결정론을 보장하지 않는다. 리포트에 문항별 재작성 질의와 실제 응답 모델을 남겨 추적한다.
 - **단일 턴**: 이전 대화를 참고하지 않는다.
 
 ## 알려진 이슈
@@ -169,7 +171,7 @@ pytest tests
 - **KIN-13 오답변**: 답이 없는 질문(같은 회사 지원+면접 횟수)에 인접 규정("동일 사업장 반복 지원 불인정")을 근거로 답한다.
 - **KIN-09 검색 실패**: 수급 신청 전 알바 소득 신고 질문은 검색 단계에서 근거를 거의 찾지 못한다.
 - **검색 평가와 답변 평가의 재작성 질의가 일부 다를 수 있다**: 두 평가가 재작성을 따로 호출해, 같은 커밋에서도 1~2문항은 두 리포트의 top-5가 다를 수 있다.
-- **LLM 구조화 출력 실패 시 500**: Gemma가 스키마에 맞는 응답을 주지 않으면 `/ask`가 오류를 반환한다. 재시도나 명시적인 오류 응답이 없다.
+- **LLM 구조화 출력 실패 시 500**: Gemini가 스키마에 맞는 응답을 주지 않으면 `/ask`가 오류를 반환한다. 재시도나 명시적인 오류 응답이 없다.
 - **Streaming 미지원**.
 
 ## 향후 개선 과제

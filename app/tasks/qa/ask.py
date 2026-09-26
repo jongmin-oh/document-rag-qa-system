@@ -8,10 +8,11 @@ import re
 import sys
 from dataclasses import dataclass
 
+from google import genai
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
-from app.config import OPENROUTER_PROVIDER, SEED, OpenRouterConfig
+from app.config import SEED, GeminiConfig
 from app.tasks.index.build import body, client
 from app.tasks.qa.search import embed_query, rank, rewrite_with_version
 
@@ -101,40 +102,31 @@ def clean_answer(answer: str) -> str:
     return re.sub(r"[ \t]{2,}", " ", cleaned).strip()
 
 
-def generation_client() -> OpenAI:
-    if not OpenRouterConfig.API_KEY:
-        raise ValueError(".env에 OPENROUTER_API_KEY를 설정하세요")
-    return OpenAI(
-        api_key=OpenRouterConfig.API_KEY,
-        base_url=OpenRouterConfig.BASE_URL,
-        max_retries=10,
-        default_headers={"X-OpenRouter-Title": "document-rag-qa-system"},
-    )
+def generation_client() -> genai.Client:
+    if not GeminiConfig.API_KEY:
+        raise ValueError(".env에 GEMINI_API_KEY를 설정하세요")
+    # 429를 받으면 지수 백오프로 재시도한다.
+    retry = {"attempts": 10, "initial_delay": 5, "max_delay": 60}
+    return genai.Client(api_key=GeminiConfig.API_KEY, http_options={"retry_options": retry})
 
 
-def answer(client: OpenAI, question: str, hits: list[tuple[float, dict]]) -> GeneratedResponse:
+def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]) -> GeneratedResponse:
     context = "\n\n".join(f"[{i}] {c['title_prefix']} ({pages(c)}쪽)\n{body(c)}" for i, (_, c) in enumerate(hits, 1))
-    response = client.chat.completions.create(
-        model=OpenRouterConfig.LLM_MODEL,
-        messages=[
-            {"role": "system", "content": SYSTEM},
-            {
-                "role": "user",
-                "content": f"<documents>\n{context}\n</documents>\n\n<question>\n{question}\n</question>",
-            },
-        ],
-        temperature=0,
-        seed=SEED,
-        response_format={
-            "type": "json_schema",
-            "json_schema": {"name": "generated_answer", "strict": True, "schema": Generated.model_json_schema()},
+    response = client.models.generate_content(
+        model=GeminiConfig.LLM_MODEL,
+        contents=f"<documents>\n{context}\n</documents>\n\n<question>\n{question}\n</question>",
+        config={
+            "system_instruction": SYSTEM,
+            "temperature": 0,
+            "seed": SEED,
+            "thinking_config": {"thinking_level": "low"},
+            "response_mime_type": "application/json",
+            "response_schema": Generated,
         },
-        extra_body={"provider": OPENROUTER_PROVIDER},
     )
-    content = response.choices[0].message.content
-    if not content:
-        raise ValueError("OpenRouter 답변 모델이 빈 응답을 반환했습니다")
-    return GeneratedResponse(Generated.model_validate_json(content), response.model)
+    if response.parsed is None:
+        raise ValueError("Gemini 답변 모델이 스키마에 맞는 응답을 반환하지 않았습니다")
+    return GeneratedResponse(response.parsed, response.model_version)
 
 
 def build_response(res, hits: list[tuple[float, dict]]) -> AskResponse:
@@ -160,7 +152,7 @@ def build_response(res, hits: list[tuple[float, dict]]) -> AskResponse:
     )
 
 
-def ask_with_trace(embedding_client: OpenAI, question: str, llm: OpenAI | None = None) -> AskTrace:
+def ask_with_trace(embedding_client: OpenAI, question: str, llm: genai.Client | None = None) -> AskTrace:
     """운영 ask와 같은 경로를 실행하고 평가에 필요한 중간 결과도 돌려준다."""
     llm = llm or generation_client()
     query, rewrite_model_version = rewrite_with_version(llm, question)
@@ -169,7 +161,7 @@ def ask_with_trace(embedding_client: OpenAI, question: str, llm: OpenAI | None =
     return AskTrace(query, hits, build_response(res, hits), rewrite_model_version, res.parsed.answer)
 
 
-def ask(embedding_client: OpenAI, question: str, llm: OpenAI | None = None) -> AskResponse:
+def ask(embedding_client: OpenAI, question: str, llm: genai.Client | None = None) -> AskResponse:
     return ask_with_trace(embedding_client, question, llm).response
 
 

@@ -18,12 +18,17 @@ SEED = 42
 
 
 @dataclass
+class GeminiConfig:
+    API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    LLM_MODEL: str = "gemini-3.7-flash"
+
+
+@dataclass
 class OpenRouterConfig:
     API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
     BASE_URL: str = "https://openrouter.ai/api/v1"
     EMBEDDING_MODEL: str = "perplexity/pplx-embed-v1-4b"
     EMBEDDING_DIM: int = 2560
-    LLM_MODEL: str = "google/gemma-4-31b-it"
     JUDGE_MODEL: str = "openai/gpt-6-sol"
 
 

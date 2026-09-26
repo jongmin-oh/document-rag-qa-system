@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
-from app.config import OPENROUTER_PROVIDER, SEED, OpenRouterConfig
+from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig, OpenRouterConfig
 from app.tasks.eval.retrieval import REPORTS, score
 from app.tasks.index.build import OUT, body, client, load_chunks, load_meta
 from app.tasks.qa.ask import AskResponse, AskTrace, ask_with_trace, citation_numbers, generation_client, pages
@@ -265,7 +265,7 @@ def evaluate() -> dict:
             "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "git_commit": git_value("rev-parse", "--short", "HEAD"),
             "git_dirty": bool(git_value("status", "--porcelain")),
-            "answer_model": OpenRouterConfig.LLM_MODEL,
+            "answer_model": GeminiConfig.LLM_MODEL,
             "rewrite_model_versions": sorted(rewrite_versions),
             "answer_model_versions": sorted(answer_versions),
             "judge_provider": "openrouter",

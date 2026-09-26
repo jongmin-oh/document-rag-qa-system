@@ -14,7 +14,7 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
-from app.config import SEED, OpenRouterConfig
+from app.config import SEED, GeminiConfig
 from app.tasks.index.build import client, load_meta
 from app.tasks.ingest.build import OUT
 from app.tasks.qa.ask import generation_client
@@ -91,7 +91,7 @@ def evaluate() -> dict:
         "meta": {
             "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "git_commit": git_commit(),
-            "rewrite_model": OpenRouterConfig.LLM_MODEL,
+            "rewrite_model": GeminiConfig.LLM_MODEL,
             "seed": SEED,
             "embedding_model": index["model"],
             "embedding_dim": index["dim"],
