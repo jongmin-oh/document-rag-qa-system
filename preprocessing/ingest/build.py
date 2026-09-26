@@ -10,13 +10,10 @@
 
 import json
 import statistics
-from pathlib import Path
 
-from app.index import OUT as APP_OUT
+from app.config import Paths
 from preprocessing.ingest.chunker import chunk_markdown, to_dict
 
-DATA = Path(__file__).resolve().parents[1] / "data"
-OUT = DATA / "processed"
 DOCS = [  # (doc_id, 제목 접두어용 짧은 이름, 청크 ID 접두어)
     ("easylaw_unemployment_benefit", "생활법령 실업급여", "EL"),
     ("work24_employment_dream_booklet", "취업드림수첩", "BK"),
@@ -25,26 +22,28 @@ DOCS = [  # (doc_id, 제목 접두어용 짧은 이름, 청크 ID 접두어)
 
 def build() -> dict:
     """문서별 (canonical text, chunks). 파일은 쓰지 않는다."""
-    sources = {s["id"]: s for s in json.loads((DATA / "sources.json").read_text(encoding="utf-8"))}
+    sources = {
+        s["id"]: s for s in json.loads((Paths.PREPROCESSING_DATA_DIR / "sources.json").read_text(encoding="utf-8"))
+    }
     result = {}
     for doc_id, title, prefix in DOCS:
-        md = (DATA / "markdown" / f"{doc_id}.md").read_text(encoding="utf-8")
+        md = (Paths.PREPROCESSING_MARKDOWN_DIR / f"{doc_id}.md").read_text(encoding="utf-8")
         result[doc_id] = chunk_markdown(md, doc_id, title, sources[doc_id]["as_of"], prefix)
     return result
 
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    APP_OUT.mkdir(parents=True, exist_ok=True)
+    Paths.PREPROCESSING_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    Paths.APP_INDEX_DIR.mkdir(parents=True, exist_ok=True)
     all_chunks = []
     for doc_id, (canonical, chunks) in build().items():
-        (OUT / f"{doc_id}.canonical.txt").write_text(canonical, encoding="utf-8")
+        (Paths.PREPROCESSING_OUTPUT_DIR / f"{doc_id}.canonical.txt").write_text(canonical, encoding="utf-8")
         all_chunks.extend(chunks)
-    with open(APP_OUT / "chunks.structure.jsonl", "w", encoding="utf-8") as f:
+    with open(Paths.APP_INDEX_DIR / "chunks.structure.jsonl", "w", encoding="utf-8") as f:
         for c in all_chunks:
             f.write(json.dumps(to_dict(c), ensure_ascii=False) + "\n")
     write_report(all_chunks)
-    print(f"{len(all_chunks)} chunks → {APP_OUT}")
+    print(f"{len(all_chunks)} chunks → {Paths.APP_INDEX_DIR}")
 
 
 def write_report(chunks):
@@ -67,7 +66,7 @@ def write_report(chunks):
             head = (c.question_prefix + " " if c.question_prefix else "") + c.text[:60].replace("\n", " ").replace("|", "/")
             lines.append(f"| {c.chunk_id} | {page} | {c.n_chars} | {' > '.join(c.section_path)} | {head} |")
         lines.append("")
-    (OUT / "chunk_report.md").write_text("\n".join(lines), encoding="utf-8")
+    (Paths.PREPROCESSING_OUTPUT_DIR / "chunk_report.md").write_text("\n".join(lines), encoding="utf-8")
 
 
 if __name__ == "__main__":

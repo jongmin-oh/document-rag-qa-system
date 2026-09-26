@@ -20,11 +20,10 @@ from datetime import datetime, timezone
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
-from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig, OpenRouterConfig
-from app.index import OUT as INDEX_OUT
+from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig, OpenRouterConfig, Paths
 from app.index import body, client, load_chunks, load_meta
 from app.tasks.qa.ask import AskResponse, AskTrace, ask_with_trace, citation_numbers, generation_client, pages
-from evaluation.retrieval import DATA, REPORTS, score
+from evaluation.retrieval import score
 
 JUDGE_MODEL = "openai/gpt-6-sol"
 
@@ -238,7 +237,7 @@ def evaluate() -> dict:
     embedding_client = client()
     llm = generation_client()
     evaluator = judge_client()
-    items = [json.loads(line) for line in open(DATA / "gold_set.jsonl", encoding="utf-8")]
+    items = [json.loads(line) for line in open(Paths.EVALUATION_OUTPUT_DIR / "gold_set.jsonl", encoding="utf-8")]
     rows = []
     rewrite_versions, answer_versions, judge_versions = set(), set(), set()
     for n, item in enumerate(items, 1):
@@ -278,7 +277,7 @@ def evaluate() -> dict:
             "judge_prompt_sha256": hashlib.sha256(JUDGE_SYSTEM.encode()).hexdigest(),
             "embedding_model": meta["model"],
             "embedding_dim": meta["dim"],
-            "index_sha256": sha256(INDEX_OUT / "embeddings.f32"),
+            "index_sha256": sha256(Paths.APP_INDEX_DIR / "embeddings.f32"),
             "answer_temperature": 0,
             "judge_temperature": None,
             "seed": SEED,
@@ -306,7 +305,9 @@ def rejudge(result: dict) -> dict:
     evaluator = judge_client()
     items = {
         item["id"]: item
-        for item in (json.loads(line) for line in open(DATA / "gold_set.jsonl", encoding="utf-8"))
+        for item in (
+            json.loads(line) for line in open(Paths.EVALUATION_OUTPUT_DIR / "gold_set.jsonl", encoding="utf-8")
+        )
     }
     chunks = {chunk["chunk_id"]: chunk for chunk in load_chunks()}
     versions = set()
@@ -428,14 +429,16 @@ def main():
     judge_only = sys.argv[1:] == ["--judge-only"]
     if sys.argv[1:] and not judge_only:
         sys.exit("사용법: python -m evaluation.answer [--judge-only]")
-    saved = REPORTS / "answer_eval.json"
+    saved = Paths.EVALUATION_REPORTS_DIR / "answer_eval.json"
     if judge_only and not saved.exists():
         sys.exit(f"기존 평가 결과가 없습니다: {saved}")
     result = rejudge(json.loads(saved.read_text(encoding="utf-8"))) if judge_only else evaluate()
-    REPORTS.mkdir(exist_ok=True)
-    (REPORTS / "answer_eval.json").write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
-    (REPORTS / "answer_eval.md").write_text(report(result), encoding="utf-8")
-    print(f"→ {REPORTS / 'answer_eval.md'}")
+    Paths.EVALUATION_REPORTS_DIR.mkdir(exist_ok=True)
+    (Paths.EVALUATION_REPORTS_DIR / "answer_eval.json").write_text(
+        json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
+    (Paths.EVALUATION_REPORTS_DIR / "answer_eval.md").write_text(report(result), encoding="utf-8")
+    print(f"→ {Paths.EVALUATION_REPORTS_DIR / 'answer_eval.md'}")
 
 
 if __name__ == "__main__":

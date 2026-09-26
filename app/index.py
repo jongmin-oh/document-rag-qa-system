@@ -3,17 +3,14 @@
 import json
 import math
 from array import array
-from pathlib import Path
 
 from openai import OpenAI
 
-from app.config import OPENROUTER_PROVIDER, OpenRouterConfig
-
-OUT = Path(__file__).resolve().parent / "data" / "processed"
+from app.config import OPENROUTER_PROVIDER, OpenRouterConfig, Paths
 
 
 def load_chunks() -> list[dict]:
-    with open(OUT / "chunks.structure.jsonl", encoding="utf-8") as f:
+    with open(Paths.APP_INDEX_DIR / "chunks.structure.jsonl", encoding="utf-8") as f:
         return [json.loads(line) for line in f]
 
 
@@ -49,7 +46,7 @@ def embed(client: OpenAI, text: str) -> list[float]:
 
 
 def load_meta() -> dict:
-    return json.loads((OUT / "embeddings.json").read_text(encoding="utf-8"))
+    return json.loads((Paths.APP_INDEX_DIR / "embeddings.json").read_text(encoding="utf-8"))
 
 
 def load_index() -> tuple[list[str], list[list[float]]]:
@@ -62,6 +59,6 @@ def load_index() -> tuple[list[str], list[list[float]]]:
             "python -m preprocessing.index.build 로 다시 생성하세요."
         )
     flat = array("f")
-    flat.frombytes((OUT / "embeddings.f32").read_bytes())
+    flat.frombytes((Paths.APP_INDEX_DIR / "embeddings.f32").read_bytes())
     dim = meta["dim"]
     return meta["chunk_ids"], [flat[i : i + dim] for i in range(0, len(flat), dim)]

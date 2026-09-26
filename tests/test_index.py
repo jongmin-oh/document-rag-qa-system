@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from app.config import OPENROUTER_PROVIDER, OpenRouterConfig
+from app.config import OPENROUTER_PROVIDER, OpenRouterConfig, Paths
 from app import index
 
 
@@ -31,7 +31,7 @@ def test_embed_uses_pplx_and_normalizes_vector():
 
 
 def test_load_index_rejects_stale_embedding_model(tmp_path, monkeypatch):
-    monkeypatch.setattr(index, "OUT", tmp_path)
+    monkeypatch.setattr(Paths, "APP_INDEX_DIR", tmp_path)
     (tmp_path / "embeddings.json").write_text(
         json.dumps({"model": "old-model", "dim": 3, "chunk_ids": []}), encoding="utf-8"
     )

@@ -10,8 +10,8 @@
 import json
 from array import array
 
-from app.config import OpenRouterConfig
-from app.index import OUT, body, client, embed, load_chunks
+from app.config import OpenRouterConfig, Paths
+from app.index import body, client, embed, load_chunks
 
 
 def main():
@@ -21,14 +21,14 @@ def main():
     for i, c in enumerate(chunks, 1):
         flat.extend(embed(openrouter, f"{c['title_prefix']}\n{body(c)}"))
         print(f"\r{i}/{len(chunks)}", end="", flush=True)
-    (OUT / "embeddings.f32").write_bytes(flat.tobytes())
+    (Paths.APP_INDEX_DIR / "embeddings.f32").write_bytes(flat.tobytes())
     meta = {
         "model": OpenRouterConfig.EMBEDDING_MODEL,
         "dim": OpenRouterConfig.EMBEDDING_DIM,
         "chunk_ids": [c["chunk_id"] for c in chunks],
     }
-    (OUT / "embeddings.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"\n{len(chunks)} vectors ({meta['dim']}d) → {OUT}")
+    (Paths.APP_INDEX_DIR / "embeddings.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"\n{len(chunks)} vectors ({meta['dim']}d) → {Paths.APP_INDEX_DIR}")
 
 
 if __name__ == "__main__":

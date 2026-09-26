@@ -12,16 +12,12 @@
 import json
 import subprocess
 from datetime import datetime, timezone
-from pathlib import Path
 
-from app.config import SEED, GeminiConfig
+from app.config import SEED, GeminiConfig, Paths
 from app.index import client, load_meta
 from app.tasks.qa.ask import generation_client
 from app.tasks.qa.search import BM25_B, BM25_K1, RRF_K, embed_query, rank, rewrite
 
-BASE = Path(__file__).resolve().parent
-DATA = BASE / "data" / "processed"
-REPORTS = BASE / "reports"
 KS = (1, 3, 5, 10)
 MAIN_K = 5  # 답변 생성에 넘기는 청크 수(ask.TOP_K)와 같다
 THRESHOLD = 0.8
@@ -68,7 +64,7 @@ def git_commit() -> str:
 def evaluate() -> dict:
     embedding_client = client()
     llm = generation_client()
-    items = [json.loads(line) for line in open(DATA / "gold_set.jsonl", encoding="utf-8")]
+    items = [json.loads(line) for line in open(Paths.EVALUATION_OUTPUT_DIR / "gold_set.jsonl", encoding="utf-8")]
     items = [i for i in items if i["evidence"]]
     rows = []
     for n, item in enumerate(items, 1):
@@ -145,10 +141,12 @@ def report(result: dict) -> str:
 
 def main():
     result = evaluate()
-    REPORTS.mkdir(exist_ok=True)
-    (REPORTS / "retrieval.json").write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
-    (REPORTS / "retrieval.md").write_text(report(result), encoding="utf-8")
-    print(f"→ {REPORTS / 'retrieval.md'}")
+    Paths.EVALUATION_REPORTS_DIR.mkdir(exist_ok=True)
+    (Paths.EVALUATION_REPORTS_DIR / "retrieval.json").write_text(
+        json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
+    (Paths.EVALUATION_REPORTS_DIR / "retrieval.md").write_text(report(result), encoding="utf-8")
+    print(f"→ {Paths.EVALUATION_REPORTS_DIR / 'retrieval.md'}")
 
 
 if __name__ == "__main__":

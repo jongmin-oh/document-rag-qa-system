@@ -9,13 +9,8 @@
 `<!-- p.N -->`은 인쇄 쪽 번호 표시로, 다음 줄부터 N쪽이라는 뜻이다.
 """
 
-from pathlib import Path
-
+from app.config import Paths
 from preprocessing.pdf_to_markdown import booklet, easylaw
-
-DATA = Path(__file__).resolve().parents[1] / "data"
-RAW = DATA / "raw"
-OUT = DATA / "markdown"
 
 
 def squash(s: str) -> str:
@@ -67,7 +62,7 @@ def find_lines(lines: list[str], target: str) -> tuple[int, int] | None:
 
 def export_easylaw() -> str:
     w = Writer()
-    for u in easylaw.parse(RAW / "easylaw_unemployment_benefit.pdf"):
+    for u in easylaw.parse(Paths.PREPROCESSING_RAW_DIR / "easylaw_unemployment_benefit.pdf"):
         n = u.section_id.split(".")
         base = (f"{n[0]}. {u.section_path[0]}", f"{n[0]}.{n[1]}. {u.section_path[1]}", f"{u.section_id}. {u.section_path[2]}")
         path = base + u.subpath
@@ -97,7 +92,7 @@ def booklet_path(u) -> tuple[str, ...]:
 def export_booklet() -> str:
     w = Writer()
     seen = set()
-    for u in booklet.parse(RAW / "work24_employment_dream_booklet.pdf"):
+    for u in booklet.parse(Paths.PREPROCESSING_RAW_DIR / "work24_employment_dream_booklet.pdf"):
         path = booklet_path(u)
         lines, pages = u.text.split("\n"), list(u.line_pages)
         first = u.section_id not in seen
@@ -126,10 +121,11 @@ def export_booklet() -> str:
 
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
+    Paths.PREPROCESSING_MARKDOWN_DIR.mkdir(parents=True, exist_ok=True)
     for doc_id, fn in (("easylaw_unemployment_benefit", export_easylaw), ("work24_employment_dream_booklet", export_booklet)):
-        (OUT / f"{doc_id}.md").write_text(fn().rstrip() + "\n", encoding="utf-8")
-        print(f"→ {OUT / doc_id}.md")
+        path = Paths.PREPROCESSING_MARKDOWN_DIR / f"{doc_id}.md"
+        path.write_text(fn().rstrip() + "\n", encoding="utf-8")
+        print(f"→ {path}")
 
 
 if __name__ == "__main__":

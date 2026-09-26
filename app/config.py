@@ -9,6 +9,15 @@ from dotenv import load_dotenv
 class Paths:
     BASE_DIR: Path = Path(__file__).resolve().parent.parent
     ENV_PATH: Path = BASE_DIR / ".env"
+    APP_INDEX_DIR: Path = BASE_DIR / "app" / "data" / "processed"
+    PREPROCESSING_DATA_DIR: Path = BASE_DIR / "preprocessing" / "data"
+    PREPROCESSING_RAW_DIR: Path = PREPROCESSING_DATA_DIR / "raw"
+    PREPROCESSING_MARKDOWN_DIR: Path = PREPROCESSING_DATA_DIR / "markdown"
+    PREPROCESSING_OUTPUT_DIR: Path = PREPROCESSING_DATA_DIR / "processed"
+    EVALUATION_DATA_DIR: Path = BASE_DIR / "evaluation" / "data"
+    EVALUATION_GOLD_DIR: Path = EVALUATION_DATA_DIR / "gold"
+    EVALUATION_OUTPUT_DIR: Path = EVALUATION_DATA_DIR / "processed"
+    EVALUATION_REPORTS_DIR: Path = BASE_DIR / "evaluation" / "reports"
 
 
 load_dotenv(Paths.ENV_PATH)

@@ -13,17 +13,13 @@
 import json
 import re
 import unicodedata
-from pathlib import Path
 
 import yaml
 
-from preprocessing.ingest.build import DATA as SOURCE_DATA
+from app.config import Paths
 from preprocessing.ingest.build import DOCS
 from preprocessing.ingest.chunker import load_markdown, page_at
 
-DATA = Path(__file__).resolve().parents[1] / "data"
-OUT = DATA / "processed"
-GOLD = DATA / "gold" / "gold_set.yaml"
 ANSWERABILITY = {"full", "partial", "none"}  # 문서로 전부 답함 | 일부만 답함 | 답할 수 없음(거부해야 함)
 QUESTION_TYPES = {"factoid", "procedural", "multi_hop", "summary", "unanswerable"}
 GAP = " ... "
@@ -68,9 +64,9 @@ def resolve(ev: dict, docs: dict) -> dict:
 def build() -> list[dict]:
     docs = {}
     for d, _, _ in DOCS:
-        text, pages = load_markdown((SOURCE_DATA / "markdown" / f"{d}.md").read_text(encoding="utf-8"))
+        text, pages = load_markdown((Paths.PREPROCESSING_MARKDOWN_DIR / f"{d}.md").read_text(encoding="utf-8"))
         docs[d] = (fold(text), pages)
-    items = yaml.safe_load(GOLD.read_text(encoding="utf-8"))
+    items = yaml.safe_load((Paths.EVALUATION_GOLD_DIR / "gold_set.yaml").read_text(encoding="utf-8"))
     ids = [item["id"] for item in items]
     if len(ids) != len(set(ids)):
         raise ValueError("id가 중복됨")
@@ -94,13 +90,13 @@ def build() -> list[dict]:
 
 def main():
     items = build()
-    OUT.mkdir(parents=True, exist_ok=True)
-    with open(OUT / "gold_set.jsonl", "w", encoding="utf-8") as f:
+    Paths.EVALUATION_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    with open(Paths.EVALUATION_OUTPUT_DIR / "gold_set.jsonl", "w", encoding="utf-8") as f:
         for item in items:
             f.write(json.dumps(item, ensure_ascii=False) + "\n")
     answerability = {a: sum(i["answerability"] == a for i in items) for a in sorted(ANSWERABILITY)}
     types = {t: sum(i["question_type"] == t for i in items) for t in sorted(QUESTION_TYPES)}
-    print(f"{len(items)} items {answerability} {types} → {OUT / 'gold_set.jsonl'}")
+    print(f"{len(items)} items {answerability} {types} → {Paths.EVALUATION_OUTPUT_DIR / 'gold_set.jsonl'}")
 
 
 if __name__ == "__main__":
