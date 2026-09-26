@@ -131,6 +131,7 @@ pytest tests
   `decision/chunking_strategy.md` 4절.
 - LLM Judge 프롬프트를 신뢰성·일관성·Human Alignment 측면에서 어떻게 설계했는지와 그 약점은 `decision/evaluation.md` 3절
   "Judge 프롬프트 설계 배경".
+- 평가 실행 단계와 변경 비교 절차(무엇을 고정하고 어떻게 판정하는지)는 `decision/eval_harness.md`.
 - 재현성: 리포트 JSON에 커밋과 dirty 여부, 모델 ID와 응답 모델 버전, seed(42), temperature, Judge 프롬프트 해시,
   인덱스 해시를 기록한다.
 
@@ -177,9 +178,9 @@ pytest tests
 ## 향후 개선 과제
 
 - 유형별 표본을 사람이 채점해 Judge와의 일치도 측정
-- 임베딩 모델 비교(voyage-4 등)를 검색 지표로 확인 (`decision/models.md` 확인 계획)
+- 임베딩 모델 비교(Qwen3-Embedding-8B)를 검색 지표로 확인 (`decision/models.md` 1절)
 - 인접 주제 거부 강화: 답변 전에 "자료가 질문의 핵심에 직접 답하는가"를 따로 판정
 - doc2query와 질의 재작성의 지연·Recall 비교
 - Streaming 응답, 구조화 출력 실패 시 재시도
 - 멀티턴 대화: 이전 대화를 반영한 질의 재작성
-- CI 연동: 결정론 지표(거부, citation integrity)는 임계값 게이트로, Judge 점수는 추세로 관리
+- CI 연동: 결정론 지표(거부, citation integrity)는 임계값 게이트로, Judge 점수는 추세로 관리 (`decision/eval_harness.md` 6절)
