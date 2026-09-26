@@ -1,57 +1,47 @@
 # 모델 선정
 
-> 결론: 임베딩은 **Gemini Embedding 2**(`gemini-embedding-2`), 답변 생성은 **Gemini 3.8 Flash**(`gemini-3.8-flash`)를 쓴다.
-> 두 모델 모두 Gemini API 키 하나로 쓸 수 있고, 정식 출시(GA) 모델 ID로 고정한다. (확인일: 2026-09-25)
+> 결론: 임베딩은 **pplx-embed-v1-4b**(`perplexity/pplx-embed-v1-4b`), 답변 생성과 질의 재작성은 OpenRouter의
+> **Gemma 4 31B**(`google/gemma-4-31b-it`)를 쓴다. (확인일: 2026-09-26)
 
-## 1. 임베딩: Gemini Embedding 2
+## 1. 임베딩: pplx-embed-v1-4b
 
-### 선정 기준
+정부 문서 검색에는 다국어 종합 점수보다 **한국어 검색 성능**이 직접적인 기준이다. Korean-MTEB v2의 Dense 검색 평균에서
+pplx-embed-v1-4b가 82.79점으로 1위였고, 서비스와 가까운 PublicHealthQA 89.54점, LawIRKo 76.44점을 기록해 채택했다.
+이는 Qwen3-Embedding-4B의 평균 81.37점보다 높고 법령 검색은 사실상 동률이다.
 
-corpus가 청크 약 120개(약 10만 토큰)라 어떤 모델을 써도 인덱싱 비용은 0.05달러 미만이다. 그래서 비용이 아니라 **한국어 검색 품질, 재현성(버전 고정), 운영 편의**로 고른다. 로컬 모델 대신 외부 API를 쓰는 이유는 설치·GPU 없이 누구나 같은 결과를 재현할 수 있어서다.
+- OpenRouter 모델 ID는 `perplexity/pplx-embed-v1-4b`다. 생성 LLM과 API 키·엔드포인트를 공유해 별도 서빙이 필요 없다.
+- 가격은 입력 $0.03/M 토큰, 입력 한도는 32,000토큰이다. 네이티브 2,560차원 벡터를 L2 정규화해 코사인 검색에 쓴다.
+- 모델이 별도 instruction을 요구하지 않으므로 질의는 그대로, 문서는 제목 경로와 본문을 함께 임베딩한다.
+- Perplexity 단일 제공이라 제공자별 양자화 편차는 없지만 장애 시 대체 제공자가 없다. OpenAI SDK의 재시도를 적용한다.
 
-### 후보 비교 (가격은 2026년 7월 기준)
+### 검증 계획
 
-| 모델 | 가격(1M 토큰) | 최대 입력 | 근거 |
-|---|---|---|---|
-| **Gemini Embedding 2** | $0.20 | 8,192 토큰 | 논문 기준 MMTEB(다국어) 69.9. 이전 gemini-embedding-001은 68.4, Voyage-3.5는 58.5 |
-| gemini-embedding-001 | $0.15 | 2,048 토큰 | 이전 세대 GA 모델 |
-| voyage-4 | $0.06 | 32,000 토큰 | 29개 데이터셋에서 Gemini 001·OpenAI 3-large보다 높다는 **벤더 자체 주장** |
-| OpenAI text-embedding-3-large | $0.13 | 8,191 토큰 | 2024년 모델. Voyage 비교에서 14% 낮게 나옴 |
+Korean-MTEB v2는 커뮤니티 리더보드이고 Qwen3-Embedding-8B가 빠져 있다. 채택을 확정하기 전에 현재 Gold Set 검색 지표로
+pplx-embed-v1-4b와 Qwen3-Embedding-8B를 같은 청킹·하이브리드 조건에서 비교한다. 모델 교체 시 문서 전체를 다시 임베딩해야 하며,
+장애나 자체 평가 열세가 확인되면 OpenRouter 안에서 Qwen3-Embedding으로 전환한다.
 
-- **한국어 비교 자료가 없다.** 한국어 검색 리더보드(MTEB-ko-retrieval)는 오픈소스 모델만 다루고 상용 API는 빠져 있다. 그래서 다국어 벤치마크(MMTEB)로 1차 선정한다.
-- 입력 한도(8,192 토큰)가 청크 크기(최대 약 1,500자)에 넉넉하다.
+## 2. 답변 생성 LLM: Gemma 4 31B
 
-### 사용 방법
-
-- Gemini Embedding 2는 `task_type` 파라미터가 없고, **질의와 문서를 프롬프트 접두어로 구분**한다.
-  - 질의: `task: search result | query: {질문}`
-  - 문서: `title: {제목} | text: {청크 본문}`
-- 차원은 기본값 3,072를 그대로 쓴다. 청크가 120개뿐이라 저장·검색 비용이 문제가 되지 않는다.
-
-### 확인 계획
-
-Gold Set이 준비되면 비교 모델 1개(voyage-4 또는 text-embedding-3-large)와 **검색 지표만** 비교해, 벤치마크 점수로 고른 선택을 우리 데이터로 확인한다. 청킹·검색 실험(`chunking_strategy.md` 4절)은 임베딩 모델을 고정한 채 진행했다. 청킹과 임베딩을 동시에 바꾸면 효과를 구분할 수 없기 때문이다. 임베딩 모델 비교는 채택한 C_hybrid 위에서 한다.
-
-## 2. 답변 생성 LLM: Gemini 3.8 Flash
+정부 문서 RAG에서는 범용 지식보다 **검색 문서에만 근거해 답하는 능력**을 우선했다. 이를 직접 측정하는 FACTS Grounding에서
+Gemma 4 31B가 80.7%로 최상위권이어서 채택했다. 26B A4B(80.9%)와의 0.2%p 차이는 사실상 동등하다고 보고, 비용·속도보다
+Dense 31B의 전반적인 답변 품질을 우선했다. OpenRouter 기준 단가는 입력 $0.09/M, 출력 $0.34/M 토큰으로 절대 비용도 낮다.
 
 - 답변 생성과 검색 전 질의 재작성(`chunking_strategy.md` 4절 H4)에 같은 모델을 쓴다.
-- 모델 ID `gemini-3.8-flash`, 2026년 9월 GA. 입력 1,048,576 토큰, 출력 65,536 토큰.
-- 가격(유료 등급, 1M 토큰): 입력 $0.75, 출력 $3.75 (2026년 12월 31일까지. 2027년부터 각각 $1.50, $7.50).
-- Flash급을 고른 이유: 답변은 검색된 청크 몇 개만 근거로 하므로 최상위 모델이 필요하지 않고, Gold Set 전체를 반복 평가하는 비용과 속도가 중요하다.
-- 재현성: temperature 0과 seed 42로 고정하고, 응답의 `model_version`을 평가 리포트에 기록한다. thinking은 `low`/`medium`/`high`만 지원한다(`minimal` 불가).
+- 262,144 토큰 컨텍스트와 JSON Schema 구조화 출력을 지원해 현재 top-5 문맥과 `{answerable, answer}` 응답에 충분하다.
+- 자체 GPU 대신 OpenRouter의 다중 제공자 라우팅·장애 전환을 사용한다. 요청마다 ZDR과 데이터 수집 거부를 강제한다.
+- 제공자별 양자화·성능 차이가 생길 수 있다. 먼저 Gold Set 41문항을 다시 평가하고, 편차가 확인되면 검증된 제공자로 고정한다.
+- temperature 0과 seed 42를 유지하고 실제 응답 모델을 평가 리포트에 기록한다. 제공사가 완전한 결정론을 보장하지는 않는다.
 
 ## 3. 주의할 점
 
-- **무료 등급 데이터 사용**: 무료 등급에서는 입력 내용이 Google 제품 개선에 쓰인다. 공개 문서만 다루므로 문제는 없지만, 실제 사용자 질문을 받는 운영 환경에서는 유료 등급을 써야 한다.
+- **데이터 보안**: OpenRouter의 ZDR은 제공자가 요청·응답을 보관하지 않게 하지만 외부 전송 자체를 막지는 않는다. 운영 전 기관 보안 정책의 허용 여부를 별도로 확인한다.
 - **Judge 모델**: 답변 모델과 분리해 OpenRouter의 `openai/gpt-6-sol`을 쓴다. 처음 쓴 `openai/gpt-5.4-mini`에서 판단력을 우선해 상위 모델로 바꿨다. 교체 전후 비교는 `evaluation.md` 4절.
-- **API 모델 변경**: GA 모델 ID도 제공사 사정으로 동작이 바뀔 수 있다. 평가 리포트에 모델 ID와 응답의 `model_version`을 함께 남긴다.
+- **영어 벤치마크의 한계**: FACTS는 실제 한국어 정부 문서·다중 청크 조건을 대신하지 못한다. 채택 근거는 1차 선별이며 최종 품질은 프로젝트 Gold Set으로 확인한다.
 
 ## 참고
 
-- [Gemini Embedding 2 모델 문서](https://ai.google.dev/gemini-api/docs/models/gemini-embedding-2), [Embeddings 가이드](https://ai.google.dev/gemini-api/docs/embeddings)
-- [Gemini Embedding 2 논문 (arXiv 2605.27295)](https://arxiv.org/html/2605.27295)
-- [Gemini 3.8 Flash 모델 문서](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash), [Gemini API 가격](https://ai.google.dev/gemini-api/docs/pricing)
+- [Korean-MTEB v2 리더보드](https://github.com/OnAnd0n/ko-embedding-leaderboard)
+- [pplx-embed-v1-4b – OpenRouter](https://openrouter.ai/perplexity/pplx-embed-v1-4b), [모델 카드](https://huggingface.co/perplexity-ai/pplx-embed-v1-4b)
+- [FACTS Grounding Leaderboard](https://www.kaggle.com/benchmarks/google/facts-grounding)
+- [Gemma 4 31B – OpenRouter](https://openrouter.ai/google/gemma-4-31b-it), [OpenRouter Structured Outputs](https://openrouter.ai/docs/guides/features/structured-outputs)
 - [OpenRouter GPT-6 Sol](https://openrouter.ai/openai/gpt-6-sol), [OpenRouter Structured Outputs](https://openrouter.ai/docs/guides/features/structured-outputs)
-- [Voyage 4 model family](https://blog.voyageai.com/2026/01/15/voyage-4/)
-- [Embedding Model Pricing (TokenCost, 2026.7)](https://tokencost.app/embeddings)
-- [Embedding Model Selection Guide – Korean benchmarks](https://www.data-dynamics.io/en/blog/embedding-model-guide)

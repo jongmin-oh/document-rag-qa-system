@@ -41,10 +41,9 @@
 
 ## 실행
 
-모델 선정 근거는 `decision/models.md`에 있다. `.env.example`을 `.env`로 복사하고 Gemini와 OpenRouter API 키를 넣는다.
+모델 선정 근거는 `decision/models.md`에 있다. `.env.example`을 `.env`로 복사하고 OpenRouter API 키를 넣는다.
 
 ```dotenv
-GEMINI_API_KEY=<키>
 OPENROUTER_API_KEY=<키>
 ```
 
@@ -53,7 +52,7 @@ Python 3.13에서 확인했다.
 ```bash
 pip install -r requirements.txt
 python -m app.tasks.ingest.build           # Markdown → canonical text, 청크
-python -m app.tasks.index.build            # 청크 → Gemini Embedding 2 벡터 (검색은 LLM 질의 재작성 → 임베딩 + BM25 하이브리드)
+python -m app.tasks.index.build            # 청크 → pplx-embed-v1-4b 벡터 (검색은 LLM 질의 재작성 → 임베딩 + BM25 하이브리드)
 python -m app.tasks.qa.ask "구직급여 하루 상한액은 얼마인가요?"   # CLI
 python main.py                             # API 서버 (http://127.0.0.1:8000/docs)
 python -m app.tasks.gold.build             # Gold Set 인용문 → 근거 좌표 (decision/gold_set.md)
@@ -81,7 +80,7 @@ pytest tests
   "citations": [
     {"n": 1, "chunk_id": "EL-0027", "source": "[생활법령 실업급여 | 2026-08-31 기준] 2. 구직급여 > ...", "page_start": 27, "page_end": 27, "score": 0.0328}
   ],
-  "model_version": "gemini-3.8-flash"
+  "model_version": "google/gemma-4-31b-it"
 }
 ```
 
@@ -94,11 +93,11 @@ pytest tests
 [1회성, 사람 검수]  app/data/raw/*.pdf ──(app/utility/pdf_to_markdown)──▶ app/data/markdown/*.md (커밋된 원본)
 
 [Ingest]   Markdown ──(app/tasks/ingest)──▶ canonical text + 제목 기반 청크 120개 (chunks.structure.jsonl)
-[Index]    청크 ──(app/tasks/index, Gemini Embedding 2)──▶ embeddings.f32 (3072차원, L2 정규화)
+[Index]    청크 ──(app/tasks/index, pplx-embed-v1-4b)──▶ embeddings.f32 (2560차원, L2 정규화)
 
-[질의]     질문 ──▶ ① 질의 재작성 (Gemini 3.8 Flash)
+[질의]     질문 ──▶ ① 질의 재작성 (OpenRouter Gemma 4 31B)
                 ──▶ ② 하이브리드 검색: 임베딩 코사인 + BM25(글자 2-gram) → RRF → top-5
-                ──▶ ③ 답변 생성 (Gemini 3.8 Flash, 구조화 출력 {answerable, answer})
+                ──▶ ③ 답변 생성 (OpenRouter Gemma 4 31B, 구조화 출력 {answerable, answer})
                 ──▶ ④ 서버가 본문의 [n]을 파싱해 citation 객체 생성, 사용자용 답변에서 번호 제거
                 ──▶ POST /ask 응답 (main.py, FastAPI)
 
@@ -116,9 +115,9 @@ pytest tests
 |---|---|---|
 | 언어·서버 | Python, FastAPI | Pydantic 스키마가 곧 Request/Response 정의와 OpenAPI 문서(`/docs`)가 된다 |
 | PDF 추출 | pdfplumber (1회성 초안) | 좌표·글꼴 정보로 제목과 표를 추정. 이후는 검수된 Markdown만 읽는다 |
-| 임베딩 | `gemini-embedding-2` | 다국어 벤치마크(MMTEB) 기준 상위, 입력 8,192토큰. 한국어 상용 API 비교 자료가 없어 1차 선정 (`decision/models.md`) |
-| 답변·재작성 LLM | `gemini-3.8-flash` | 검색된 청크 5개만 근거로 답하므로 최상위 모델이 필요 없고, 반복 평가 비용·속도가 중요 |
-| Judge | OpenRouter `openai/gpt-6-sol` | 답변 모델과 다른 제공사로 자기 선호 편향을 줄이고, JSON Schema structured output으로 채점 형식 강제. 재채점이 41회 호출뿐이라 비용보다 판단력을 우선해 상위 모델 사용 |
+| 임베딩 | OpenRouter `perplexity/pplx-embed-v1-4b` | Korean-MTEB v2 Dense 검색 1위이며 법령·공공 QA 검색에서도 최상위권 (`decision/models.md`) |
+| 답변·재작성 LLM | OpenRouter `google/gemma-4-31b-it` | FACTS Grounding 80.7%의 근거 충실도와 낮은 API 단가를 우선 (`decision/models.md`) |
+| Judge | OpenRouter `openai/gpt-6-sol` | 답변 모델과 다른 개발사 모델로 자기 선호 편향을 줄이고, JSON Schema structured output으로 채점 형식 강제. 재채점이 41회 호출뿐이라 비용보다 판단력을 우선해 상위 모델 사용 |
 | 키워드 검색 | 직접 구현한 BM25 (글자 2-gram) | 형태소 분석(kiwipiepy)보다 Recall@5가 높았고(0.691 vs 0.605) 의존성이 없다 |
 | 프레임워크 | 사용 안 함 (LangChain·LlamaIndex 미사용) | 파이프라인이 재작성 → 검색 → 생성 세 단계라 직접 구현해도 짧고, 각 단계를 평가 trace로 그대로 노출할 수 있다 |
 
@@ -144,17 +143,16 @@ pytest tests
 | LLM 질의 재작성 | Recall@5 0.691 → 0.788 (seed 도입 후 3회 0.769~0.783). 구어와 문서 용어의 차이를 메운다 | 질문마다 LLM 호출 1회 추가(응답 지연 증가), 두 가지를 묻는 질문을 한쪽으로 좁히기도 함 |
 | 인용 번호를 답변 본문에서 파싱 (LLM이 별도 목록을 만들지 않음) | 본문과 citation 목록이 어긋날 수 없다 | 사용자용 답변에서는 번호를 지우므로, 어느 문장이 어느 출처인지는 응답에 남지 않는다 |
 | 거부를 구조화 출력 `answerable`로 판정 | 거부 여부를 결정론적으로 채점할 수 있다 | 판정이 LLM 한 번에 달려 있어 인접 주제 질문(KIN-13)에 답해 버리는 경우가 있다 |
-| Judge를 답변과 다른 제공사 모델로 | 자기 선호 편향 감소 | 두 API 키가 필요하고, Judge temperature는 요청 호환성 문제로 지정하지 않는다(API 기본값) |
+| Judge를 답변과 다른 개발사 모델로 | 자기 선호 편향 감소 | Judge 호출 비용이 추가되고, temperature는 요청 호환성 문제로 지정하지 않는다(API 기본값) |
 
 실험 과정과 조건별 결과는 `decision/chunking_strategy.md` 4절에 있다.
 
 ## 비용·컴퓨팅 제약
 
 - GPU 없이 누구나 재현할 수 있도록 로컬 모델 대신 API 모델을 썼다. 인덱싱 비용은 청크 120개에 0.05달러 미만이다.
-- 답변 모델은 Flash급으로 골랐다. Gold Set 전체 평가 한 번에 질문당 Gemini 2회(재작성·답변), 임베딩 1회, Judge 1회를 호출하므로
-  반복 평가 비용과 속도가 모델 선택을 좌우했다.
-- 무료 등급의 분당 요청 한도 때문에 Gemini 클라이언트에 지수 백오프 재시도를 넣었다. 무료 등급은 입력이 Google 제품 개선에 쓰이므로
-  실제 사용자 질문을 받는 운영에서는 유료 등급을 써야 한다.
+- Gold Set 전체 평가 한 번에 질문당 OpenRouter Gemma 2회(재작성·답변), Perplexity 임베딩 1회, OpenRouter Judge 1회를 호출한다.
+  Gemma는 입력 $0.09/M, 출력 $0.34/M 토큰이라 31B Dense 모델의 품질을 택해도 반복 평가 비용이 낮다.
+- OpenRouter 요청은 ZDR과 데이터 수집 거부를 강제한다. 다만 외부 전송은 발생하므로 실제 사용자 질문을 받기 전 기관 보안 정책을 확인해야 한다.
 - 청크가 120개라 벡터 DB를 두지 않았다. 문서가 수만 청크로 늘면 벡터 DB로 바꾼다.
 - 질의 재작성 대신 청크마다 예상 질문을 미리 생성해 색인하는 방식(doc2query)은 질의 시 호출이 없지만, 측정 비용 때문에 비교하지 않았다.
 
@@ -163,7 +161,7 @@ pytest tests
 - **Corpus 범위**: 정부 공식 안내 2종만 담아 실제 심사 사례, 판례, 예외 처리 관행은 답할 수 없다. 두 문서의 기준일이 다르다.
 - **평가 규모**: 41문항, 거부 문항 5개라 한 문항이 거부 지표를 20%p 움직인다. 작은 차이는 경향으로만 읽는다.
 - **Judge 검증**: Judge 점수를 사람 채점과 대조하지 않았다. 신뢰성·일관성은 설계로 다뤘지만 사람과의 정합성은 측정되지 않았다.
-- **비결정성**: seed 42를 지정하자 재작성 질의가 같은 문항이 0/36에서 35~36/36으로 늘었지만, 완전히 같지는 않다. 리포트에 문항별 재작성 질의와 답변을 남겨 추적한다.
+- **비결정성**: temperature 0과 seed 42를 지정하지만 OpenRouter 제공자는 완전한 결정론을 보장하지 않는다. 리포트에 문항별 재작성 질의와 실제 응답 모델을 남겨 추적한다.
 - **단일 턴**: 이전 대화를 참고하지 않는다.
 
 ## 알려진 이슈
@@ -171,7 +169,7 @@ pytest tests
 - **KIN-13 오답변**: 답이 없는 질문(같은 회사 지원+면접 횟수)에 인접 규정("동일 사업장 반복 지원 불인정")을 근거로 답한다.
 - **KIN-09 검색 실패**: 수급 신청 전 알바 소득 신고 질문은 검색 단계에서 근거를 거의 찾지 못한다.
 - **검색 평가와 답변 평가의 재작성 질의가 일부 다를 수 있다**: 두 평가가 재작성을 따로 호출해, 같은 커밋에서도 1~2문항은 두 리포트의 top-5가 다를 수 있다.
-- **LLM 구조화 출력 실패 시 500**: Gemini가 스키마에 맞는 응답을 주지 않으면 `/ask`가 오류를 반환한다. 재시도나 명시적인 오류 응답이 없다.
+- **LLM 구조화 출력 실패 시 500**: Gemma가 스키마에 맞는 응답을 주지 않으면 `/ask`가 오류를 반환한다. 재시도나 명시적인 오류 응답이 없다.
 - **Streaming 미지원**.
 
 ## 향후 개선 과제
