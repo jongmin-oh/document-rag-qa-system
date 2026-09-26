@@ -1,6 +1,6 @@
 {
- "model": "gemini-embedding-2",
- "dim": 3072,
+ "model": "perplexity/pplx-embed-v1-4b",
+ "dim": 2560,
  "chunk_ids": [
   "EL-0000",
   "EL-0001",
