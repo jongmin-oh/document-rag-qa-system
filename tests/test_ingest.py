@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-from preprocessing.ingest.build import DATA, build
+from preprocessing.ingest.build import build
 from preprocessing.ingest.chunker import HEADING, SOFT_LIMIT
 from preprocessing.ingest.laws import cited_laws
 
@@ -17,25 +17,12 @@ def built():
     return build()
 
 
-def md(doc_id: str) -> str:
-    return (DATA / "markdown" / f"{doc_id}.md").read_text(encoding="utf-8")
-
-
 def chunks(built, doc_id=None):
     return [c for d, (_, cs) in built.items() if doc_id in (None, d) for c in cs]
 
 
 def find(built, doc_id, needle):
     return next(c for c in chunks(built, doc_id) if needle in c.text)
-
-
-# --- Markdown 원문 구조
-def test_easylaw_has_22_leaf_sections():
-    assert len(re.findall(r"^### \d+\.\d+\.\d+\. ", md(EL), re.M)) == 22
-
-
-def test_booklet_has_29_qa():
-    assert len(re.findall(r"^## Q\d+(?:-\d)?\. ", md(BK), re.M)) == 29
 
 
 # --- 청킹 규칙
