@@ -24,7 +24,7 @@
 
 ### 확보 방법 (재현성)
 
-원본 PDF를 `app/data/raw/`에 포함했다. 출처 URL과 기준일은 `app/data/sources.json`에 기록했다.
+원본 PDF를 `preprocessing/data/raw/`에 포함했다. 출처 URL과 기준일은 `preprocessing/data/sources.json`에 기록했다.
 
 ### 라이선스 및 출처
 
@@ -52,14 +52,14 @@ Python 3.13에서 확인했다.
 
 ```bash
 pip install -r requirements.txt
-python -m app.tasks.ingest.build           # Markdown → canonical text, 청크
-python -m app.tasks.index.build            # 청크 → pplx-embed-v1-4b 벡터 (검색은 LLM 질의 재작성 → 임베딩 + BM25 하이브리드)
+python -m preprocessing.ingest.build           # Markdown → canonical text, 청크
+python -m preprocessing.index.build            # 청크 → pplx-embed-v1-4b 벡터 (검색은 LLM 질의 재작성 → 임베딩 + BM25 하이브리드)
 python -m app.tasks.qa.ask "구직급여 하루 상한액은 얼마인가요?"   # CLI
 python main.py                             # API 서버 (http://127.0.0.1:8000/docs)
-python -m app.tasks.gold.build             # Gold Set 인용문 → 근거 좌표 (decision/gold_set.md)
-python -m app.tasks.eval.retrieval         # 검색 평가 → reports/retrieval.md
-python -m app.tasks.eval.answer            # 답변·거부·인용 평가 → reports/answer_eval.md
-python -m app.tasks.eval.answer --judge-only  # 저장된 동일 답변을 OpenRouter GPT Judge로 재채점
+python -m evaluation.gold.build            # Gold Set 인용문 → 근거 좌표 (decision/gold_set.md)
+python -m evaluation.retrieval             # 검색 평가 → evaluation/reports/retrieval.md
+python -m evaluation.answer                # 답변·거부·인용 평가 → evaluation/reports/answer_eval.md
+python -m evaluation.answer --judge-only  # 저장된 동일 답변을 OpenRouter GPT Judge로 재채점
 pytest tests
 ```
 
@@ -91,10 +91,11 @@ pytest tests
 ## 시스템 아키텍처
 
 ```
-[1회성, 사람 검수]  app/data/raw/*.pdf ──(app/utility/pdf_to_markdown)──▶ app/data/markdown/*.md (커밋된 원본)
+[1회성, 사람 검수]  preprocessing/data/raw/*.pdf ──(preprocessing/pdf_to_markdown)──▶ preprocessing/data/markdown/*.md (커밋된 원본)
 
-[Ingest]   Markdown ──(app/tasks/ingest)──▶ canonical text + 제목 기반 청크 120개 (chunks.structure.jsonl)
-[Index]    청크 ──(app/tasks/index, pplx-embed-v1-4b)──▶ embeddings.f32 (2560차원, L2 정규화)
+[Ingest]   Markdown ──(preprocessing/ingest)─┬─▶ canonical text (preprocessing/data/processed)
+                                             └─▶ 제목 기반 청크 120개 (app/data/processed/chunks.structure.jsonl)
+[Index]    청크 ──(preprocessing/index, pplx-embed-v1-4b)──▶ app/data/processed/embeddings.f32 (2560차원, L2 정규화)
 
 [질의]     질문 ──▶ ① 질의 재작성 (Gemini 3.7 Flash)
                 ──▶ ② 하이브리드 검색: 임베딩 코사인 + BM25(글자 2-gram) → RRF → top-5
@@ -102,13 +103,18 @@ pytest tests
                 ──▶ ④ 서버가 본문의 [n]을 파싱해 citation 객체 생성, 사용자용 답변에서 번호 제거
                 ──▶ POST /ask 응답 (main.py, FastAPI)
 
-[평가]     Gold Set(41문항, 근거 = canonical text 문자 구간)
-             ├─ app/tasks/eval/retrieval: 검색만 실행 → Hit/Recall/Coverage/Precision@k
-             └─ app/tasks/eval/answer: ①~④ 전체 실행 → 거부·인용 결정론 지표 + OpenRouter GPT Judge
+[평가]     Gold Set(evaluation/data, 41문항, 근거 = canonical text 문자 구간)
+             ├─ evaluation/retrieval: 검색만 실행 → Hit/Recall/Coverage/Precision@k
+             └─ evaluation/answer: ①~④ 전체 실행 → 거부·인용 결정론 지표 + OpenRouter GPT Judge
 ```
 
+`app/`은 배포 시 필요한 API·검색·답변 생성·인덱스 로딩 코드와 런타임 데이터만 가진다. `preprocessing/`은 PDF 변환,
+청킹·인덱스 생성과 관련 데이터를, `evaluation/`은 Gold Set·평가 코드·평가 리포트를 가진다. 앱은 두 오프라인 패키지를
+import하지 않고, 전처리가 만든 `app/data/processed/` 안의 청크와 임베딩 세 파일만 읽는다.
+
 - 벡터 DB 없이 120개 벡터를 전수 비교한다. 순수 Python으로 검색 한 번에 약 10ms라 별도 설치가 필요 없다.
-- 청크·인덱스·Gold Set 산출물(`app/data/processed/`)도 커밋되어 있어 ingest와 index를 다시 돌리지 않아도 질의·평가를 실행할 수 있다.
+- 앱용 청크·인덱스(`app/data/processed/`)와 평가용 Gold Set(`evaluation/data/processed/`)이 커밋되어 있어
+  ingest와 index를 다시 돌리지 않아도 질의·평가를 실행할 수 있다.
 
 ## 기술 스택과 선정 근거
 
@@ -197,7 +203,7 @@ pytest tests
 
 모든 비교는 평균뿐 아니라 개선·악화 문항과 실패 사례를 함께 확인했다. LLM과 Judge는 seed 42에서도 완전히 결정적이지 않고,
 검색 36문항·거부 5문항의 작은 표본이므로 작은 차이는 경향으로만 해석한다. 현재 전체 운영 조합의 수치는
-`reports/retrieval.md`와 `reports/answer_eval.md`, 상세 실험 조건은 `decision/chunking_strategy.md`, `decision/models.md`,
+`evaluation/reports/retrieval.md`와 `evaluation/reports/answer_eval.md`, 상세 실험 조건은 `decision/chunking_strategy.md`, `decision/models.md`,
 `decision/eval_harness.md`에 기록했다.
 
 ### Next Steps

@@ -8,11 +8,11 @@
 
 | 단계 | 명령 | 입력 | 출력 |
 |---|---|---|---|
-| Gold Set 빌드 | `python -m app.tasks.gold.build` | `app/data/gold/gold_set.yaml` (사람이 작성한 질문·참고 정답·근거 인용문) | `app/data/processed/gold_set.jsonl` (근거를 canonical text 문자 구간으로 변환) |
-| 인덱스 빌드 | `python -m app.tasks.index.build` | 청크 | `app/data/processed/embeddings.*` |
-| 검색 평가 | `python -m app.tasks.eval.retrieval` | Gold Set(none 제외 36문항), 인덱스 | `reports/retrieval.{json,md}` |
-| 답변 평가 | `python -m app.tasks.eval.answer` | Gold Set 41문항, 인덱스 | `reports/answer_eval.{json,md}` |
-| 재채점 | `python -m app.tasks.eval.answer --judge-only` | 저장된 `reports/answer_eval.json` | 같은 답변에 Judge 점수와 결정론 지표만 다시 계산 |
+| Gold Set 빌드 | `python -m evaluation.gold.build` | `evaluation/data/gold/gold_set.yaml` (사람이 작성한 질문·참고 정답·근거 인용문) | `evaluation/data/processed/gold_set.jsonl` (근거를 canonical text 문자 구간으로 변환) |
+| 인덱스 빌드 | `python -m preprocessing.index.build` | 청크 | `app/data/processed/embeddings.*` |
+| 검색 평가 | `python -m evaluation.retrieval` | Gold Set(none 제외 36문항), 인덱스 | `evaluation/reports/retrieval.{json,md}` |
+| 답변 평가 | `python -m evaluation.answer` | Gold Set 41문항, 인덱스 | `evaluation/reports/answer_eval.{json,md}` |
+| 재채점 | `python -m evaluation.answer --judge-only` | 저장된 `evaluation/reports/answer_eval.json` | 같은 답변에 Judge 점수와 결정론 지표만 다시 계산 |
 
 ## 2. 실행 단계
 

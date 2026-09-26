@@ -61,8 +61,8 @@
 그래서 **PDF는 한 번만 Markdown으로 변환하고 사람이 검수**한다. 이후 파이프라인은 Markdown만 읽는다.
 
 ```
-[1회성]      PDF ──(app/utility/pdf_to_markdown: 초안 생성)──▶ Markdown ──(사람이 원문과 대조·수정)──▶ 커밋
-[파이프라인] app/data/markdown/*.md ──(app/tasks/ingest: 제목 기반 청킹)──▶ 청크
+[1회성]      PDF ──(preprocessing/pdf_to_markdown: 초안 생성)──▶ Markdown ──(사람이 원문과 대조·수정)──▶ 커밋
+[파이프라인] preprocessing/data/markdown/*.md ──(preprocessing/ingest: 제목 기반 청킹)──▶ 청크
 ```
 
 - 문서가 버전이 고정된 PDF 2개라 1회 변환이 정당하다. PDF가 개정되면 변환과 검수를 다시 한다(한계로 기록).
@@ -78,9 +78,9 @@
 - **제외한 내용**: 목차, 매 쪽 머리말·쪽 번호, 수첩의 빈 서식·달력·인사말·뒤표지(중복). 서식 장의 안내 문장은 남기고, 여러 장에 반복되는 안내문과 문의처는 한 번만 둔다.
 - **원문 수정 금지**: 문구는 바꾸지 않는다. 구조(제목·표·목록)만 입힌다.
 
-초안은 `app/utility/pdf_to_markdown`이 만든다(pdfplumber로 좌표·글꼴을 읽어 제목·표를 추정). 자동 추출이 깨지는 수첩 표 3개(5쪽, 51–52쪽)는 검수 단계에서 원문 이미지를 보고 Markdown에 직접 옮겨 적었다. 초안 생성 후에도 사람이 수정할 수 있으며, **커밋된 Markdown이 원본(source of truth)**이다.
+초안은 `preprocessing/pdf_to_markdown`이 만든다(pdfplumber로 좌표·글꼴을 읽어 제목·표를 추정). 자동 추출이 깨지는 수첩 표 3개(5쪽, 51–52쪽)는 검수 단계에서 원문 이미지를 보고 Markdown에 직접 옮겨 적었다. 초안 생성 후에도 사람이 수정할 수 있으며, **커밋된 Markdown이 원본(source of truth)**이다.
 
-### 3.3 청킹 규칙 (`app/tasks/ingest/chunker.py`)
+### 3.3 청킹 규칙 (`preprocessing/ingest/chunker.py`)
 
 1. Markdown 제목으로 트리를 만든다.
 2. 제목 아래 전체(하위 제목 포함)가 **1,500자(공백 제외) 이하면 하나의 청크**로 둔다. 넘으면 하위 제목으로 내려가 같은 규칙을 반복한다.
@@ -119,7 +119,7 @@ Contextual Retrieval의 문맥 보강 아이디어를 LLM 호출 없이 적용�
 
 ## 4. 실험 (완료: C_hybrid + 질의 재작성 채택)
 
-비교 조건 A, B, C의 코드와 인덱스는 채택 후 삭제했다. 비교를 다시 돌리려면 커밋 `a0bb8bc`에서 `python -m app.tasks.ingest.build && python -m app.tasks.index.build && python -m app.tasks.eval.retrieval`을 실행한다.
+비교 조건 A, B, C의 코드와 인덱스는 채택 후 삭제했다. 비교를 다시 돌리려면 커밋 `a0bb8bc`에서 `python -m preprocessing.ingest.build && python -m preprocessing.index.build && python -m evaluation.retrieval`을 실행한다.
 
 ### 조건
 
@@ -193,7 +193,7 @@ Contextual Retrieval의 문맥 보강 아이디어를 LLM 호출 없이 적용�
 
 ### Canonical text
 
-- 검수된 Markdown에서 주석 줄(쪽 표시 등)만 뺀 텍스트다. `app/data/processed/{doc_id}.canonical.txt`로 저장한다.
+- 검수된 Markdown에서 주석 줄(쪽 표시 등)만 뺀 텍스트다. `preprocessing/data/processed/{doc_id}.canonical.txt`로 저장한다.
 - 모든 청크의 `char_start`, `char_end`와 Gold 근거 구간은 이 텍스트 기준 좌표다. 조건 A/B/C 모두 같은 canonical text를 서로 다르게 자를 뿐이다.
 - 나뉜 Q&A 앞에 다시 붙이는 질문과 조건 C의 제목 접두어는 canonical text 밖의 텍스트이므로 좌표에 포함하지 않는다.
 
@@ -251,7 +251,7 @@ Gold 근거를 청크 ID로 라벨링하면 조건마다 청크가 달라서 같
 ## 6. 검수와 회귀 테스트
 
 - Markdown 검수: 원문 PDF와 대조해 누락·제목 수준·표 값·쪽 표시를 확인한다. 커밋 후에는 Markdown이 원본이다.
-- 청크 검수: `python -m app.tasks.ingest.build`가 만드는 `chunk_report.md`(청크 목록, 크기 분포)로 확인한다.
+- 청크 검수: `python -m preprocessing.ingest.build`가 만드는 `chunk_report.md`(청크 목록, 크기 분포)로 확인한다.
 - 회귀 테스트(`pytest tests`): 생활법령 최하위 절 22개, 수첩 Q&A 29개, Q10은 2개 청크이며 두 번째에 질문 접두어, Q&A끼리 병합 안 됨, 1,500자 초과 청크는 쪼갤 수 없는 단일 블록뿐, 제목만 있는 청크 없음, canonical 구간 일치, 그룹 제목 경로, 쪽 범위, 소정급여일수 표 값, 분류표, 재취업활동 표의 세 수급자 유형, 문의처 1개, 조문 추출 예시.
 
 ## 7. 알려진 한계

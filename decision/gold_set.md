@@ -57,7 +57,7 @@ evidence:
         quote: 1. 최후에 이직한 사업의 사업주나 ... 재고용된 경우
 ```
 
-- `python -m app.tasks.gold.build`가 인용문을 찾아 `char_start`, `char_end`, 인쇄 쪽을 붙여 `app/data/processed/gold_set.jsonl`을 만든다.
+- `python -m evaluation.gold.build`가 인용문을 찾아 `char_start`, `char_end`, 인쇄 쪽을 붙여 `evaluation/data/processed/gold_set.jsonl`을 만든다.
 - 인용문은 문서 안에서 **정확히 한 번** 나와야 한다. 공백·줄바꿈 차이와 한자 호환 문자 차이(원문의 `離`는 U+F9EA)는 무시한다.
 - 긴 구간은 `시작 문구 ... 끝 문구`로 적는다.
 - 근거 하나는 답에 필요한 **사실 하나**다. 여러 사실을 조합해야 하는 문항(KIN-10: 수급자격, 180일, 피보험기간 합산, 소정급여일수, 금액)은 근거가 여러 개이며 Recall@k와 Hit@k가 갈린다.

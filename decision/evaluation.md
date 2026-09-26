@@ -5,9 +5,9 @@
 
 ## 1. 평가 단위
 
-`python -m app.tasks.eval.answer`는 Gold Set 41문항 전체에 실제 운영 경로인 질의 재작성 → 하이브리드 검색 →
+`python -m evaluation.answer`는 Gold Set 41문항 전체에 실제 운영 경로인 질의 재작성 → 하이브리드 검색 →
 답변 생성을 적용한다. API에는 노출하지 않는 trace에 재작성 질의, top-5 청크, 실제 인용 청크와 모델 버전을 남긴다.
-Judge 모델만 비교할 때는 `python -m app.tasks.eval.answer --judge-only`로 저장된 동일 답변을 재채점한다. 답변까지 다시
+Judge 모델만 비교할 때는 `python -m evaluation.answer --judge-only`로 저장된 동일 답변을 재채점한다. 답변까지 다시
 생성해 Gemini 출력 변동을 Judge 차이로 잘못 해석하는 것을 막고 Judge 호출도 41회로 줄인다.
 
 ## 2. 결정론적 지표
@@ -55,7 +55,7 @@ top-5 검색 결과와 연결한다. 따라서 본문이 인용 번호의 단일
 
 ### Judge 프롬프트 설계 배경
 
-프롬프트는 `app/tasks/eval/answer.py`의 `JUDGE_SYSTEM`(역할·rubric), `judge()`의 사용자 프롬프트(문항별 입력),
+프롬프트는 `evaluation/answer.py`의 `JUDGE_SYSTEM`(역할·rubric), `judge()`의 사용자 프롬프트(문항별 입력),
 `JudgeResult`(출력 스키마) 세 부분이다. 과제가 요구하는 신뢰성·일관성·Human Alignment마다, 알려진 LLM Judge의 실패 방식을
 하나씩 막는 장치로 설계했다.
 
