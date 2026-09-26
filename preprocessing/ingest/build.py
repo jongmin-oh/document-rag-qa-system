@@ -1,10 +1,10 @@
 """검수된 Markdown → canonical text + 구조 기반 청크 + 검수 리포트.
 
-사용법: python -m app.tasks.ingest.build
-입력: app/data/markdown/{doc_id}.md  (PDF에서 1회 변환 후 사람이 검수한 원문)
-출력: app/data/processed/
+사용법: python -m preprocessing.ingest.build
+입력: preprocessing/data/markdown/{doc_id}.md  (PDF에서 1회 변환 후 사람이 검수한 원문)
+출력: preprocessing/data/processed/, app/data/processed/
   - {doc_id}.canonical.txt   Gold 근거 좌표의 기준 텍스트 (Markdown에서 주석 줄 제거)
-  - chunks.structure.jsonl   구조 기반 청크 (검색 시 title_prefix를 함께 쓴다)
+  - app/data/processed/chunks.structure.jsonl   구조 기반 앱 검색 청크
   - chunk_report.md          사람 검수용 청크 목록·분포
 """
 
@@ -12,9 +12,10 @@ import json
 import statistics
 from pathlib import Path
 
-from app.tasks.ingest.chunker import chunk_markdown, to_dict
+from app.index import OUT as APP_OUT
+from preprocessing.ingest.chunker import chunk_markdown, to_dict
 
-DATA = Path(__file__).resolve().parents[2] / "data"
+DATA = Path(__file__).resolve().parents[1] / "data"
 OUT = DATA / "processed"
 DOCS = [  # (doc_id, 제목 접두어용 짧은 이름, 청크 ID 접두어)
     ("easylaw_unemployment_benefit", "생활법령 실업급여", "EL"),
@@ -34,15 +35,16 @@ def build() -> dict:
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
+    APP_OUT.mkdir(parents=True, exist_ok=True)
     all_chunks = []
     for doc_id, (canonical, chunks) in build().items():
         (OUT / f"{doc_id}.canonical.txt").write_text(canonical, encoding="utf-8")
         all_chunks.extend(chunks)
-    with open(OUT / "chunks.structure.jsonl", "w", encoding="utf-8") as f:
+    with open(APP_OUT / "chunks.structure.jsonl", "w", encoding="utf-8") as f:
         for c in all_chunks:
             f.write(json.dumps(to_dict(c), ensure_ascii=False) + "\n")
     write_report(all_chunks)
-    print(f"{len(all_chunks)} chunks → {OUT}")
+    print(f"{len(all_chunks)} chunks → {APP_OUT}")
 
 
 def write_report(chunks):

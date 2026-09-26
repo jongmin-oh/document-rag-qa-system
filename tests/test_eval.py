@@ -1,6 +1,6 @@
 """검색 지표 계산 테스트. 실행: pytest tests"""
 
-from app.tasks.eval.retrieval import score
+from evaluation.retrieval import score
 
 
 def span(doc, start, end, alt=()):

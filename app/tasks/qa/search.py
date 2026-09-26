@@ -16,7 +16,7 @@ from google import genai
 from openai import OpenAI
 
 from app.config import SEED, GeminiConfig
-from app.tasks.index.build import body, embed, load_chunks, load_index
+from app.index import body, embed, load_chunks, load_index
 
 BM25_K1, BM25_B = 1.2, 0.75
 RRF_K = 60

@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-from app.tasks.index.build import client
+from app.index import client
 from app.tasks.qa.ask import AskResponse, ask, generation_client
 
 app = FastAPI(title="실업급여 RAG QA")

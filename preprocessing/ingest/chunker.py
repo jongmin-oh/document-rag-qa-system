@@ -16,7 +16,7 @@ import bisect
 import re
 from dataclasses import asdict, dataclass, field
 
-from app.tasks.ingest.laws import cited_laws
+from preprocessing.ingest.laws import cited_laws
 
 SOFT_LIMIT = 1500  # 공백 제외 글자 수
 MIN_CHARS = 300

@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import pytest
 
 from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig, OpenRouterConfig
-from app.tasks.eval.answer import JudgeResult, deterministic, judge, readability, summarize, trace_from_row
+from evaluation.answer import JudgeResult, deterministic, judge, readability, summarize, trace_from_row
 from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, answer, build_response, citation_numbers, clean_answer
 
 

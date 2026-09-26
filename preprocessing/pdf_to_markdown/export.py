@@ -1,19 +1,19 @@
 """PDF → Markdown 초안 생성 (1회성 도구).
 
-사용법: python -m app.utility.pdf_to_markdown.export
-출력: app/data/markdown/{doc_id}.md
+사용법: python -m preprocessing.pdf_to_markdown.export
+출력: preprocessing/data/markdown/{doc_id}.md
 
 생성된 Markdown은 사람이 원문 PDF와 대조해 검수·수정한 뒤 커밋한다(수첩 표 3개는 이 단계에서 직접 옮겨 적었다).
 다시 실행하면 검수한 내용이 덮어써지므로 PDF가 개정됐을 때만 실행한다.
-이후 파이프라인(app/tasks/ingest)은 PDF가 아니라 이 Markdown만 읽는다.
+이후 파이프라인(preprocessing/ingest)은 PDF가 아니라 이 Markdown만 읽는다.
 `<!-- p.N -->`은 인쇄 쪽 번호 표시로, 다음 줄부터 N쪽이라는 뜻이다.
 """
 
 from pathlib import Path
 
-from app.utility.pdf_to_markdown import booklet, easylaw
+from preprocessing.pdf_to_markdown import booklet, easylaw
 
-DATA = Path(__file__).resolve().parents[2] / "data"
+DATA = Path(__file__).resolve().parents[1] / "data"
 RAW = DATA / "raw"
 OUT = DATA / "markdown"
 

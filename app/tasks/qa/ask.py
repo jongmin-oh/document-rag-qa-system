@@ -1,7 +1,7 @@
 """질문 → 청크 검색 → 근거를 인용한 답변 생성.
 
 사용법: python -m app.tasks.qa.ask "질문"  (API는 main.py)
-먼저 python -m app.tasks.index.build 로 인덱스를 만들어야 한다.
+먼저 python -m preprocessing.index.build 로 인덱스를 만들어야 한다.
 """
 
 import re
@@ -13,7 +13,7 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 
 from app.config import SEED, GeminiConfig
-from app.tasks.index.build import body, client
+from app.index import body, client
 from app.tasks.qa.search import embed_query, rank, rewrite_with_version
 
 TOP_K = 5

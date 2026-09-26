@@ -2,7 +2,7 @@
 
 import pytest
 
-from app.tasks.gold.build import build, fold, locate
+from evaluation.gold.build import build, fold, locate
 
 
 def test_gold_set_builds():

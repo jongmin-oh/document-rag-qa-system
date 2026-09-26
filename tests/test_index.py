@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from app.config import OPENROUTER_PROVIDER, OpenRouterConfig
-from app.tasks.index import build
+from app import index
 
 
 def test_embed_uses_pplx_and_normalizes_vector():
@@ -21,7 +21,7 @@ def test_embed_uses_pplx_and_normalizes_vector():
 
     embeddings = Embeddings()
     client = SimpleNamespace(embeddings=embeddings)
-    vector = build.embed(client, "검색할 문장")
+    vector = index.embed(client, "검색할 문장")
 
     assert math.isclose(sum(v * v for v in vector), 1.0)
     assert vector[:2] == [0.6, 0.8]
@@ -31,10 +31,10 @@ def test_embed_uses_pplx_and_normalizes_vector():
 
 
 def test_load_index_rejects_stale_embedding_model(tmp_path, monkeypatch):
-    monkeypatch.setattr(build, "OUT", tmp_path)
+    monkeypatch.setattr(index, "OUT", tmp_path)
     (tmp_path / "embeddings.json").write_text(
         json.dumps({"model": "old-model", "dim": 3, "chunk_ids": []}), encoding="utf-8"
     )
 
     with pytest.raises(ValueError, match="다시 생성하세요"):
-        build.load_index()
+        index.load_index()

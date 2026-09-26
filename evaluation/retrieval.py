@@ -1,8 +1,8 @@
 """검색 평가: Gold Set 질문으로 검색해 근거를 얼마나 회수하는지 잰다.
 
-사용법: python -m app.tasks.eval.retrieval
-입력: app/data/processed/gold_set.jsonl, 인덱스(app/data/processed/embeddings.*)
-출력: reports/retrieval.md (요약 리포트), reports/retrieval.json (문항별 결과)
+사용법: python -m evaluation.retrieval
+입력: evaluation/data/processed/gold_set.jsonl, 인덱스(app/data/processed/embeddings.*)
+출력: evaluation/reports/retrieval.md (요약 리포트), evaluation/reports/retrieval.json (문항별 결과)
 
 지표 정의는 decision/chunking_strategy.md 4절을 따른다.
 - 근거 회수: top-k 청크가 근거 구간을 THRESHOLD 이상 덮으면 회수. alt가 있으면 가장 많이 덮인 쪽을 쓴다.
@@ -15,12 +15,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from app.config import SEED, GeminiConfig
-from app.tasks.index.build import client, load_meta
-from app.tasks.ingest.build import OUT
+from app.index import client, load_meta
 from app.tasks.qa.ask import generation_client
 from app.tasks.qa.search import BM25_B, BM25_K1, RRF_K, embed_query, rank, rewrite
 
-REPORTS = Path(__file__).resolve().parents[3] / "reports"
+BASE = Path(__file__).resolve().parent
+DATA = BASE / "data" / "processed"
+REPORTS = BASE / "reports"
 KS = (1, 3, 5, 10)
 MAIN_K = 5  # 답변 생성에 넘기는 청크 수(ask.TOP_K)와 같다
 THRESHOLD = 0.8
@@ -67,7 +68,7 @@ def git_commit() -> str:
 def evaluate() -> dict:
     embedding_client = client()
     llm = generation_client()
-    items = [json.loads(line) for line in open(OUT / "gold_set.jsonl", encoding="utf-8")]
+    items = [json.loads(line) for line in open(DATA / "gold_set.jsonl", encoding="utf-8")]
     items = [i for i in items if i["evidence"]]
     rows = []
     for n, item in enumerate(items, 1):

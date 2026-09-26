@@ -1,8 +1,8 @@
 """Gold Set 원본(YAML) → 근거 좌표가 붙은 Gold Set(JSONL).
 
-사용법: python -m app.tasks.gold.build
-입력: app/data/gold/gold_set.yaml  (사람이 작성·검수. 근거는 문서 원문 인용)
-출력: app/data/processed/gold_set.jsonl
+사용법: python -m evaluation.gold.build
+입력: evaluation/data/gold/gold_set.yaml  (사람이 작성·검수. 근거는 문서 원문 인용)
+출력: evaluation/data/processed/gold_set.jsonl
 
 근거 인용문(quote)을 canonical text에서 찾아 char_start/char_end와 인쇄 쪽을 붙인다.
 - 공백·줄바꿈 차이와 한자 호환 문자(離 U+F9EA ↔ 離 U+96E2) 차이는 무시하고, 문서 안에서 정확히 한 번 나와야 한다.
@@ -13,12 +13,16 @@
 import json
 import re
 import unicodedata
+from pathlib import Path
 
 import yaml
 
-from app.tasks.ingest.build import DATA, DOCS, OUT
-from app.tasks.ingest.chunker import load_markdown, page_at
+from preprocessing.ingest.build import DATA as SOURCE_DATA
+from preprocessing.ingest.build import DOCS
+from preprocessing.ingest.chunker import load_markdown, page_at
 
+DATA = Path(__file__).resolve().parents[1] / "data"
+OUT = DATA / "processed"
 GOLD = DATA / "gold" / "gold_set.yaml"
 ANSWERABILITY = {"full", "partial", "none"}  # 문서로 전부 답함 | 일부만 답함 | 답할 수 없음(거부해야 함)
 QUESTION_TYPES = {"factoid", "procedural", "multi_hop", "summary", "unanswerable"}
@@ -64,7 +68,7 @@ def resolve(ev: dict, docs: dict) -> dict:
 def build() -> list[dict]:
     docs = {}
     for d, _, _ in DOCS:
-        text, pages = load_markdown((DATA / "markdown" / f"{d}.md").read_text(encoding="utf-8"))
+        text, pages = load_markdown((SOURCE_DATA / "markdown" / f"{d}.md").read_text(encoding="utf-8"))
         docs[d] = (fold(text), pages)
     items = yaml.safe_load(GOLD.read_text(encoding="utf-8"))
     ids = [item["id"] for item in items]
@@ -90,6 +94,7 @@ def build() -> list[dict]:
 
 def main():
     items = build()
+    OUT.mkdir(parents=True, exist_ok=True)
     with open(OUT / "gold_set.jsonl", "w", encoding="utf-8") as f:
         for item in items:
             f.write(json.dumps(item, ensure_ascii=False) + "\n")

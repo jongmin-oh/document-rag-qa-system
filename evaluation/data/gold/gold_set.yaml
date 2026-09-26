@@ -1,4 +1,4 @@
-# Gold Set 원본. 작성·판정 기준은 decision/gold_set.md, 빌드: python -m app.tasks.gold.build
+# Gold Set 원본. 작성·판정 기준은 decision/gold_set.md, 빌드: python -m evaluation.gold.build
 # source: kin(네이버 지식iN 실제 질문을 요약·익명화)
 # question_type: factoid(규정 하나 확인) | procedural(해야 할 일·절차) | multi_hop(여러 규정 조합) | summary(정리·비교) | unanswerable(문서 밖)
 # answerability: full(문서로 전부 답함) | partial(일부만 답함, 나머지는 모른다고 해야 함) | none(거부해야 함)
