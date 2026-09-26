@@ -8,10 +8,10 @@ import re
 import sys
 from dataclasses import dataclass
 
-from google import genai
+from openai import OpenAI
 from pydantic import BaseModel, Field
 
-from app.config import SEED, GeminiConfig
+from app.config import OPENROUTER_PROVIDER, SEED, OpenRouterConfig
 from app.tasks.index.build import body, client
 from app.tasks.qa.search import embed_query, rank, rewrite_with_version
 
@@ -49,6 +49,12 @@ class Generated(BaseModel):
 
     answerable: bool = Field(description="자료로 질문에 답할 수 있으면 true, 자료에 답이 전혀 없으면 false")
     answer: str
+
+
+@dataclass
+class GeneratedResponse:
+    parsed: Generated
+    model_version: str
 
 
 class Citation(BaseModel):
@@ -95,20 +101,40 @@ def clean_answer(answer: str) -> str:
     return re.sub(r"[ \t]{2,}", " ", cleaned).strip()
 
 
-def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]):
-    context = "\n\n".join(f"[{i}] {c['title_prefix']} ({pages(c)}쪽)\n{body(c)}" for i, (_, c) in enumerate(hits, 1))
-    return client.models.generate_content(
-        model=GeminiConfig.LLM_MODEL,
-        contents=f"<documents>\n{context}\n</documents>\n\n<question>\n{question}\n</question>",
-        config={
-            "system_instruction": SYSTEM,
-            "temperature": 0,
-            "seed": SEED,
-            "thinking_config": {"thinking_level": "low"},
-            "response_mime_type": "application/json",
-            "response_schema": Generated,
-        },
+def generation_client() -> OpenAI:
+    if not OpenRouterConfig.API_KEY:
+        raise ValueError(".env에 OPENROUTER_API_KEY를 설정하세요")
+    return OpenAI(
+        api_key=OpenRouterConfig.API_KEY,
+        base_url=OpenRouterConfig.BASE_URL,
+        max_retries=10,
+        default_headers={"X-OpenRouter-Title": "document-rag-qa-system"},
     )
+
+
+def answer(client: OpenAI, question: str, hits: list[tuple[float, dict]]) -> GeneratedResponse:
+    context = "\n\n".join(f"[{i}] {c['title_prefix']} ({pages(c)}쪽)\n{body(c)}" for i, (_, c) in enumerate(hits, 1))
+    response = client.chat.completions.create(
+        model=OpenRouterConfig.LLM_MODEL,
+        messages=[
+            {"role": "system", "content": SYSTEM},
+            {
+                "role": "user",
+                "content": f"<documents>\n{context}\n</documents>\n\n<question>\n{question}\n</question>",
+            },
+        ],
+        temperature=0,
+        seed=SEED,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {"name": "generated_answer", "strict": True, "schema": Generated.model_json_schema()},
+        },
+        extra_body={"provider": OPENROUTER_PROVIDER},
+    )
+    content = response.choices[0].message.content
+    if not content:
+        raise ValueError("OpenRouter 답변 모델이 빈 응답을 반환했습니다")
+    return GeneratedResponse(Generated.model_validate_json(content), response.model)
 
 
 def build_response(res, hits: list[tuple[float, dict]]) -> AskResponse:
@@ -134,23 +160,24 @@ def build_response(res, hits: list[tuple[float, dict]]) -> AskResponse:
     )
 
 
-def ask_with_trace(client: genai.Client, question: str) -> AskTrace:
+def ask_with_trace(embedding_client: OpenAI, question: str, llm: OpenAI | None = None) -> AskTrace:
     """운영 ask와 같은 경로를 실행하고 평가에 필요한 중간 결과도 돌려준다."""
-    query, rewrite_model_version = rewrite_with_version(client, question)
-    hits = rank(embed_query(client, query), query, TOP_K)
-    res = answer(client, question, hits)
+    llm = llm or generation_client()
+    query, rewrite_model_version = rewrite_with_version(llm, question)
+    hits = rank(embed_query(embedding_client, query), query, TOP_K)
+    res = answer(llm, question, hits)
     return AskTrace(query, hits, build_response(res, hits), rewrite_model_version, res.parsed.answer)
 
 
-def ask(client: genai.Client, question: str) -> AskResponse:
-    return ask_with_trace(client, question).response
+def ask(embedding_client: OpenAI, question: str, llm: OpenAI | None = None) -> AskResponse:
+    return ask_with_trace(embedding_client, question, llm).response
 
 
 def main():
     question = " ".join(sys.argv[1:])
     if not question:
         sys.exit('사용법: python -m app.tasks.qa.ask "질문"')
-    res = ask(client(), question)
+    res = ask(client(), question, generation_client())
     print(res.answer, "\n")
     for c in res.citations:
         print(f"[{c.n}] {c.score:.3f} {c.chunk_id} {c.source} ({pages(c.model_dump())}쪽)")

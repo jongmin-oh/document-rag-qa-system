@@ -18,15 +18,18 @@ SEED = 42
 
 
 @dataclass
-class GeminiConfig:
-    API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    EMBEDDING_MODEL: str = "gemini-embedding-2"
-    EMBEDDING_DIM: int = 3072
-    LLM_MODEL: str = "gemini-3.8-flash"
-
-
-@dataclass
 class OpenRouterConfig:
     API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
     BASE_URL: str = "https://openrouter.ai/api/v1"
+    EMBEDDING_MODEL: str = "perplexity/pplx-embed-v1-4b"
+    EMBEDDING_DIM: int = 2560
+    LLM_MODEL: str = "google/gemma-4-31b-it"
     JUDGE_MODEL: str = "openai/gpt-6-sol"
+
+
+# 정부 문서와 사용자 질문을 처리하므로 저장·학습하지 않는 제공자만 사용한다.
+OPENROUTER_PROVIDER = {
+    "require_parameters": True,
+    "zdr": True,
+    "data_collection": "deny",
+}

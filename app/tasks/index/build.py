@@ -1,4 +1,4 @@
-"""청크 → Gemini Embedding 2 벡터 인덱스. 임베딩 입력에 제목 경로 접두어를 넣는다.
+"""청크 → pplx-embed-v1-4b 벡터 인덱스. 제목 경로와 본문을 함께 임베딩한다.
 
 사용법: python -m app.tasks.index.build
 입력: app/data/processed/chunks.structure.jsonl
@@ -11,9 +11,9 @@ import json
 import math
 from array import array
 
-from google import genai
+from openai import OpenAI
 
-from app.config import GeminiConfig
+from app.config import OPENROUTER_PROVIDER, OpenRouterConfig
 from app.tasks.ingest.build import OUT
 
 
@@ -27,22 +27,29 @@ def body(chunk: dict) -> str:
     return f"{chunk['question_prefix']}\n{chunk['text']}" if chunk["question_prefix"] else chunk["text"]
 
 
-def client() -> genai.Client:
-    if not GeminiConfig.API_KEY:
-        raise ValueError(".env에 GEMINI_API_KEY를 설정하세요")
-    # 무료 등급은 분당 요청 한도가 낮아 429를 받으면 지수 백오프로 재시도한다.
-    retry = {"attempts": 10, "initial_delay": 5, "max_delay": 60}
-    return genai.Client(api_key=GeminiConfig.API_KEY, http_options={"retry_options": retry})
+def client() -> OpenAI:
+    if not OpenRouterConfig.API_KEY:
+        raise ValueError(".env에 OPENROUTER_API_KEY를 설정하세요")
+    return OpenAI(
+        api_key=OpenRouterConfig.API_KEY,
+        base_url=OpenRouterConfig.BASE_URL,
+        max_retries=10,
+        default_headers={"X-OpenRouter-Title": "document-rag-qa-system"},
+    )
 
 
-def embed(client: genai.Client, text: str) -> list[float]:
-    # 여러 텍스트를 한 요청에 넣으면 하나의 벡터로 합쳐지므로 텍스트마다 호출한다.
-    values = client.models.embed_content(
-        model=GeminiConfig.EMBEDDING_MODEL,
-        contents=text,
-        config={"output_dimensionality": GeminiConfig.EMBEDDING_DIM},
-    ).embeddings[0].values
+def embed(client: OpenAI, text: str) -> list[float]:
+    values = client.embeddings.create(
+        model=OpenRouterConfig.EMBEDDING_MODEL,
+        input=text,
+        encoding_format="float",
+        extra_body={"provider": OPENROUTER_PROVIDER},
+    ).data[0].embedding
+    if len(values) != OpenRouterConfig.EMBEDDING_DIM:
+        raise ValueError(f"임베딩 차원이 {len(values)}입니다. 예상값: {OpenRouterConfig.EMBEDDING_DIM}")
     norm = math.sqrt(sum(v * v for v in values))
+    if norm == 0:
+        raise ValueError("임베딩 모델이 영벡터를 반환했습니다")
     return [v / norm for v in values]
 
 
@@ -52,6 +59,13 @@ def load_meta() -> dict:
 
 def load_index() -> tuple[list[str], list[list[float]]]:
     meta = load_meta()
+    expected = (OpenRouterConfig.EMBEDDING_MODEL, OpenRouterConfig.EMBEDDING_DIM)
+    actual = (meta["model"], meta["dim"])
+    if actual != expected:
+        raise ValueError(
+            f"인덱스가 현재 임베딩 설정과 다릅니다({actual[0]}, {actual[1]}차원). "
+            "python -m app.tasks.index.build 로 다시 생성하세요."
+        )
     flat = array("f")
     flat.frombytes((OUT / "embeddings.f32").read_bytes())
     dim = meta["dim"]
@@ -59,17 +73,16 @@ def load_index() -> tuple[list[str], list[list[float]]]:
 
 
 def main():
-    gemini = client()
+    openrouter = client()
     chunks = load_chunks()
     flat = array("f")
     for i, c in enumerate(chunks, 1):
-        # decision/models.md: Gemini Embedding 2는 task_type 대신 접두어로 문서를 표시한다.
-        flat.extend(embed(gemini, f"title: {c['title_prefix']} | text: {body(c)}"))
+        flat.extend(embed(openrouter, f"{c['title_prefix']}\n{body(c)}"))
         print(f"\r{i}/{len(chunks)}", end="", flush=True)
     (OUT / "embeddings.f32").write_bytes(flat.tobytes())
     meta = {
-        "model": GeminiConfig.EMBEDDING_MODEL,
-        "dim": GeminiConfig.EMBEDDING_DIM,
+        "model": OpenRouterConfig.EMBEDDING_MODEL,
+        "dim": OpenRouterConfig.EMBEDDING_DIM,
         "chunk_ids": [c["chunk_id"] for c in chunks],
     }
     (OUT / "embeddings.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")

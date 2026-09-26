@@ -3,10 +3,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
 from app.tasks.index.build import client
-from app.tasks.qa.ask import AskResponse, ask
+from app.tasks.qa.ask import AskResponse, ask, generation_client
 
 app = FastAPI(title="실업급여 RAG QA")
-gemini = client()
+embedding_client = client()
+llm = generation_client()
 
 
 class AskRequest(BaseModel):
@@ -15,7 +16,7 @@ class AskRequest(BaseModel):
 
 @app.post("/ask", response_model=AskResponse)
 def post_ask(req: AskRequest) -> AskResponse:
-    return ask(gemini, req.question)
+    return ask(embedding_client, req.question, llm)
 
 
 if __name__ == "__main__":

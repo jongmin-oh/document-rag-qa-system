@@ -14,9 +14,10 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
-from app.config import SEED, GeminiConfig
+from app.config import SEED, OpenRouterConfig
 from app.tasks.index.build import client, load_meta
 from app.tasks.ingest.build import OUT
+from app.tasks.qa.ask import generation_client
 from app.tasks.qa.search import BM25_B, BM25_K1, RRF_K, embed_query, rank, rewrite
 
 REPORTS = Path(__file__).resolve().parents[3] / "reports"
@@ -64,13 +65,14 @@ def git_commit() -> str:
 
 
 def evaluate() -> dict:
-    gemini = client()
+    embedding_client = client()
+    llm = generation_client()
     items = [json.loads(line) for line in open(OUT / "gold_set.jsonl", encoding="utf-8")]
     items = [i for i in items if i["evidence"]]
     rows = []
     for n, item in enumerate(items, 1):
-        query = rewrite(gemini, item["question"])
-        ranked = [c for _, c in rank(embed_query(gemini, query), query, max(KS))]
+        query = rewrite(llm, item["question"])
+        ranked = [c for _, c in rank(embed_query(embedding_client, query), query, max(KS))]
         rows.append(
             {
                 "id": item["id"],
@@ -89,7 +91,7 @@ def evaluate() -> dict:
         "meta": {
             "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "git_commit": git_commit(),
-            "rewrite_model": GeminiConfig.LLM_MODEL,
+            "rewrite_model": OpenRouterConfig.LLM_MODEL,
             "seed": SEED,
             "embedding_model": index["model"],
             "embedding_dim": index["dim"],

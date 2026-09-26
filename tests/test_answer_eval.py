@@ -4,9 +4,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from app.config import SEED, OpenRouterConfig
+from app.config import OPENROUTER_PROVIDER, SEED, OpenRouterConfig
 from app.tasks.eval.answer import JudgeResult, deterministic, judge, readability, summarize, trace_from_row
-from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, build_response, citation_numbers, clean_answer
+from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, answer, build_response, citation_numbers, clean_answer
 
 
 def item(answerability="full", evidence=True):
@@ -100,6 +100,31 @@ def test_api_citations_are_derived_from_answer_text():
     assert response.answer == "근거"
 
 
+def test_openrouter_answer_uses_gemma_structured_output_and_private_routing():
+    class Completions:
+        kwargs = None
+
+        def create(self, **kwargs):
+            self.kwargs = kwargs
+            content = Generated(answerable=True, answer="근거 [1]").model_dump_json()
+            return SimpleNamespace(
+                model="google/gemma-4-31b-it",
+                choices=[SimpleNamespace(message=SimpleNamespace(content=content))],
+            )
+
+    completions = Completions()
+    client = SimpleNamespace(chat=SimpleNamespace(completions=completions))
+    result = answer(client, "질문", trace().hits)
+
+    assert result.parsed.answerable
+    assert result.model_version == "google/gemma-4-31b-it"
+    assert completions.kwargs["model"] == OpenRouterConfig.LLM_MODEL
+    assert completions.kwargs["temperature"] == 0
+    assert completions.kwargs["seed"] == SEED
+    assert completions.kwargs["response_format"]["json_schema"]["strict"] is True
+    assert completions.kwargs["extra_body"]["provider"] == OPENROUTER_PROVIDER
+
+
 def test_answer_needs_inline_citation_even_if_response_lists_one():
     result = deterministic(item(), trace(answer="본문에는 인용 표시가 없음", citations=(1,)))
     assert not result["citation_integrity"]
@@ -175,7 +200,7 @@ def test_openrouter_judge_uses_strict_structured_output():
     assert "temperature" not in completions.kwargs
     assert completions.kwargs["seed"] == SEED
     assert completions.kwargs["response_format"]["json_schema"]["strict"] is True
-    assert completions.kwargs["extra_body"]["provider"]["require_parameters"] is True
+    assert completions.kwargs["extra_body"]["provider"] == OPENROUTER_PROVIDER
 
 
 def test_trace_from_saved_row_restores_cited_chunks():

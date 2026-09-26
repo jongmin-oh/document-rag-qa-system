@@ -12,9 +12,9 @@ import re
 from collections import Counter
 from functools import lru_cache
 
-from google import genai
+from openai import OpenAI
 
-from app.config import SEED, GeminiConfig
+from app.config import OPENROUTER_PROVIDER, SEED, OpenRouterConfig
 from app.tasks.index.build import body, embed, load_chunks, load_index
 
 BM25_K1, BM25_B = 1.2, 0.75
@@ -61,22 +61,26 @@ def load():
     return ordered, vectors, BM25([c["title_prefix"] + "\n" + body(c) for c in ordered])
 
 
-def rewrite_with_version(client: genai.Client, question: str) -> tuple[str, str]:
-    res = client.models.generate_content(
-        model=GeminiConfig.LLM_MODEL,
-        contents=REWRITE.format(question=question),
-        config={"temperature": 0, "seed": SEED, "thinking_config": {"thinking_level": "low"}},
+def rewrite_with_version(client: OpenAI, question: str) -> tuple[str, str]:
+    res = client.chat.completions.create(
+        model=OpenRouterConfig.LLM_MODEL,
+        messages=[{"role": "user", "content": REWRITE.format(question=question)}],
+        temperature=0,
+        seed=SEED,
+        extra_body={"provider": OPENROUTER_PROVIDER},
     )
-    return res.text.strip(), res.model_version
+    content = res.choices[0].message.content
+    if not content:
+        raise ValueError("OpenRouter 질의 재작성 모델이 빈 응답을 반환했습니다")
+    return content.strip(), res.model
 
 
-def rewrite(client: genai.Client, question: str) -> str:
+def rewrite(client: OpenAI, question: str) -> str:
     return rewrite_with_version(client, question)[0]
 
 
-def embed_query(client: genai.Client, question: str) -> list[float]:
-    # decision/models.md: 질의는 이 접두어로 문서와 구분한다.
-    return embed(client, f"task: search result | query: {question}")
+def embed_query(client: OpenAI, question: str) -> list[float]:
+    return embed(client, question)
 
 
 def rrf(*rankings: list[int]) -> list[tuple[float, int]]:
