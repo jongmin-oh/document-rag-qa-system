@@ -4,8 +4,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig, OpenRouterConfig
-from evaluation.answer import JudgeResult, deterministic, judge, readability, summarize, trace_from_row
+from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig
+from evaluation.answer import JUDGE_MODEL, JudgeResult, deterministic, judge, readability, summarize, trace_from_row
 from app.tasks.qa.ask import AskResponse, AskTrace, Citation, Generated, answer, build_response, citation_numbers, clean_answer
 
 
@@ -191,7 +191,7 @@ def test_openrouter_judge_uses_strict_structured_output():
 
     assert result.parsed.correctness == 5
     assert result.model_version == "openai/gpt-6-sol-actual"
-    assert completions.kwargs["model"] == OpenRouterConfig.JUDGE_MODEL
+    assert completions.kwargs["model"] == JUDGE_MODEL
     assert "temperature" not in completions.kwargs
     assert completions.kwargs["seed"] == SEED
     assert completions.kwargs["response_format"]["json_schema"]["strict"] is True

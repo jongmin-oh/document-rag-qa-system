@@ -13,7 +13,7 @@ class Paths:
 
 load_dotenv(Paths.ENV_PATH)
 
-# 질의 재작성·답변 생성·Judge 호출에 공통으로 넘긴다. 제공사가 결정론을 보장하지는 않는다.
+# 질의 재작성과 답변 생성에 공통으로 넘긴다. 제공사가 결정론을 보장하지는 않는다.
 SEED = 42
 
 
@@ -29,7 +29,6 @@ class OpenRouterConfig:
     BASE_URL: str = "https://openrouter.ai/api/v1"
     EMBEDDING_MODEL: str = "perplexity/pplx-embed-v1-4b"
     EMBEDDING_DIM: int = 2560
-    JUDGE_MODEL: str = "openai/gpt-6-sol"
 
 
 # 정부 문서와 사용자 질문을 처리하므로 저장·학습하지 않는 제공자만 사용한다.
