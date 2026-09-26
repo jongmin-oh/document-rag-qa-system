@@ -1,12 +1,3 @@
-"""질의 재작성 + 하이브리드 검색: LLM이 질문을 문서 용어로 바꾸고, 임베딩(dense) 순위와 BM25 순위를 RRF로 합친다.
-
-- 재작성: 구어 질문("군입대로 중지")과 문서 용어("병역 복무로 인한 수급기간 연기")의 차이를 메운다.
-- dense: 질문 임베딩과 청크 임베딩의 코사인 유사도 (벡터를 정규화했으므로 내적)
-- BM25: 공백을 뺀 글자 2-gram. 형태소 분석(kiwipiepy)보다 같거나 나았고 의존성도 없다.
-- BM25·RRF 파라미터는 널리 쓰는 기본값으로 고정한다. Gold Set에 맞춰 조정하면 과적합이 된다.
-채택 근거(고정 길이·구조 기반·제목 접두어·하이브리드·질의 재작성 비교)는 decision/chunking_strategy.md 4절.
-"""
-
 import math
 import re
 from collections import Counter

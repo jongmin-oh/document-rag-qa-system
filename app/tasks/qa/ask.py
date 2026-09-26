@@ -1,11 +1,4 @@
-"""질문 → 청크 검색 → 근거를 인용한 답변 생성.
-
-사용법: python -m app.tasks.qa.ask "질문"  (API는 main.py)
-먼저 python -m preprocessing.index.build 로 인덱스를 만들어야 한다.
-"""
-
 import re
-import sys
 from dataclasses import dataclass
 
 from google import genai
@@ -13,7 +6,7 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 
 from app.config import SEED, GeminiConfig
-from app.index import body, client
+from app.index import body
 from app.tasks.qa.search import embed_query, rank, rewrite_with_version
 
 TOP_K = 5
@@ -163,18 +156,3 @@ def ask_with_trace(embedding_client: OpenAI, question: str, llm: genai.Client | 
 
 def ask(embedding_client: OpenAI, question: str, llm: genai.Client | None = None) -> AskResponse:
     return ask_with_trace(embedding_client, question, llm).response
-
-
-def main():
-    question = " ".join(sys.argv[1:])
-    if not question:
-        sys.exit('사용법: python -m app.tasks.qa.ask "질문"')
-    res = ask(client(), question, generation_client())
-    print(res.answer, "\n")
-    for c in res.citations:
-        print(f"[{c.n}] {c.score:.3f} {c.chunk_id} {c.source} ({pages(c.model_dump())}쪽)")
-    print(f"\nanswerable: {res.answerable} / model_version: {res.model_version}")
-
-
-if __name__ == "__main__":
-    main()
