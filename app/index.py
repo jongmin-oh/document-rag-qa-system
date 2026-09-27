@@ -20,8 +20,6 @@ def body(chunk: dict) -> str:
 
 
 def client() -> OpenAI:
-    if not OpenRouterConfig.API_KEY:
-        raise ValueError(".env에 OPENROUTER_API_KEY를 설정하세요")
     return OpenAI(
         api_key=OpenRouterConfig.API_KEY,
         base_url=OpenRouterConfig.BASE_URL,

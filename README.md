@@ -41,11 +41,11 @@
 
 ## 실행
 
-모델 선정 근거는 `decision/models.md`에 있다. `.env.example`을 `.env`로 복사하고 Gemini와 OpenRouter API 키를 넣는다.
+모델 선정 근거는 `decision/models.md`에 있다. API 키는 AWS Systems Manager Parameter Store의 `/document-rag-qa/` 아래 SecureString으로 둔다. 로컬 실행에도 `ssm:GetParametersByPath` 권한이 있는 AWS 자격 증명이 필요하다.
 
-```dotenv
-GEMINI_API_KEY=<키>
-OPENROUTER_API_KEY=<키>
+```bash
+aws ssm put-parameter --name /document-rag-qa/GEMINI_API_KEY --type SecureString --value <키>
+aws ssm put-parameter --name /document-rag-qa/OPENROUTER_API_KEY --type SecureString --value <키>
 ```
 
 Python 3.13에서 확인했다.

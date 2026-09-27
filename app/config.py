@@ -1,14 +1,12 @@
-import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from dotenv import load_dotenv
+import boto3
 
 
 @dataclass
 class Paths:
     BASE_DIR: Path = Path(__file__).resolve().parent.parent
-    ENV_PATH: Path = BASE_DIR / ".env"
     APP_INDEX_DIR: Path = BASE_DIR / "app" / "data" / "processed"
     PREPROCESSING_DATA_DIR: Path = BASE_DIR / "preprocessing" / "data"
     PREPROCESSING_RAW_DIR: Path = PREPROCESSING_DATA_DIR / "raw"
@@ -20,7 +18,12 @@ class Paths:
     EVALUATION_REPORTS_DIR: Path = BASE_DIR / "evaluation" / "reports"
 
 
-load_dotenv(Paths.ENV_PATH)
+SSM_PATH = "/document-rag-qa/"
+
+# API 키는 Parameter Store의 SSM_PATH 아래에 둔다. import 시점에 한 번 읽는다.
+_pages = boto3.client("ssm").get_paginator("get_parameters_by_path").paginate(Path=SSM_PATH, WithDecryption=True)
+SECRETS = {p["Name"].removeprefix(SSM_PATH): p["Value"] for page in _pages for p in page["Parameters"]}
+
 
 # 질의 재작성과 답변 생성에 공통으로 넘긴다. 제공사가 결정론을 보장하지는 않는다.
 SEED = 42
@@ -28,13 +31,13 @@ SEED = 42
 
 @dataclass
 class GeminiConfig:
-    API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    API_KEY: str = SECRETS["GEMINI_API_KEY"]
     LLM_MODEL: str = "gemini-3.7-flash"
 
 
 @dataclass
 class OpenRouterConfig:
-    API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
+    API_KEY: str = SECRETS["OPENROUTER_API_KEY"]
     BASE_URL: str = "https://openrouter.ai/api/v1"
     EMBEDDING_MODEL: str = "perplexity/pplx-embed-v1-4b"
     EMBEDDING_DIM: int = 2560

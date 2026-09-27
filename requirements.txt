@@ -1,4 +1,4 @@
-python-dotenv==1.2.3
+boto3==1.43.103
 google-genai==2.25.0
 openai==3.19.2
 fastapi==0.141.1

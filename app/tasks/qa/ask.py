@@ -32,8 +32,6 @@ def clean_answer(answer: str) -> str:
 
 
 def generation_client() -> genai.Client:
-    if not GeminiConfig.API_KEY:
-        raise ValueError(".env에 GEMINI_API_KEY를 설정하세요")
     return genai.Client(api_key=GeminiConfig.API_KEY, http_options={"retry_options": {"attempts": 2}})
 
 
