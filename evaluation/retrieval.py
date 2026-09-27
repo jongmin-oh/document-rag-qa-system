@@ -14,9 +14,9 @@ import subprocess
 from datetime import datetime, timezone
 
 from app.config import SEED, GeminiConfig, Paths
-from app.index import client, load_meta
+from app.index import client, embed, load_meta
 from app.tasks.qa.ask import generation_client
-from app.tasks.qa.search import BM25_B, BM25_K1, RRF_K, embed_query, rank, rewrite
+from app.tasks.qa.search import BM25_B, BM25_K1, RRF_K, rank, rewrite_with_version
 
 KS = (1, 3, 5, 10)
 MAIN_K = 5  # 답변 생성에 넘기는 청크 수(ask.TOP_K)와 같다
@@ -68,8 +68,8 @@ def evaluate() -> dict:
     items = [i for i in items if i["evidence"]]
     rows = []
     for n, item in enumerate(items, 1):
-        query = rewrite(llm, item["question"])
-        ranked = [c for _, c in rank(embed_query(embedding_client, query), query, max(KS))]
+        query = rewrite_with_version(llm, item["question"])[0]
+        ranked = [c for _, c in rank(embed(embedding_client, query), query, max(KS))]
         rows.append(
             {
                 "id": item["id"],

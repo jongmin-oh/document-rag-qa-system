@@ -4,10 +4,9 @@ from collections import Counter
 from functools import lru_cache
 
 from google import genai
-from openai import OpenAI
 
 from app.config import SEED, GeminiConfig
-from app.index import body, embed, load_chunks, load_index
+from app.index import body, load_chunks, load_index
 
 BM25_K1, BM25_B = 1.2, 0.75
 RRF_K = 60
@@ -62,14 +61,6 @@ def rewrite_with_version(client: genai.Client, question: str) -> tuple[str, str]
     if not res.text:
         raise ValueError("Gemini 질의 재작성 모델이 빈 응답을 반환했습니다")
     return res.text.strip(), res.model_version
-
-
-def rewrite(client: genai.Client, question: str) -> str:
-    return rewrite_with_version(client, question)[0]
-
-
-def embed_query(client: OpenAI, question: str) -> list[float]:
-    return embed(client, question)
 
 
 def rrf(*rankings: list[int]) -> list[tuple[float, int]]:

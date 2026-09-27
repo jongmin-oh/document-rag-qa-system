@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
-from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig, OpenRouterConfig, Paths
+from app.config import OPENROUTER_PROVIDER, SEED, GeminiConfig, Paths
 from app.index import body, client, load_chunks, load_meta
 from app.tasks.qa.ask import AskResponse, AskTrace, ask_with_trace, citation_numbers, generation_client, pages
 from evaluation.retrieval import score
@@ -81,17 +81,6 @@ class JudgeResult(BaseModel):
 class JudgeResponse:
     parsed: JudgeResult
     model_version: str
-
-
-def judge_client() -> OpenAI:
-    if not OpenRouterConfig.API_KEY:
-        raise ValueError(".env에 OPENROUTER_API_KEY를 설정하세요")
-    return OpenAI(
-        api_key=OpenRouterConfig.API_KEY,
-        base_url=OpenRouterConfig.BASE_URL,
-        max_retries=10,
-        default_headers={"X-OpenRouter-Title": "document-rag-qa-system"},
-    )
 
 
 def cited_context(trace: AskTrace) -> str:
@@ -236,7 +225,7 @@ def sha256(path) -> str:
 def evaluate() -> dict:
     embedding_client = client()
     llm = generation_client()
-    evaluator = judge_client()
+    evaluator = client()
     items = [json.loads(line) for line in open(Paths.EVALUATION_OUTPUT_DIR / "gold_set.jsonl", encoding="utf-8")]
     rows = []
     rewrite_versions, answer_versions, judge_versions = set(), set(), set()
@@ -302,7 +291,7 @@ def trace_from_row(row: dict, chunks: dict[str, dict]) -> AskTrace:
 
 def rejudge(result: dict) -> dict:
     """저장된 동일 답변을 유지하고 Judge 결과와 결정론 지표를 현재 코드로 다시 계산한다."""
-    evaluator = judge_client()
+    evaluator = client()
     items = {
         item["id"]: item
         for item in (

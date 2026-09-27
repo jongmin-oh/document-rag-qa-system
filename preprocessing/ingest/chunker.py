@@ -14,7 +14,7 @@ canonical text = Markdown에서 주석 줄(<!-- p.N --> 쪽 표시 등)을 뺀 �
 
 import bisect
 import re
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 
 from preprocessing.ingest.laws import cited_laws
 
@@ -213,7 +213,3 @@ def chunk_markdown(md: str, doc_id: str, doc_title: str, as_of: str, id_prefix: 
             )
         )
     return text, chunks
-
-
-def to_dict(chunk: Chunk) -> dict:
-    return asdict(chunk)

@@ -5,10 +5,10 @@ from openai import OpenAI
 
 
 from app.config import SEED, GeminiConfig
-from app.index import body
+from app.index import body, embed
 from app.tasks.qa import Generated, GeneratedResponse, AskResponse, Citation, AskTrace
 from app.tasks.qa.prompt import PERSONA
-from app.tasks.qa.search import embed_query, rank, rewrite_with_version
+from app.tasks.qa.search import rank, rewrite_with_version
 
 TOP_K = 5
 CITATION_GROUP = re.compile(r"\[((?:\d+\s*,\s*)*\d+)]")
@@ -83,7 +83,7 @@ def ask_with_trace(embedding_client: OpenAI, question: str, llm: genai.Client | 
     """운영 ask와 같은 경로를 실행하고 평가에 필요한 중간 결과도 돌려준다."""
     llm = llm or generation_client()
     query, rewrite_model_version = rewrite_with_version(llm, question)
-    hits = rank(embed_query(embedding_client, query), query, TOP_K)
+    hits = rank(embed(embedding_client, query), query, TOP_K)
     res = answer(llm, question, hits)
     return AskTrace(query, hits, build_response(res, hits), rewrite_model_version, res.parsed.answer)
 

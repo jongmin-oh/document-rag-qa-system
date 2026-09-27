@@ -10,9 +10,10 @@
 
 import json
 import statistics
+from dataclasses import asdict
 
 from app.config import Paths
-from preprocessing.ingest.chunker import chunk_markdown, to_dict
+from preprocessing.ingest.chunker import chunk_markdown
 
 DOCS = [  # (doc_id, 제목 접두어용 짧은 이름, 청크 ID 접두어)
     ("easylaw_unemployment_benefit", "생활법령 실업급여", "EL"),
@@ -41,7 +42,7 @@ def main():
         all_chunks.extend(chunks)
     with open(Paths.APP_INDEX_DIR / "chunks.structure.jsonl", "w", encoding="utf-8") as f:
         for c in all_chunks:
-            f.write(json.dumps(to_dict(c), ensure_ascii=False) + "\n")
+            f.write(json.dumps(asdict(c), ensure_ascii=False) + "\n")
     write_report(all_chunks)
     print(f"{len(all_chunks)} chunks → {Paths.APP_INDEX_DIR}")
 
