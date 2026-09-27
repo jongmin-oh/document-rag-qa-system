@@ -51,7 +51,7 @@ OPENROUTER_API_KEY=<키>
 Python 3.13에서 확인했다.
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 python -m preprocessing.ingest.build           # Markdown → canonical text, 청크
 python -m preprocessing.index.build            # 청크 → pplx-embed-v1-4b 벡터 (검색은 LLM 질의 재작성 → 임베딩 + BM25 하이브리드)
 python -m app.tasks.qa.ask "구직급여 하루 상한액은 얼마인가요?"   # CLI

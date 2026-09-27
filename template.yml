@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 60
+    MemorySize: 1024
+    Architectures:
+      - arm64
+
+Resources:
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: document-rag-qa-system
+      Handler: main.lambda_handler
+      CodeUri: .
+      Environment:
+        Variables:
+          TZ: Asia/Seoul
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: ssm:GetParametersByPath
+              Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*'
+            - Effect: Allow
+              Action: kms:Decrypt
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  kms:ViaService: !Sub 'ssm.${AWS::Region}.amazonaws.com'
+
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins: ['*']
+          AllowMethods: ['*']
+          AllowHeaders: ['*']
+
+Outputs:
+  FunctionUrl:
+    Description: Invoke URL for template-function
+    Value: !GetAtt LambdaFunctionUrl.FunctionUrl
