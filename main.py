@@ -1,13 +1,23 @@
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from mangum import Mangum
 
+from app.config import Paths
 from app.routers import get_routers
 
 app = FastAPI(title="실업급여 RAG QA")
 for router in get_routers():
     app.include_router(router)
+
+STATIC_DIR = Paths.BASE_DIR / "static"
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
+@app.get("/", include_in_schema=False)
+def home() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html")
 
 
 @app.exception_handler(Exception)

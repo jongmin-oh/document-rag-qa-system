@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>디자인 시스템 — 다시, 일</title>
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body class="system-page">
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span class="brand-name">다시, 일</span>
+        <span class="brand-label">Design System</span>
+      </a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a href="/">서비스로 돌아가기</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="system-main">
+    <section class="system-hero">
+      <div class="container">
+        <p class="eyebrow"><span aria-hidden="true">●</span> Design system 1.0</p>
+        <h1>따뜻한 생활 안내서,<br><mark>근거는 분명하게.</mark></h1>
+        <p>취업드림수첩의 밝은 색, 번호 안내, 강조 박스를 웹 접근성에 맞게 재해석했습니다. 친근하지만 가볍지 않고, 정확하지만 어렵지 않은 화면을 만듭니다.</p>
+      </div>
+    </section>
+
+    <div class="container system-layout">
+      <aside class="system-nav" aria-label="디자인 시스템 목차">
+        <strong>Foundations</strong>
+        <a href="#principles">원칙</a>
+        <a href="#colors">색상</a>
+        <a href="#type">타이포그래피</a>
+        <a href="#spacing">간격과 형태</a>
+        <strong>Components</strong>
+        <a href="#buttons">버튼과 칩</a>
+        <a href="#forms">입력 요소</a>
+        <a href="#statuses">상태와 알림</a>
+        <a href="#cards">답변과 근거</a>
+        <strong>Content</strong>
+        <a href="#voice">톤앤매너</a>
+      </aside>
+
+      <div class="system-content">
+        <section id="principles" class="system-section">
+          <p class="section-kicker">01 · Principles</p>
+          <h2>디자인 원칙</h2>
+          <div class="principle-grid">
+            <article><span>01</span><h3>결론부터</h3><p>사용자가 지금 알아야 할 답과 행동을 화면의 가장 앞에 둡니다.</p></article>
+            <article><span>02</span><h3>근거와 함께</h3><p>출처, 기준일, 쪽 번호를 답변과 분리하지 않습니다.</p></article>
+            <article><span>03</span><h3>모르면 정직하게</h3><p>불확실성을 숨기지 않고 확인할 방법을 이어서 안내합니다.</p></article>
+            <article><span>04</span><h3>누구나 읽기 쉽게</h3><p>17px 이상의 본문, 짧은 문장, 충분한 터치 영역을 사용합니다.</p></article>
+          </div>
+        </section>
+
+        <section id="colors" class="system-section">
+          <p class="section-kicker">02 · Color</p>
+          <h2>색상</h2>
+          <p class="system-description">수첩의 파랑·주황·민트·분홍을 역할 중심으로 정리했습니다. 색만으로 상태를 전달하지 않습니다.</p>
+          <div class="swatch-grid">
+            <article class="swatch"><div style="--swatch:#146B94"></div><strong>Primary Blue</strong><code>#146B94</code><p>주요 행동, 링크, 헤더</p></article>
+            <article class="swatch"><div style="--swatch:#0E7182"></div><strong>Deep Teal</strong><code>#0E7182</code><p>정보 배너, 보조 섹션</p></article>
+            <article class="swatch"><div style="--swatch:#F47A1F"></div><strong>Warm Orange</strong><code>#F47A1F</code><p>핵심 포인트, 번호</p></article>
+            <article class="swatch"><div style="--swatch:#FFF1D8"></div><strong>Cream</strong><code>#FFF1D8</code><p>따뜻한 배경</p></article>
+            <article class="swatch"><div style="--swatch:#D8EEE7"></div><strong>Mint</strong><code>#D8EEE7</code><p>확인된 정보</p></article>
+            <article class="swatch"><div style="--swatch:#E8899E"></div><strong>Soft Pink</strong><code>#E8899E</code><p>부분 답변, 주의</p></article>
+            <article class="swatch"><div style="--swatch:#FFF238"></div><strong>Highlight</strong><code>#FFF238</code><p>단어 수준 강조</p></article>
+            <article class="swatch"><div style="--swatch:#1F2933"></div><strong>Text</strong><code>#1F2933</code><p>제목과 본문</p></article>
+          </div>
+        </section>
+
+        <section id="type" class="system-section">
+          <p class="section-kicker">03 · Typography</p>
+          <h2>타이포그래피</h2>
+          <div class="type-specimens">
+            <div><span>Display · 48/1.2 · 750</span><p class="type-display">실업급여, 쉽게 확인하세요.</p></div>
+            <div><span>Heading 1 · 36/1.3 · 700</span><p class="type-h1">어떤 점이 궁금하신가요?</p></div>
+            <div><span>Heading 2 · 24/1.4 · 700</span><p class="type-h2">내 상황에 적용하면</p></div>
+            <div><span>Body · 18/1.7 · 400</span><p class="type-body">계약기간이 끝나 퇴사했다면 구직급여 대상이 될 수 있어요. 다만 가입기간과 실제 이직 사유를 함께 확인해야 합니다.</p></div>
+            <div><span>Caption · 14/1.6 · 500</span><p class="type-caption">법제처 · 2026-08-31 기준 · 27쪽</p></div>
+          </div>
+        </section>
+
+        <section id="spacing" class="system-section">
+          <p class="section-kicker">04 · Layout</p>
+          <h2>간격과 형태</h2>
+          <div class="token-row">
+            <div><span class="space-block s1"></span><code>4</code></div>
+            <div><span class="space-block s2"></span><code>8</code></div>
+            <div><span class="space-block s3"></span><code>16</code></div>
+            <div><span class="space-block s4"></span><code>24</code></div>
+            <div><span class="space-block s5"></span><code>32</code></div>
+            <div><span class="space-block s6"></span><code>48</code></div>
+          </div>
+          <div class="radius-row">
+            <div class="radius-sample radius-small">8px</div>
+            <div class="radius-sample radius-medium">16px</div>
+            <div class="radius-sample radius-large">24px</div>
+          </div>
+        </section>
+
+        <section id="buttons" class="system-section">
+          <p class="section-kicker">05 · Actions</p>
+          <h2>버튼과 칩</h2>
+          <div class="component-demo inline-demo">
+            <button class="button button-primary" type="button">질문하기 <span aria-hidden="true">→</span></button>
+            <button class="button button-secondary" type="button">다시 시도</button>
+            <button class="button button-ghost" type="button">근거 보기</button>
+          </div>
+          <div class="component-demo inline-demo">
+            <button class="chip" type="button">계약 만료</button>
+            <button class="chip" type="button">실업인정일</button>
+            <button class="chip" type="button">아르바이트 신고</button>
+          </div>
+        </section>
+
+        <section id="forms" class="system-section">
+          <p class="section-kicker">06 · Forms</p>
+          <h2>입력 요소</h2>
+          <div class="component-demo form-demo">
+            <label for="system-question">실업급여 질문</label>
+            <textarea id="system-question" rows="3" placeholder="궁금한 상황을 입력해 주세요."></textarea>
+            <p class="privacy-note"><span aria-hidden="true">ⓘ</span> 개인정보는 입력하지 마세요.</p>
+          </div>
+        </section>
+
+        <section id="statuses" class="system-section">
+          <p class="section-kicker">07 · Feedback</p>
+          <h2>상태와 알림</h2>
+          <div class="component-demo inline-demo">
+            <span class="status-badge status-confirmed"><span aria-hidden="true">✓</span> 자료에서 확인했어요</span>
+            <span class="status-badge status-partial"><span aria-hidden="true">△</span> 일부만 확인할 수 있어요</span>
+            <span class="status-badge status-unknown"><span aria-hidden="true">?</span> 판단하기 어려워요</span>
+          </div>
+          <div class="decision-note component-demo">
+            <span class="decision-note-icon" aria-hidden="true">!</span>
+            <p><strong>최종 판단 전에 확인해 주세요.</strong><br>제도는 변경될 수 있으므로 중요한 결정은 담당 기관에 확인합니다.</p>
+          </div>
+        </section>
+
+        <section id="cards" class="system-section">
+          <p class="section-kicker">08 · Cards</p>
+          <h2>답변과 근거</h2>
+          <div class="component-demo sample-answer-card">
+            <span class="status-badge status-confirmed"><span aria-hidden="true">✓</span> 자료에서 확인했어요</span>
+            <h3>계약기간이 끝나 퇴사했다면 대상이 될 수 있어요.</h3>
+            <p>다만 이직 전 고용보험 가입기간과 실제 퇴사 사유를 함께 확인해야 합니다.</p>
+          </div>
+          <article class="citation-card component-demo">
+            <span class="citation-number">근거 1</span>
+            <div class="citation-body">
+              <span class="citation-publisher">법제처 · 2026-08-31 기준</span>
+              <h4>찾기 쉬운 생활법령정보 「실업급여」</h4>
+              <p>구직급여 &gt; 수급자격 &gt; 이직 사유</p>
+              <span class="citation-page">27쪽</span>
+            </div>
+          </article>
+        </section>
+
+        <section id="voice" class="system-section">
+          <p class="section-kicker">09 · Voice &amp; Tone</p>
+          <h2>친절하지만 단정하지 않는 상담원</h2>
+          <div class="voice-grid">
+            <article class="voice-do"><span>Do</span><p>“조건이 맞으면 받을 수 있어요. 다만 가입기간과 퇴사 사유를 함께 확인해야 해요.”</p></article>
+            <article class="voice-dont"><span>Don't</span><p>“수급자격자는 고용보험법 제40조에 의거하여 소정 요건을 충족해야 합니다.”</p></article>
+          </div>
+          <ul class="voice-rules">
+            <li>첫 문장에서 결론을 말합니다.</li>
+            <li>한 문장에는 한 가지 정보만 담습니다.</li>
+            <li>법률 용어는 일상적인 말로 풀어씁니다.</li>
+            <li>확인하지 못한 부분과 문서의 기준일을 숨기지 않습니다.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>다시, 일 Design System 1.0</p>
+      <a href="/">서비스로 돌아가기</a>
+    </div>
+  </footer>
+</body>
+</html>

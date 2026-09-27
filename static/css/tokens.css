@@ -1,0 +1,185 @@
+:root {
+  color-scheme: light;
+
+  /* Brand */
+  --blue-900: #0b4d6d;
+  --blue-800: #105c80;
+  --blue-700: #146b94;
+  --blue-600: #197eae;
+  --blue-100: #e5f3f9;
+  --teal-800: #0a5f6d;
+  --teal-700: #0e7182;
+  --teal-100: #dff2f1;
+  --orange-600: #e76612;
+  --orange-500: #f47a1f;
+  --orange-100: #ffead9;
+  --cream-100: #fff1d8;
+  --cream-50: #fffaf2;
+  --mint-200: #c6e6dc;
+  --mint-100: #d8eee7;
+  --pink-500: #e8899e;
+  --pink-100: #fbe8ed;
+  --yellow-400: #fff238;
+  --red-700: #a93a3a;
+  --red-100: #fde8e8;
+
+  /* Neutral */
+  --ink-950: #16212a;
+  --ink-900: #1f2933;
+  --ink-700: #44515d;
+  --ink-600: #5d6470;
+  --ink-500: #747d86;
+  --line-300: #cfd8df;
+  --line-200: #dde3e8;
+  --line-100: #edf0f2;
+  --surface: #ffffff;
+  --surface-muted: #f7f9fa;
+
+  /* Semantic */
+  --color-primary: var(--blue-700);
+  --color-primary-hover: var(--blue-800);
+  --color-focus: var(--orange-500);
+  --color-text: var(--ink-900);
+  --color-text-muted: var(--ink-600);
+  --color-border: var(--line-200);
+  --color-background: var(--cream-50);
+
+  /* Typography */
+  --font-sans: "Pretendard Variable", Pretendard, "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: clamp(1.75rem, 3vw, 2.25rem);
+  --text-display: clamp(2.35rem, 5.8vw, 4.5rem);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* Shape */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px rgb(22 33 42 / 6%), 0 4px 12px rgb(22 33 42 / 5%);
+  --shadow-md: 0 14px 40px rgb(22 33 42 / 10%);
+  --container: 70rem;
+  --reading: 45rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--color-text);
+  background: var(--surface);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+textarea,
+input,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.35;
+  letter-spacing: -0.035em;
+}
+
+mark {
+  color: inherit;
+  background: linear-gradient(transparent 62%, var(--yellow-400) 62% 91%, transparent 91%);
+  padding-inline: 0.05em;
+}
+
+.container {
+  width: min(calc(100% - 2rem), var(--container));
+  margin-inline: auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: var(--ink-950);
+  background: var(--yellow-400);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
