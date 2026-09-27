@@ -5,6 +5,9 @@
   if (!form) return;
 
   const question = document.querySelector("#question");
+  const questionDialog = document.querySelector("#question-dialog");
+  const openQuestionButton = document.querySelector("#open-question-dialog");
+  const closeQuestionButton = document.querySelector("#close-question-dialog");
   const charCount = document.querySelector("#char-count");
   const questionError = document.querySelector("#question-error");
   const submitButton = form.querySelector("button[type='submit']");
@@ -22,6 +25,7 @@
   const retryButton = document.querySelector("#retry-button");
   const copyButton = document.querySelector("#copy-answer");
   const toast = document.querySelector("#toast");
+  const responseSection = document.querySelector("#response-section");
   const apiUrl = document.body.dataset.apiUrl || "/ask";
 
   let loadingTimer = null;
@@ -36,11 +40,16 @@
 
   const updateCount = () => {
     charCount.textContent = `${question.value.length} / 1000`;
+    if (question.value.trim()) {
+      question.setAttribute("aria-invalid", "false");
+      questionError.textContent = "";
+    }
   };
 
   const setLoading = (active) => {
     loading.hidden = !active;
     submitButton.disabled = active;
+    openQuestionButton.disabled = active;
     question.disabled = active;
     if (!active) {
       window.clearInterval(loadingTimer);
@@ -152,14 +161,19 @@
 
     if (!cleaned) {
       questionError.textContent = "궁금한 내용을 한 문장 이상 입력해 주세요.";
+      question.setAttribute("aria-invalid", "true");
       question.focus();
       return;
     }
 
+    question.setAttribute("aria-invalid", "false");
+
     lastQuestion = cleaned;
+    responseSection.hidden = false;
     answerSection.hidden = true;
     errorState.hidden = true;
     setLoading(true);
+    loading.scrollIntoView({ behavior: "smooth", block: "center" });
 
     try {
       const response = await fetch(apiUrl, {
@@ -185,6 +199,17 @@
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     submitQuestion(question.value);
+  });
+
+  openQuestionButton.addEventListener("click", () => {
+    questionDialog.showModal();
+    question.focus();
+  });
+
+  closeQuestionButton.addEventListener("click", () => questionDialog.close());
+
+  questionDialog.addEventListener("click", (event) => {
+    if (event.target === questionDialog) questionDialog.close();
   });
 
   document.querySelectorAll(".example-chip").forEach((chip) => {

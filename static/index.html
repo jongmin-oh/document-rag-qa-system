@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="고용노동부와 법제처 문서에서 실업급여 정보를 찾아 쉬운 말과 근거로 안내합니다.">
-  <title>다시, 일 — 실업급여 문서 안내</title>
+  <title>다시, 일 - 실업급여 문서 안내</title>
   <link rel="stylesheet" href="/static/css/tokens.css">
   <link rel="stylesheet" href="/static/css/components.css">
   <link rel="stylesheet" href="/static/css/app.css">
@@ -23,7 +23,6 @@
       <nav class="site-nav" aria-label="주요 메뉴">
         <a href="#sources">자료 안내</a>
         <a href="#about">서비스 소개</a>
-        <a class="nav-system" href="/static/design-system.html">디자인 시스템</a>
       </nav>
     </div>
   </header>
@@ -65,106 +64,6 @@
             </div>
             <div class="speech-bubble">근거까지<br>함께 볼까요?</div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="ask-section" aria-labelledby="ask-title">
-      <div class="container ask-layout">
-        <div class="ask-heading">
-          <span class="section-number" aria-hidden="true">01</span>
-          <div>
-            <p class="section-kicker">질문하기</p>
-            <h2 id="ask-title">어떤 점이 궁금하신가요?</h2>
-          </div>
-        </div>
-
-        <div class="question-card">
-          <form id="ask-form" novalidate>
-            <label class="sr-only" for="question">실업급여 질문</label>
-            <textarea
-              id="question"
-              name="question"
-              rows="4"
-              maxlength="1000"
-              placeholder="예: 계약기간이 끝나서 퇴사했는데 실업급여를 받을 수 있나요?"
-              required
-              aria-describedby="question-help question-error"
-            ></textarea>
-            <div class="composer-footer">
-              <p id="question-help" class="privacy-note">
-                <span aria-hidden="true">ⓘ</span> 이름, 주민번호, 회사명 같은 개인정보는 입력하지 마세요.
-              </p>
-              <div class="composer-actions">
-                <span id="char-count" class="char-count" aria-live="polite">0 / 1000</span>
-                <button class="button button-primary" type="submit">
-                  <span>질문하기</span>
-                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </button>
-              </div>
-            </div>
-            <p id="question-error" class="field-error" role="alert"></p>
-          </form>
-
-          <div class="examples" aria-labelledby="example-title">
-            <p id="example-title">이렇게 물어보세요</p>
-            <div class="chip-row">
-              <button class="chip example-chip" type="button">계약 만료로 퇴사하면 받을 수 있나요?</button>
-              <button class="chip example-chip" type="button">실업인정일에는 무엇을 해야 하나요?</button>
-              <button class="chip example-chip" type="button">아르바이트 소득은 어떻게 신고하나요?</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="loading" class="response-state loading-card" hidden aria-live="polite" aria-busy="true">
-          <div class="loading-symbol" aria-hidden="true"><span></span><span></span><span></span></div>
-          <div>
-            <strong id="loading-title">관련 문서를 찾고 있어요</strong>
-            <p id="loading-message">질문을 문서에 쓰인 표현으로 정리하고 있습니다.</p>
-          </div>
-        </div>
-
-        <section id="answer-section" class="answer-section" hidden aria-labelledby="answer-title" tabindex="-1">
-          <div class="answer-card">
-            <div class="answer-head">
-              <div>
-                <span id="answer-status" class="status-badge status-confirmed">
-                  <span aria-hidden="true">✓</span> 자료에서 확인했어요
-                </span>
-                <h2 id="answer-title">답변</h2>
-              </div>
-              <button id="copy-answer" class="icon-button" type="button" aria-label="답변 복사">
-                <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-              </button>
-            </div>
-            <div id="answer-content" class="answer-content"></div>
-            <div id="answer-meta" class="answer-meta"></div>
-          </div>
-
-          <div id="citations-section" class="citations-block">
-            <div class="subsection-heading">
-              <div>
-                <p class="section-kicker">확인한 자료</p>
-                <h3>답변의 근거를 직접 확인해 보세요</h3>
-              </div>
-              <span id="citation-count" class="count-badge"></span>
-            </div>
-            <div id="citation-list" class="citation-list"></div>
-          </div>
-
-          <div class="decision-note">
-            <span class="decision-note-icon" aria-hidden="true">!</span>
-            <p><strong>최종 수급 여부는 고용센터가 개인 상황과 제출 서류를 확인해 판단합니다.</strong><br>이 답변은 공식 문서를 쉽게 찾아보기 위한 참고 정보예요.</p>
-          </div>
-        </section>
-
-        <div id="error-state" class="response-state error-card" hidden role="alert">
-          <span class="error-symbol" aria-hidden="true">!</span>
-          <div>
-            <strong>답변을 불러오지 못했어요</strong>
-            <p>잠시 후 다시 시도해 주세요. 같은 문제가 계속되면 질문을 조금 짧게 바꿔보세요.</p>
-          </div>
-          <button id="retry-button" class="button button-secondary" type="button">다시 시도</button>
         </div>
       </div>
     </section>
@@ -259,6 +158,118 @@
       </div>
     </div>
   </footer>
+
+  <dialog id="question-dialog" class="question-dialog" aria-labelledby="question-dialog-title">
+    <div class="dialog-panel">
+      <div class="dialog-header">
+        <div>
+          <p class="section-kicker">질문하기</p>
+          <h2 id="question-dialog-title">어떤 점이 궁금하신가요?</h2>
+        </div>
+        <button id="close-question-dialog" class="icon-button" type="button" aria-label="질문 창 닫기">×</button>
+      </div>
+
+      <div class="question-card">
+        <form id="ask-form" novalidate>
+          <label class="sr-only" for="question">실업급여 질문</label>
+          <textarea
+            id="question"
+            name="question"
+            rows="4"
+            maxlength="1000"
+            placeholder="예: 계약기간이 끝나서 퇴사했는데 실업급여를 받을 수 있나요?"
+            required
+            aria-invalid="false"
+            aria-describedby="question-help question-error"
+          ></textarea>
+          <div class="composer-footer">
+            <p id="question-help" class="privacy-note">
+              <span aria-hidden="true">ⓘ</span> 이름, 주민번호, 회사명 같은 개인정보는 입력하지 마세요.
+            </p>
+            <div class="composer-actions">
+              <span id="char-count" class="char-count" aria-live="polite">0 / 1000</span>
+              <button class="button button-primary" type="submit">
+                <span>질문 보내기</span>
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </div>
+          <p id="question-error" class="field-error" role="alert"></p>
+        </form>
+
+        <div class="examples" aria-labelledby="example-title">
+          <p id="example-title">이렇게 물어보세요</p>
+          <div class="chip-row">
+            <button class="chip example-chip" type="button">같은 회사에서 재계약한 뒤 계약만료되면 실업급여를 받을 수 있나요?</button>
+            <button class="chip example-chip" type="button">실업급여 180일은 실제 출근일 기준인가요?</button>
+            <button class="chip example-chip" type="button">2차 실업인정 때 취업특강만 들어도 되나요?</button>
+            <button class="chip example-chip" type="button">실업급여 신청 전 단기알바 소득도 신고해야 하나요?</button>
+            <button class="chip example-chip" type="button">재취업 후 계약이 끝나면 남은 실업급여를 다시 받을 수 있나요?</button>
+          </div>
+        </div>
+      </div>
+
+      <section id="response-section" class="dialog-response" aria-label="질문 결과" hidden>
+        <div id="loading" class="response-state loading-card" hidden aria-live="polite" aria-busy="true">
+          <div class="loading-symbol" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div>
+            <strong id="loading-title">관련 문서를 찾고 있어요</strong>
+            <p id="loading-message">질문을 문서에 쓰인 표현으로 정리하고 있습니다.</p>
+          </div>
+        </div>
+
+        <section id="answer-section" class="answer-section" hidden aria-labelledby="answer-title" tabindex="-1">
+          <div class="answer-card">
+            <div class="answer-head">
+              <div>
+                <span id="answer-status" class="status-badge status-confirmed">
+                  <span aria-hidden="true">✓</span> 자료에서 확인했어요
+                </span>
+                <h2 id="answer-title">답변</h2>
+              </div>
+              <button id="copy-answer" class="icon-button" type="button" aria-label="답변 복사">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+              </button>
+            </div>
+            <div id="answer-content" class="answer-content"></div>
+            <div id="answer-meta" class="answer-meta"></div>
+          </div>
+
+          <div id="citations-section" class="citations-block">
+            <div class="subsection-heading">
+              <div>
+                <p class="section-kicker">확인한 자료</p>
+                <h3>답변의 근거를 직접 확인해 보세요</h3>
+              </div>
+              <span id="citation-count" class="count-badge"></span>
+            </div>
+            <div id="citation-list" class="citation-list"></div>
+          </div>
+
+          <div class="decision-note">
+            <span class="decision-note-icon" aria-hidden="true">!</span>
+            <p><strong>최종 수급 여부는 고용센터가 개인 상황과 제출 서류를 확인해 판단합니다.</strong><br>이 답변은 공식 문서를 쉽게 찾아보기 위한 참고 정보예요.</p>
+          </div>
+        </section>
+
+        <div id="error-state" class="response-state error-card" hidden role="alert">
+          <span class="error-symbol" aria-hidden="true">!</span>
+          <div>
+            <strong>답변을 불러오지 못했어요</strong>
+            <p>잠시 후 다시 시도해 주세요. 같은 문제가 계속되면 질문을 조금 짧게 바꿔보세요.</p>
+          </div>
+          <button id="retry-button" class="button button-secondary" type="button">다시 시도</button>
+        </div>
+      </section>
+    </div>
+  </dialog>
+
+  <div class="floating-ask-bar">
+    <button id="open-question-dialog" class="button button-primary floating-ask-button" type="button" aria-haspopup="dialog" aria-controls="question-dialog">
+      질문하기
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
 
   <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
 </body>
