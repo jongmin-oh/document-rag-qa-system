@@ -1,5 +1,7 @@
 # document-rag-qa-system
 
+👉 **[바로 사용해보기](https://glejbvabumaf7sp46v5p4q5ieq0xzyqu.lambda-url.ap-northeast-2.on.aws/)**
+
 ## Corpus
 
 ### 선정: 고용보험 실업급여(구직급여)
