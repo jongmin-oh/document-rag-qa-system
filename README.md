@@ -62,6 +62,7 @@ python -m evaluation.gold.build            # Gold Set 인용문 → 근거 좌�
 python -m evaluation.retrieval             # 검색 평가 → evaluation/reports/retrieval.md
 python -m evaluation.answer                # 답변·거부·인용 평가 → evaluation/reports/answer_eval.md
 python -m evaluation.answer --judge-only  # 저장된 동일 답변을 OpenRouter GPT Judge로 재채점
+python -m evaluation.feedback --table <FeedbackTable 이름>  # 개선이 필요한 운영 피드백 추출
 pytest tests
 ```
 
@@ -83,13 +84,37 @@ pytest tests
   "citations": [
     {"n": 1, "chunk_id": "EL-0027", "source": "[생활법령 실업급여 | 2026-08-31 기준] 2. 구직급여 > ...", "page_start": 27, "page_end": 27, "score": 0.0328}
   ],
-  "model_version": "gemini-3.7-flash"
+  "model_version": "gemini-3.7-flash",
+  "interaction_id": "8e3987e9-..."
 }
 ```
 
 - `answerable: false`: 검색된 자료에 답이 없어 응답 불가. 이때 `citations`는 비어 있다.
 - `citations`: 답변 생성에 사용한 자료 목록. 내부 인용 번호는 사용자용 `answer`에서 제거한다.
+- `interaction_id`: 사용자 피드백을 해당 질문·답변과 연결하는 식별자다.
 - `502`: 질의 재작성·임베딩·답변 생성 중 오류가 나면 종류와 관계없이(429, 스키마에 맞지 않는 응답 등) `{"detail": "<오류 종류>: <메시지>"}`로 응답한다. Gemini의 408·429·5xx·네트워크 오류는 SDK가 약 1초 뒤 한 번 더 요청(`attempts: 2`, 첫 호출 포함)하고 그래도 실패하면 오류로 본다.
+
+`POST /feedback`
+
+```json
+{
+  "interaction_id": "8e3987e9-...",
+  "rating": "not_helpful",
+  "reason": "source",
+  "comment": "근거가 질문한 상황과 달라요."
+}
+```
+
+### 휴먼 피드백 개선 루프
+
+답변 직후 사용자가 `도움이 됐어요` 또는 `아쉬워요`를 선택할 수 있다. 부정 평가는 부정확함·내용 누락·근거 불일치·이해하기 어려움으로 원인을 나누고 선택 의견도 받는다. 질문, 답변, 인용, 모델 버전과 평가는 DynamoDB에 90일간 저장되며 개인정보를 입력하지 말라는 안내를 질문창에 표시한다.
+
+1. `python -m evaluation.feedback --table <FeedbackTable 이름>`으로 `review_needed` 평가를 JSONL로 추출한다.
+2. 사람이 질문·답변·근거를 검토해 문서 문제, 검색 실패, 생성 실패, 표현 문제로 분류한다.
+3. 반복되거나 중요한 실패 질문은 `evaluation/data/gold/gold_set.yaml`에 근거와 함께 추가하고, 필요하면 문서·청킹·검색·프롬프트를 수정한다.
+4. `evaluation.gold.build`, `evaluation.retrieval`, `evaluation.answer`를 다시 실행해 기존 41문항과 새 문항의 회귀 여부를 확인한 뒤 배포한다.
+
+피드백 저장 실패는 원래 질문 응답을 실패시키지 않는다. DynamoDB TTL로 원본 데이터는 자동 삭제되며, Gold Set에는 사람이 검토해 개인정보를 제거한 사례만 반영한다.
 
 ## 시스템 아키텍처
 
@@ -105,6 +130,9 @@ pytest tests
                 ──▶ ③ 답변 생성 (Gemini 3.7 Flash, 구조화 출력 {answerable, answer})
                 ──▶ ④ 서버가 본문의 [n]을 파싱해 citation 객체 생성, 사용자용 답변에서 번호 제거
                 ──▶ POST /ask 응답 (app/routers/ask.py, FastAPI)
+
+[피드백]   질문·답변·인용 ──▶ DynamoDB(90일 TTL) ◀── 사용자 평가·사유
+                                  └─▶ 사람 검토 ─▶ Gold Set 추가/시스템 수정 ─▶ 회귀 평가 ─▶ 배포
 
 [평가]     Gold Set(evaluation/data, 41문항, 근거 = canonical text 문자 구간)
              ├─ evaluation/retrieval: 검색만 실행 → Hit/Recall/Coverage/Precision@k

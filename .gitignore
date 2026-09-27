@@ -218,6 +218,9 @@ playwright-report/
 test-results/
 .playwright-browsers/
 
+# 운영 피드백에는 사용자 입력이 포함될 수 있음
+evaluation/data/feedback/
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
