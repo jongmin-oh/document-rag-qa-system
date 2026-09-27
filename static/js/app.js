@@ -33,11 +33,17 @@
   const responseSection = document.querySelector("#response-section");
   const responseActions = document.querySelector("#response-actions");
   const askAnotherButton = document.querySelector("#ask-another-button");
+  const feedbackPrompt = document.querySelector("#feedback-prompt");
+  const feedbackForm = document.querySelector("#feedback-form");
+  const feedbackComment = document.querySelector("#feedback-comment");
+  const feedbackThanks = document.querySelector("#feedback-thanks");
   const apiUrl = document.body.dataset.apiUrl || "/ask";
+  const feedbackUrl = document.body.dataset.feedbackUrl || "/feedback";
 
   let loadingTimer = null;
   let lastQuestion = "";
   let currentAnswer = "";
+  let currentInteractionId = "";
 
   const loadingMessages = [
     "질문을 문서에 쓰인 표현으로 정리하고 있습니다.",
@@ -145,6 +151,7 @@
   const renderAnswer = (data) => {
     const answerable = Boolean(data.answerable);
     currentAnswer = data.answer || "";
+    currentInteractionId = data.interaction_id || "";
     answerCard.classList.toggle("is-refusal", !answerable);
     answerStatus.className = `status-badge ${answerable ? "status-confirmed" : "status-unknown"}`;
     answerStatus.innerHTML = "";
@@ -167,6 +174,36 @@
     dialogPanel.scrollTop = 0;
   };
 
+  const resetFeedback = () => {
+    feedbackPrompt.hidden = false;
+    feedbackForm.hidden = true;
+    feedbackThanks.hidden = true;
+    feedbackForm.reset();
+  };
+
+  const sendFeedback = async (rating, reason = null, comment = "") => {
+    if (!currentInteractionId) {
+      showToast("이 답변은 평가할 수 없어요.");
+      return false;
+    }
+
+    const response = await fetch(feedbackUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        interaction_id: currentInteractionId,
+        rating,
+        reason,
+        comment,
+      }),
+    });
+    if (!response.ok) throw new Error(`feedback failed: ${response.status}`);
+    feedbackPrompt.hidden = true;
+    feedbackForm.hidden = true;
+    feedbackThanks.hidden = false;
+    return true;
+  };
+
   const submitQuestion = async (text) => {
     const cleaned = text.trim();
     questionError.textContent = "";
@@ -185,6 +222,7 @@
     questionComposer.hidden = true;
     responseSection.hidden = false;
     responseActions.hidden = true;
+    resetFeedback();
     answerSection.hidden = true;
     errorState.hidden = true;
     setLoading(true);
@@ -250,6 +288,40 @@
     question.select();
   });
 
+  document.querySelectorAll(".feedback-rating").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const rating = button.dataset.rating;
+      if (rating === "not_helpful") {
+        feedbackPrompt.hidden = true;
+        feedbackForm.hidden = false;
+        feedbackForm.querySelector("input").focus();
+        return;
+      }
+      try {
+        await sendFeedback(rating);
+      } catch (error) {
+        console.error(error);
+        showToast("평가를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
+      }
+    });
+  });
+
+  feedbackForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const reason = new FormData(feedbackForm).get("feedback-reason");
+    if (!reason) return;
+    const button = feedbackForm.querySelector("button[type='submit']");
+    button.disabled = true;
+    try {
+      await sendFeedback("not_helpful", reason, feedbackComment.value);
+    } catch (error) {
+      console.error(error);
+      showToast("의견을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
+    } finally {
+      button.disabled = false;
+    }
+  });
+
   copyButton.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(currentAnswer);
@@ -260,4 +332,5 @@
   });
 
   updateCount();
+  resetFeedback();
 })();

@@ -10,7 +10,10 @@
   <link rel="stylesheet" href="/static/css/app.css">
   <script src="/static/js/app.js" defer></script>
 </head>
-<body data-api-url="https://glejbvabumaf7sp46v5p4q5ieq0xzyqu.lambda-url.ap-northeast-2.on.aws/ask">
+<body
+  data-api-url="https://glejbvabumaf7sp46v5p4q5ieq0xzyqu.lambda-url.ap-northeast-2.on.aws/ask"
+  data-feedback-url="https://glejbvabumaf7sp46v5p4q5ieq0xzyqu.lambda-url.ap-northeast-2.on.aws/feedback"
+>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
 
   <header class="site-header">
@@ -259,6 +262,33 @@
             <span class="decision-note-icon" aria-hidden="true">!</span>
             <p><strong>최종 수급 여부는 고용센터가 개인 상황과 제출 서류를 확인해 판단합니다.</strong><br>이 답변은 공식 문서를 쉽게 찾아보기 위한 참고 정보예요.</p>
           </div>
+
+          <section id="feedback-section" class="feedback-card" aria-labelledby="feedback-title">
+            <div id="feedback-prompt">
+              <h3 id="feedback-title">이 답변이 도움이 됐나요?</h3>
+              <p>평가는 더 정확한 답변을 만드는 데 활용됩니다.</p>
+              <div class="feedback-buttons">
+                <button class="button button-secondary feedback-rating" type="button" data-rating="helpful" aria-label="도움이 됐어요">👍 도움이 됐어요</button>
+                <button class="button button-secondary feedback-rating" type="button" data-rating="not_helpful" aria-label="도움이 안 됐어요">👎 아쉬워요</button>
+              </div>
+            </div>
+
+            <form id="feedback-form" hidden>
+              <fieldset>
+                <legend>어떤 점이 아쉬웠나요?</legend>
+                <label><input type="radio" name="feedback-reason" value="incorrect" required> 내용이 정확하지 않아요</label>
+                <label><input type="radio" name="feedback-reason" value="missing"> 필요한 내용이 빠졌어요</label>
+                <label><input type="radio" name="feedback-reason" value="source"> 근거가 답변과 맞지 않아요</label>
+                <label><input type="radio" name="feedback-reason" value="unclear"> 설명이 이해하기 어려워요</label>
+                <label><input type="radio" name="feedback-reason" value="other"> 그 밖의 이유</label>
+              </fieldset>
+              <label class="feedback-comment-label" for="feedback-comment">의견 (선택)</label>
+              <textarea id="feedback-comment" rows="3" maxlength="500" placeholder="더 나아졌으면 하는 점을 알려주세요."></textarea>
+              <button class="button button-primary" type="submit">의견 보내기</button>
+            </form>
+
+            <p id="feedback-thanks" class="feedback-thanks" role="status" hidden>의견을 보내주셔서 감사합니다.</p>
+          </section>
         </section>
 
         <div id="error-state" class="response-state error-card" hidden role="alert">
