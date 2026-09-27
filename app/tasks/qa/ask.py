@@ -34,8 +34,8 @@ def clean_answer(answer: str) -> str:
 def generation_client() -> genai.Client:
     if not GeminiConfig.API_KEY:
         raise ValueError(".env에 GEMINI_API_KEY를 설정하세요")
-    # 429를 받으면 지수 백오프로 재시도한다.
-    retry = {"attempts": 10, "initial_delay": 5, "max_delay": 60}
+    # 408·429·5xx·네트워크 오류면 SDK가 약 1초 뒤 한 번 더 요청한다(attempts는 첫 호출 포함).
+    retry = {"attempts": 2}
     return genai.Client(api_key=GeminiConfig.API_KEY, http_options={"retry_options": retry})
 
 

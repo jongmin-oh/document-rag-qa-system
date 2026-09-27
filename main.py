@@ -1,5 +1,6 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from app.index import client
@@ -12,6 +13,12 @@ llm = generation_client()
 
 class AskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=1000)
+
+
+@app.exception_handler(Exception)
+def upstream_error(_: Request, exc: Exception) -> JSONResponse:
+    # /ask의 실패는 대부분 Gemini·OpenRouter 호출(429 재시도 소진, 스키마 불일치 등)이라 종류를 가리지 않고 502로 알린다.
+    return JSONResponse(status_code=502, content={"detail": f"{type(exc).__name__}: {exc}"})
 
 
 @app.post("/ask", response_model=AskResponse)
