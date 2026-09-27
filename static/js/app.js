@@ -7,6 +7,7 @@
   const question = document.querySelector("#question");
   const questionDialog = document.querySelector("#question-dialog");
   const dialogTitle = document.querySelector("#question-dialog-title");
+  const dialogPanel = questionDialog.querySelector(".dialog-panel");
   const questionComposer = document.querySelector("#question-composer");
   const openQuestionButton = document.querySelector("#open-question-dialog");
   const closeQuestionButton = document.querySelector("#close-question-dialog");
@@ -18,7 +19,9 @@
   const answerSection = document.querySelector("#answer-section");
   const answerCard = answerSection.querySelector(".answer-card");
   const answerStatus = document.querySelector("#answer-status");
+  const answerQuestion = document.querySelector("#answer-question");
   const answerContent = document.querySelector("#answer-content");
+  const refusalHelp = document.querySelector("#refusal-help");
   const answerMeta = document.querySelector("#answer-meta");
   const citationsSection = document.querySelector("#citations-section");
   const citationList = document.querySelector("#citation-list");
@@ -151,12 +154,17 @@
     statusIcon.textContent = answerable ? "✓" : "?";
     answerStatus.append(statusIcon, document.createTextNode(answerable ? " 자료에서 확인했어요" : " 현재 자료로 판단하기 어려워요"));
 
+    answerQuestion.textContent = lastQuestion;
     renderParagraphs(currentAnswer);
-    renderCitations(Array.isArray(data.citations) ? data.citations : []);
-    answerMeta.textContent = "문서 기준일은 근거 카드에서 확인할 수 있어요.";
+    const citations = Array.isArray(data.citations) ? data.citations : [];
+    renderCitations(citations);
+    refusalHelp.hidden = answerable;
+    copyButton.hidden = !answerable;
+    answerMeta.hidden = citations.length === 0;
+    answerMeta.textContent = "문서 기준일은 아래 근거 카드에서 확인할 수 있어요.";
     answerSection.hidden = false;
     answerSection.focus({ preventScroll: true });
-    answerSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    dialogPanel.scrollTop = 0;
   };
 
   const submitQuestion = async (text) => {
@@ -180,7 +188,7 @@
     answerSection.hidden = true;
     errorState.hidden = true;
     setLoading(true);
-    loading.scrollIntoView({ behavior: "smooth", block: "center" });
+    dialogPanel.scrollTop = 0;
 
     try {
       const response = await fetch(apiUrl, {
@@ -195,7 +203,6 @@
     } catch (error) {
       console.error(error);
       errorState.hidden = false;
-      errorState.scrollIntoView({ behavior: "smooth", block: "center" });
     } finally {
       setLoading(false);
       dialogTitle.textContent = "질문 결과";
@@ -225,7 +232,7 @@
     chip.addEventListener("click", () => {
       question.value = chip.textContent.trim();
       updateCount();
-      question.focus();
+      submitQuestion(question.value);
     });
   });
 
@@ -238,6 +245,7 @@
     responseActions.hidden = true;
     questionComposer.hidden = false;
     dialogTitle.textContent = "어떤 점이 궁금하신가요?";
+    dialogPanel.scrollTop = 0;
     question.focus();
     question.select();
   });

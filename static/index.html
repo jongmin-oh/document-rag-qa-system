@@ -191,7 +191,7 @@
           <p id="question-error" class="field-error" role="alert"></p>
 
           <div class="examples" aria-labelledby="example-title">
-            <p id="example-title">이렇게 물어보세요</p>
+            <p id="example-title">눌러서 바로 물어보세요</p>
             <div class="chip-row">
               <button class="chip example-chip" type="button">같은 회사에서 재계약한 뒤 계약만료되면 실업급여를 받을 수 있나요?</button>
               <button class="chip example-chip" type="button">실업급여 180일은 실제 출근일 기준인가요?</button>
@@ -232,7 +232,15 @@
                 <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
               </button>
             </div>
+            <p class="answer-question"><span>내 질문</span> <span id="answer-question"></span></p>
             <div id="answer-content" class="answer-content"></div>
+            <div id="refusal-help" class="refusal-help" hidden>
+              <strong>이렇게 해보세요</strong>
+              <ul>
+                <li>상황을 조금 더 구체적으로 적어 다시 질문해 보세요. 예: 퇴사 사유, 근무 기간</li>
+                <li>개인 상황은 고용노동부 고객상담센터 <a href="tel:1350">☎ 1350</a>이나 관할 고용센터에 문의하세요.</li>
+              </ul>
+            </div>
             <div id="answer-meta" class="answer-meta"></div>
           </div>
 
@@ -257,7 +265,7 @@
           <span class="error-symbol" aria-hidden="true">!</span>
           <div>
             <strong>답변을 불러오지 못했어요</strong>
-            <p>잠시 후 다시 시도해 주세요. 같은 문제가 계속되면 질문을 조금 짧게 바꿔보세요.</p>
+            <p>일시적인 문제일 수 있어요. 입력한 질문은 그대로 남아 있으니 다시 시도해 주세요.</p>
           </div>
           <button id="retry-button" class="button button-secondary" type="button">다시 시도</button>
         </div>
