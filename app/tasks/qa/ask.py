@@ -34,9 +34,7 @@ def clean_answer(answer: str) -> str:
 def generation_client() -> genai.Client:
     if not GeminiConfig.API_KEY:
         raise ValueError(".env에 GEMINI_API_KEY를 설정하세요")
-    # 408·429·5xx·네트워크 오류면 SDK가 약 1초 뒤 한 번 더 요청한다(attempts는 첫 호출 포함).
-    retry = {"attempts": 2}
-    return genai.Client(api_key=GeminiConfig.API_KEY, http_options={"retry_options": retry})
+    return genai.Client(api_key=GeminiConfig.API_KEY, http_options={"retry_options": {"attempts": 2}})
 
 
 def answer(client: genai.Client, question: str, hits: list[tuple[float, dict]]) -> GeneratedResponse:
