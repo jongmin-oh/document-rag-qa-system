@@ -102,7 +102,7 @@ pytest tests
                 ──▶ ② 하이브리드 검색: 임베딩 코사인 + BM25(글자 2-gram) → RRF → top-5
                 ──▶ ③ 답변 생성 (Gemini 3.7 Flash, 구조화 출력 {answerable, answer})
                 ──▶ ④ 서버가 본문의 [n]을 파싱해 citation 객체 생성, 사용자용 답변에서 번호 제거
-                ──▶ POST /ask 응답 (main.py, FastAPI)
+                ──▶ POST /ask 응답 (app/routers/ask.py, FastAPI)
 
 [평가]     Gold Set(evaluation/data, 41문항, 근거 = canonical text 문자 구간)
              ├─ evaluation/retrieval: 검색만 실행 → Hit/Recall/Coverage/Precision@k
