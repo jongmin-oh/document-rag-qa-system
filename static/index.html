@@ -169,7 +169,7 @@
         <button id="close-question-dialog" class="icon-button" type="button" aria-label="질문 창 닫기">×</button>
       </div>
 
-      <div class="question-card">
+      <div id="question-composer" class="question-card">
         <form id="ask-form" novalidate>
           <label class="sr-only" for="question">실업급여 질문</label>
           <textarea
@@ -186,27 +186,28 @@
             <p id="question-help" class="privacy-note">
               <span aria-hidden="true">ⓘ</span> 이름, 주민번호, 회사명 같은 개인정보는 입력하지 마세요.
             </p>
-            <div class="composer-actions">
-              <span id="char-count" class="char-count" aria-live="polite">0 / 1000</span>
-              <button class="button button-primary" type="submit">
-                <span>질문 보내기</span>
-                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </button>
-            </div>
+            <span id="char-count" class="char-count" aria-live="polite">0 / 1000</span>
           </div>
           <p id="question-error" class="field-error" role="alert"></p>
-        </form>
 
-        <div class="examples" aria-labelledby="example-title">
-          <p id="example-title">이렇게 물어보세요</p>
-          <div class="chip-row">
-            <button class="chip example-chip" type="button">같은 회사에서 재계약한 뒤 계약만료되면 실업급여를 받을 수 있나요?</button>
-            <button class="chip example-chip" type="button">실업급여 180일은 실제 출근일 기준인가요?</button>
-            <button class="chip example-chip" type="button">2차 실업인정 때 취업특강만 들어도 되나요?</button>
-            <button class="chip example-chip" type="button">실업급여 신청 전 단기알바 소득도 신고해야 하나요?</button>
-            <button class="chip example-chip" type="button">재취업 후 계약이 끝나면 남은 실업급여를 다시 받을 수 있나요?</button>
+          <div class="examples" aria-labelledby="example-title">
+            <p id="example-title">이렇게 물어보세요</p>
+            <div class="chip-row">
+              <button class="chip example-chip" type="button">같은 회사에서 재계약한 뒤 계약만료되면 실업급여를 받을 수 있나요?</button>
+              <button class="chip example-chip" type="button">실업급여 180일은 실제 출근일 기준인가요?</button>
+              <button class="chip example-chip" type="button">2차 실업인정 때 취업특강만 들어도 되나요?</button>
+              <button class="chip example-chip" type="button">실업급여 신청 전 단기알바 소득도 신고해야 하나요?</button>
+              <button class="chip example-chip" type="button">재취업 후 계약이 끝나면 남은 실업급여를 다시 받을 수 있나요?</button>
+            </div>
           </div>
-        </div>
+
+          <div class="dialog-submit-bar">
+            <button class="button button-primary" type="submit">
+              <span>질문 보내기</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </form>
       </div>
 
       <section id="response-section" class="dialog-response" aria-label="질문 결과" hidden>
@@ -259,6 +260,10 @@
             <p>잠시 후 다시 시도해 주세요. 같은 문제가 계속되면 질문을 조금 짧게 바꿔보세요.</p>
           </div>
           <button id="retry-button" class="button button-secondary" type="button">다시 시도</button>
+        </div>
+
+        <div id="response-actions" class="response-actions" hidden>
+          <button id="ask-another-button" class="button button-secondary" type="button">다른 질문하기</button>
         </div>
       </section>
     </div>

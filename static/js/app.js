@@ -6,6 +6,8 @@
 
   const question = document.querySelector("#question");
   const questionDialog = document.querySelector("#question-dialog");
+  const dialogTitle = document.querySelector("#question-dialog-title");
+  const questionComposer = document.querySelector("#question-composer");
   const openQuestionButton = document.querySelector("#open-question-dialog");
   const closeQuestionButton = document.querySelector("#close-question-dialog");
   const charCount = document.querySelector("#char-count");
@@ -26,6 +28,8 @@
   const copyButton = document.querySelector("#copy-answer");
   const toast = document.querySelector("#toast");
   const responseSection = document.querySelector("#response-section");
+  const responseActions = document.querySelector("#response-actions");
+  const askAnotherButton = document.querySelector("#ask-another-button");
   const apiUrl = document.body.dataset.apiUrl || "/ask";
 
   let loadingTimer = null;
@@ -169,7 +173,10 @@
     question.setAttribute("aria-invalid", "false");
 
     lastQuestion = cleaned;
+    dialogTitle.textContent = "답변을 준비하고 있어요";
+    questionComposer.hidden = true;
     responseSection.hidden = false;
+    responseActions.hidden = true;
     answerSection.hidden = true;
     errorState.hidden = true;
     setLoading(true);
@@ -191,6 +198,8 @@
       errorState.scrollIntoView({ behavior: "smooth", block: "center" });
     } finally {
       setLoading(false);
+      dialogTitle.textContent = "질문 결과";
+      responseActions.hidden = false;
     }
   };
 
@@ -221,6 +230,17 @@
   });
 
   retryButton.addEventListener("click", () => submitQuestion(lastQuestion));
+
+  askAnotherButton.addEventListener("click", () => {
+    responseSection.hidden = true;
+    answerSection.hidden = true;
+    errorState.hidden = true;
+    responseActions.hidden = true;
+    questionComposer.hidden = false;
+    dialogTitle.textContent = "어떤 점이 궁금하신가요?";
+    question.focus();
+    question.select();
+  });
 
   copyButton.addEventListener("click", async () => {
     try {
