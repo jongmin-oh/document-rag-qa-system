@@ -29,6 +29,7 @@ class AskResponse(BaseModel):
     answer: str
     citations: list[Citation]
     model_version: str
+    interaction_id: str | None = None  # 운영 피드백과 답변을 연결하는 식별자
 
 
 @dataclass

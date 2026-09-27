@@ -1,7 +1,10 @@
+from uuid import uuid4
+
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
 from app.index import client
+from app.feedback import record_interaction
 from app.tasks.qa.ask import AskResponse, ask, generation_client
 
 router = APIRouter()
@@ -15,4 +18,8 @@ class AskRequest(BaseModel):
 
 @router.post("/ask", response_model=AskResponse)
 def post_ask(req: AskRequest) -> AskResponse:
-    return ask(embedding_client, req.question, llm)
+    response = ask(embedding_client, req.question, llm)
+    interaction_id = str(uuid4())
+    response.interaction_id = interaction_id
+    record_interaction(interaction_id, req.question, response)
+    return response
