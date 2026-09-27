@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>다시, 일</title>
+  <rect width="64" height="64" rx="18" fill="#fffaf2"/>
+  <g transform="rotate(-9 32 32)">
+    <circle cx="32" cy="32" r="25" fill="#146b94"/>
+    <circle cx="17" cy="48" r="15" fill="#fff1d8"/>
+    <circle cx="48" cy="17" r="11" fill="#f47a1f"/>
+    <circle cx="32" cy="32" r="6" fill="#fff238"/>
+  </g>
+</svg>
