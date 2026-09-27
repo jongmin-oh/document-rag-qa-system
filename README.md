@@ -152,7 +152,7 @@ import하지 않고, 전처리가 만든 `app/data/processed/` 안의 청크와 
 | 구성 | 선택 | 근거 |
 |---|---|---|
 | 언어·서버 | Python, FastAPI | Pydantic 스키마가 곧 Request/Response 정의와 OpenAPI 문서(`/docs`)가 된다 |
-| PDF 추출 | pdfplumber (1회성 초안) | 좌표·글꼴 정보로 제목과 표를 추정. 이후는 검수된 Markdown만 읽는다 |
+| PDF 추출 | pdfplumber (1회성 초안) | 실제 두 PDF 전체를 보고 좌표·글꼴·좌우 책자 페이지·서식 제외 규칙을 맞췄다. `kordoc 4.15.6`도 직접 비교했지만 수첩 핵심 표 병합과 제목 오인이 있어 유지했다. 이후는 검수된 Markdown만 읽는다 (`decision/chunking_strategy.md` 3.1.1절) |
 | 임베딩 | OpenRouter `perplexity/pplx-embed-v1-4b` | Korean-MTEB v2 Dense 검색 1위. Gold Set 검색에서 이전 Gemini Embedding 2와 동등 이상이면서 가격은 약 1/7 (`decision/models.md`) |
 | 답변·재작성 LLM | Gemini API `gemini-3.7-flash` (thinking low) | FACTS Grounding 6위. Gold Set에서 Gemma 4 31B보다 근거 충실도·partial 처리가 높고, Gemini 3.8 Flash와 같은 가격에 정답성·완전성이 높음 (`decision/models.md`) |
 | Judge | OpenRouter `openai/gpt-6-sol` | 답변 모델과 다른 개발사 모델로 자기 선호 편향을 줄이고, JSON Schema structured output으로 채점 형식 강제. 재채점이 41회 호출뿐이라 비용보다 판단력을 우선해 상위 모델 사용 |
