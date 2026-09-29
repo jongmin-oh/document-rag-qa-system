@@ -2,6 +2,12 @@
 
 👉 **[바로 사용해보기](https://glejbvabumaf7sp46v5p4q5ieq0xzyqu.lambda-url.ap-northeast-2.on.aws/)**
 
+## 서비스 화면
+
+| 서비스 첫 화면 | 답변과 공식 근거 |
+|---|---|
+| <img src="portfolio-assets/mobile-01-home.png" alt="다시, 일 모바일 서비스 첫 화면" width="360"> | <img src="portfolio-assets/mobile-02-answer.png" alt="구직급여 질문에 대한 답변과 공식 문서 근거 화면" width="360"> |
+
 ## Corpus
 
 ### 선정: 고용보험 실업급여(구직급여)
