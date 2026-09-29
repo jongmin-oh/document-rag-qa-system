@@ -8,6 +8,10 @@
 |---|---|
 | <img src="portfolio-assets/mobile-01-home.png" alt="다시, 일 모바일 서비스 첫 화면" width="360"> | <img src="portfolio-assets/mobile-02-answer.png" alt="구직급여 질문에 대한 답변과 공식 문서 근거 화면" width="360"> |
 
+## 공공서비스 제안
+
+2026-09-29, 국민과 상담 담당자가 공식 근거를 더 쉽게 찾을 수 있도록 **고용24 공식 문서 기반 실업급여 안내·검색 기능**을 국민신문고에 제안했다. 제안 내용은 [국민신문고 제안서](portfolio-assets/public-proposal/proposal.md)에서 확인할 수 있다.
+
 ## Corpus
 
 ### 선정: 고용보험 실업급여(구직급여)
